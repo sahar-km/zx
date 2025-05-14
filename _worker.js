@@ -132,12 +132,9 @@ export default {
         switch (url.pathname) {
           case '/':
           case `/${userCode}`: {
-            const streamConfig = await getDianaConfig(userCode, request.headers.get('Host'));
-            return new Response(streamConfig, {
-              status: 200,
-              headers: { 'Content-Type': 'text/html;charset=utf-8' },
-            });
-          }
+            const responseFromConfig = await getDianaConfig(userCode, request.headers.get('Host'), request);
+            return responseFromConfig; 
+        }
           default:
             return new Response('Not found', { status: 404 });
         }
@@ -577,9 +574,9 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
  * @param {string} hostName - Hostname.
  * @returns {Promise<string>} Processed HTML content.
  */
-async function getDianaConfig(userCode, hostName) {
+async function getDianaConfig(userCode, hostName, request) {
   try {
-    console.log(`Fetching HTML from: ${CONSTANTS.HTML_URL}`);
+    // console.log(`Fetching HTML from: ${CONSTANTS.HTML_URL}`);
     const protocol = CONSTANTS.VLESS_PROTOCOL;
     const networkType = CONSTANTS.WS_PROTOCOL;
 
@@ -600,14 +597,15 @@ async function getDianaConfig(userCode, hostName) {
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(freedomConfig)}`;
 
-    // Fetch HTML template from Pages
-    const response = await fetch(CONSTANTS.HTML_URL, { cache: 'default' });
+    const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString(); // خوب: از request.url استفاده شده
+    console.log(`Fetching HTML from: ${htmlTemplateUrl}`); // خوب: URL کامل لاگ می‌شود
+    const response = await fetch(htmlTemplateUrl, { cache: 'default' }); // خوب: از htmlTemplateUrl استفاده شده
+
     if (!response.ok) {
-      throw new Error(`Failed to fetch HTML: ${response.statusText}`);
+      throw new Error(`Failed to fetch HTML: ${response.status} ${response.statusText} from ${htmlTemplateUrl}`);
     }
     let html = await response.text();
 
-    // Replace placeholders with dynamic values
     html = html
       .replace(/{{PROXY_IP}}/g, proxyIP)
       .replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('en-US', {
@@ -624,20 +622,17 @@ async function getDianaConfig(userCode, hostName) {
       .replace(/{{DREAM_CONFIG_ENCODED}}/g, encodeURIComponent(dreamConfig))
       .replace(/{{CLASH_META_URL}}/g, clashMetaFullUrl)
       .replace(/{{NEKOBOX_URL}}/g, nekoBoxImportUrl)
-      .replace(/<span>-</span>/g, `<span id="current-year">${new Date().getFullYear()}</span>`); // همچنان توصیه می‌کنم این را با {{YEAR}} جایگزین کنید
+      .replace(/{{YEAR}}/g, new Date().getFullYear().toString());
 
     return new Response(html, {
       headers: { 'Content-Type': 'text/html;charset=UTF-8' },
     });
 
   } catch (error) {
-    console.error('Error in Pages Function:', error);
+    console.error('Error in Pages Function getDianaConfig:', error);
     const errorHtml = `
       <!DOCTYPE html>
       <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <title>Error</title>
       <head>
         <meta charset="UTF-8">
         <title>Error</title>
