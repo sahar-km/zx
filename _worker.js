@@ -624,7 +624,7 @@ async function getDianaConfig(userCode, hostName) {
       .replace(/{{DREAM_CONFIG_ENCODED}}/g, encodeURIComponent(dreamConfig))
       .replace(/{{CLASH_META_URL}}/g, clashMetaFullUrl)
       .replace(/{{NEKOBOX_URL}}/g, nekoBoxImportUrl)
-      .replace(/<span>-</span>/g, `<span id="current-year">${new Date().getFullYear()}</span>`);
+      .replace(/<span>-</span>/g, '<span id="current-year">' + new Date().getFullYear() + '</span>');
 
     return html;
   } catch (error) {
