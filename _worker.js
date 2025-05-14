@@ -1,6 +1,6 @@
-/**
+/**see
  * Cloudflare Worker for VLESS proxy with WebSocket and configuration UI.
- * @version 0.12.1
+ * @version 0.12.2
  */
 
 // Constants for configuration
@@ -16,10 +16,10 @@ const CONSTANTS = {
   NETWORK_TYPE: 'websocket',
   DNS_RESOLVER: '1.1.1.1',
   MAX_RETRIES: 3,
-  HTML_URL: 'https://sahar-km.github.io/zx/',
+  HTML_URL: '/index.html',
 };
 
-// Default user UUID and proxy IP.
+// Default user UUID and proxy IP
 let userCode = '15553e19-982d-4202-bcc2-7a9fd530e9d1';
 let proxyIP = 'turk.radicalization.ir';
 let dnsResolver = CONSTANTS.DNS_RESOLVER;
@@ -76,7 +76,7 @@ function safeCloseWebSocket(socket) {
 function stringify(arr, offset = 0) {
   const byteToHex = [];
   for (let i = 0; i < 256; ++i) {
-    byteToHex.push  push((i + 256).toString(16).slice(1));
+    byteToHex.push((i + 256).toString(16).slice(1));
   }
   const uuid = (
     byteToHex[arr[offset + 0]] +
@@ -120,6 +120,8 @@ export default {
       proxyIP = env.PROXYIP || proxyIP;
       dnsResolver = env.DNS_RESOLVER || dnsResolver;
 
+      console.log('Environment variables:', { userCode, proxyIP, dnsResolver });
+
       if (!isValidUserCode(userCode)) {
         throw new Error('Invalid user code');
       }
@@ -129,10 +131,6 @@ export default {
         const url = new URL(request.url);
         switch (url.pathname) {
           case '/':
-            return new Response(JSON.stringify(request.cf, null, 2), {
-              status: 200,
-              headers: { 'Content-Type': 'application/json;charset=utf-8' },
-            });
           case `/${userCode}`: {
             const streamConfig = await getDianaConfig(userCode, request.headers.get('Host'));
             return new Response(streamConfig, {
@@ -581,6 +579,7 @@ async function handleUDPOutBound(webSocket, vlessResponseHeader, log) {
  */
 async function getDianaConfig(userCode, hostName) {
   try {
+    console.log(`Fetching HTML from: ${CONSTANTS.HTML_URL}`);
     const protocol = CONSTANTS.VLESS_PROTOCOL;
     const networkType = CONSTANTS.WS_PROTOCOL;
 
@@ -612,7 +611,12 @@ async function getDianaConfig(userCode, hostName) {
     html = html
       .replace(/{{PROXY_IP}}/g, proxyIP)
       .replace(/{{LAST_UPDATED}}/g, new Date().toLocaleString('en-US', {
-        day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
       }))
       .replace(/{{FREEDOM_CONFIG}}/g, freedomConfig)
       .replace(/{{DREAM_CONFIG}}/g, dreamConfig)
