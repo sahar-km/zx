@@ -16,7 +16,7 @@ const CONSTANTS = {
   NETWORK_TYPE: 'websocket',
   DNS_RESOLVER: '1.1.1.1',
   MAX_RETRIES: 3,
-  HTML_URL: 'https://sahar-km.github.io/zx/index.html',
+  HTML_URL: 'https://sahar-km.github.io/zx/',
 };
 
 // Default user UUID and proxy IP.
