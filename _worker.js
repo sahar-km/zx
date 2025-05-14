@@ -597,9 +597,9 @@ async function getDianaConfig(userCode, hostName, request) {
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(freedomConfig)}`;
 
-    const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString(); // خوب: از request.url استفاده شده
-    console.log(`Fetching HTML from: ${htmlTemplateUrl}`); // خوب: URL کامل لاگ می‌شود
-    const response = await fetch(htmlTemplateUrl, { cache: 'default' }); // خوب: از htmlTemplateUrl استفاده شده
+    const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString();
+    console.log(`Fetching HTML from: ${htmlTemplateUrl}`);
+    const response = await fetch(htmlTemplateUrl);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch HTML: ${response.status} ${response.statusText} from ${htmlTemplateUrl}`);
