@@ -1,4 +1,4 @@
-/**see
+/**
  * Cloudflare Worker for VLESS proxy with WebSocket and configuration UI.
  * @version 0.12.2
  */
@@ -16,7 +16,7 @@ const CONSTANTS = {
   NETWORK_TYPE: 'websocket',
   DNS_RESOLVER: '1.1.1.1',
   MAX_RETRIES: 3,
-  HTML_URL: '/index.html',
+  HTML_URL: '/index.html', // Use local index.html from Pages
 };
 
 // Default user UUID and proxy IP
@@ -600,7 +600,7 @@ async function getDianaConfig(userCode, hostName) {
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(freedomConfig)}`;
 
-    // Fetch HTML template from external source
+    // Fetch HTML template from Pages
     const response = await fetch(CONSTANTS.HTML_URL, { cache: 'default' });
     if (!response.ok) {
       throw new Error(`Failed to fetch HTML: ${response.statusText}`);
@@ -624,7 +624,7 @@ async function getDianaConfig(userCode, hostName) {
       .replace(/{{DREAM_CONFIG_ENCODED}}/g, encodeURIComponent(dreamConfig))
       .replace(/{{CLASH_META_URL}}/g, clashMetaFullUrl)
       .replace(/{{NEKOBOX_URL}}/g, nekoBoxImportUrl)
-      .replace(/<span>-</span>/g, '<span id="current-year">' + new Date().getFullYear() + '</span>');
+      .replace(/<span>-</span>/g, `<span id="current-year">${new Date().getFullYear()}</span>`);
 
     return html;
   } catch (error) {
