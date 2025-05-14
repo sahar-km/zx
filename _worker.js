@@ -624,14 +624,20 @@ async function getDianaConfig(userCode, hostName) {
       .replace(/{{DREAM_CONFIG_ENCODED}}/g, encodeURIComponent(dreamConfig))
       .replace(/{{CLASH_META_URL}}/g, clashMetaFullUrl)
       .replace(/{{NEKOBOX_URL}}/g, nekoBoxImportUrl)
-      .replace(/<span>-</span>/g, `<span id="current-year">${new Date().getFullYear()}</span>`);
+      .replace(/<span>-</span>/g, `<span id="current-year">${new Date().getFullYear()}</span>`); // همچنان توصیه می‌کنم این را با {{YEAR}} جایگزین کنید
 
-    return html;
+    return new Response(html, {
+      headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+    });
+
   } catch (error) {
-    console.error('Error fetching HTML template:', error);
-    return `
+    console.error('Error in Pages Function:', error);
+    const errorHtml = `
       <!DOCTYPE html>
       <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <title>Error</title>
       <head>
         <meta charset="UTF-8">
         <title>Error</title>
@@ -639,8 +645,13 @@ async function getDianaConfig(userCode, hostName) {
       <body>
         <h1>Error</h1>
         <p>Failed to load configuration page. Please try again later.</p>
+        <pre>${error.message}\n${error.stack}</pre>
       </body>
       </html>
     `;
+    return new Response(errorHtml, {
+      status: 500,
+      headers: { 'Content-Type': 'text/html;charset=UTF-8' },
+    });
   }
 }
