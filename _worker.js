@@ -16,7 +16,7 @@ const CONSTANTS = {
   NETWORK_TYPE: 'websocket',
   DNS_RESOLVER: '1.1.1.1',
   MAX_RETRIES: 3,
-  HTML_URL: '/index.html', // Use local index.html from Pages
+  HTML_URL: 'https://sahar-km.github.io/zx/',
 };
 
 // Default user UUID and proxy IP
@@ -597,12 +597,12 @@ async function getDianaConfig(userCode, hostName, request) {
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(freedomConfig)}`;
 
-    const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString();
+//  const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString();
     console.log(`Fetching HTML from: ${htmlTemplateUrl}`);
     const response = await fetch(htmlTemplateUrl);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch HTML: ${response.status} ${response.statusText} from ${htmlTemplateUrl}`);
+      throw new Error(`Failed to fetch HTML from GitHub Pages: ${response.status} ${response.statusText} (URL: ${CONSTANTS.HTML_URL})`);
     }
     let html = await response.text();
 
