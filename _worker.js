@@ -1,4 +1,4 @@
-à/**
+/**
  * Cloudflare Worker for VLESS proxy with WebSocket and configuration UI.
  * @version 0.12.2
  */
