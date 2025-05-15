@@ -21,7 +21,7 @@ const CONSTANTS = {
 
 // Default user UUID and proxy IP
 let userCode = '15553e19-982d-4202-bcc2-7a9fd530e9d1';
-let proxyIP = 'turk.radicalization.ir';
+let proxyIP = '';
 let dnsResolver = CONSTANTS.DNS_RESOLVER;
 
 /**
@@ -126,94 +126,27 @@ export default {
         throw new Error('Invalid user code');
       }
 
-      const url = new URL(request.url);
       const upgradeHeader = request.headers.get('Upgrade');
-      
-      // Handle WebSocket upgrade requests
-      if (upgradeHeader && upgradeHeader.toLowerCase() === CONSTANTS.WS_PROTOCOL.toLowerCase()) {
-        console.log(`WebSocket upgrade requested for path: ${url.pathname}`);
+      if (!upgradeHeader || upgradeHeader !== CONSTANTS.WS_PROTOCOL) {
+        const url = new URL(request.url);
+        switch (url.pathname) {
+          case '/':
+          case `/${userCode}`: {
+            const responseFromConfig = await getDianaConfig(userCode, request.headers.get('Host'), request);
+            return responseFromConfig; 
+        }
+          default:
+            return new Response('Not found', { status: 404 });
+        }
+      } else {
         return await streamOverWSHandler(request);
-      } 
-      
-      // Handle HTTP requests
-      if (url.pathname === '/' || url.pathname === `/${userCode}`) {
-        const responseFromConfig = await getDianaConfig(userCode, request.headers.get('Host'), request);
-        return responseFromConfig;
-      } 
-      
-      // Important: Check for /assets path (XRAY endpoint)
-      if (url.pathname === CONSTANTS.API_PATHS.XRAY || url.pathname.startsWith(`${CONSTANTS.API_PATHS.XRAY}?`)) {
-        // This is a WebSocket path but no upgrade header, handle accordingly
-        console.log(`Request for ${url.pathname} without WebSocket upgrade`);
-        return new Response("Upgrade to WebSocket required", { status: 426 });
       }
-      
-      // Handle API paths if needed
-      if (url.pathname === CONSTANTS.API_PATHS.SING_BOX) {
-        console.log(`Request for ${url.pathname} without WebSocket upgrade`);
-        return new Response("Upgrade to WebSocket required", { status: 426 });
-      }
-      
-      console.log(`Unhandled path: ${url.pathname}`);
-      return new Response('Not found', { status: 404 });
     } catch (err) {
       console.error('Fetch error:', err);
       return new Response('Internal Server Error', { status: 500 });
     }
   },
 };
-
-/**
- * Connect to a remote host
- * @param {Object} options - Connection options
- * @returns {Promise<Object>} - Socket-like object with readable and writable streams
- */
-function connect({ hostname, port }) {
-  // For Cloudflare Workers environment
-  return new Promise((resolve, reject) => {
-    try {
-      const socket = new WebSocket(`wss://${hostname}:${port}`);
-      const reader = new ReadableStream({
-        start(controller) {
-          socket.onmessage = (event) => {
-            controller.enqueue(event.data);
-          };
-          socket.onclose = () => {
-            controller.close();
-          };
-          socket.onerror = (error) => {
-            controller.error(error);
-          };
-        },
-        cancel() {
-          socket.close();
-        }
-      });
-      
-      const writer = new WritableStream({
-        write(chunk) {
-          socket.send(chunk);
-        },
-        close() {
-          socket.close();
-        },
-        abort(reason) {
-          socket.close();
-        }
-      });
-      
-      resolve({
-        readable: reader,
-        writable: writer,
-        closed: new Promise((resolve) => {
-          socket.onclose = () => resolve();
-        })
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
 
 /**
  * Handles WebSocket streaming.
@@ -488,8 +421,7 @@ async function handleTCPOutBound(
 ) {
   async function connectAndWrite(address, port, attempt = 1) {
     try {
-      log(`Connecting to ${address}:${port} (attempt ${attempt}/${CONSTANTS.MAX_RETRIES})`);
-      const tcpSocket = connect({ hostname: address, port });
+      const tcpSocket = connect({ hostname: addressRemote, port: portRemote });
       remoteSocket.value = tcpSocket;
       log(`Connected to ${address}:${port}`);
       const writer = tcpSocket.writable.getWriter();
@@ -497,7 +429,6 @@ async function handleTCPOutBound(
       writer.releaseLock();
       return tcpSocket;
     } catch (error) {
-      log(`Connection error: ${error.message}`);
       if (attempt < CONSTANTS.MAX_RETRIES) {
         log(`Connection failed, retrying (${attempt + 1}/${CONSTANTS.MAX_RETRIES})`);
         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
@@ -509,7 +440,6 @@ async function handleTCPOutBound(
 
   async function retry() {
     try {
-      log(`Retrying connection using proxy IP: ${proxyIP || addressRemote}`);
       const tcpSocket = await connectAndWrite(proxyIP || addressRemote, portRemote);
       tcpSocket.closed
         .catch(error => {
@@ -525,13 +455,8 @@ async function handleTCPOutBound(
     }
   }
 
-  try {
-    const tcpSocket = await connectAndWrite(addressRemote, portRemote);
-    remoteSocketToWS(tcpSocket, webSocket, vlessResponseHeader, retry, log);
-  } catch (error) {
-    log(`Initial connection failed: ${error.message}`);
-    retry();
-  }
+  const tcpSocket = await connectAndWrite(addressRemote, portRemote);
+  remoteSocketToWS(tcpSocket, webSocket, vlessResponseHeader, retry, log);
 }
 
 /**
@@ -562,13 +487,9 @@ async function remoteSocketToWS(remoteSocket, webSocket, vlessResponseHeader, re
           } else {
             webSocket.send(chunk);
           }
-          remoteChunkCount++;
-          if (remoteChunkCount === 1) {
-            log('First chunk of data received from remote');
-          }
         },
         close() {
-          log(`Remote connection closed after receiving ${remoteChunkCount} chunks`);
+          log('Remote connection closed');
         },
         abort(reason) {
           log('Remote connection aborted', reason);
@@ -662,15 +583,13 @@ async function getDianaConfig(userCode, hostName, request) {
     const baseUrl = `${protocol}://${userCode}@${hostName}:${CONSTANTS.DEFAULT_PORT}`;
     const commonParams = `encryption=none&host=${hostName}&type=${networkType}&security=tls&sni=${hostName}`;
 
-    // Fixed the path parameter to use proper ampersand separator instead of question mark
     const freedomConfig =
       `${baseUrl}?path=${CONSTANTS.API_PATHS.SING_BOX}&eh=Sec-WebSocket-Protocol` +
       `&ed=2560&${commonParams}&fp=chrome&alpn=h3#${hostName}`;
 
-    // Fixed the path parameter format here as well
     const dreamConfig =
-      `${baseUrl}?path=${CONSTANTS.API_PATHS.XRAY}&ed=2048&${commonParams}` +
-      `&fp=randomized&alpn=h2,http/1.1#${hostName}`;
+      `${baseUrl}?path=${CONSTANTS.API_PATHS.XRAY}?ed=2560&${commonParams}` +
+      `&fp=firefox&alpn=http/1.1#${hostName}`;
 
     const clashMetaFullUrl = `clash://install-config?url=${encodeURIComponent(
       `https://revil-sub.pages.dev/sub/clash-meta?url=${encodeURIComponent(freedomConfig)}&remote_config=&udp=true&ss_uot=false&show_host=false&forced_ws0rtt=false`,
