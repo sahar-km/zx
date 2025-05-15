@@ -1,4 +1,4 @@
-/**
+à/**
  * Cloudflare Worker for VLESS proxy with WebSocket and configuration UI.
  * @version 0.12.2
  */
@@ -592,15 +592,14 @@ async function getDianaConfig(userCode, hostName, request) {
       `&fp=randomized&alpn=h2,http/1.1#${hostName}`;
 
     const clashMetaFullUrl = `clash://install-config?url=${encodeURIComponent(
-      `https://sub.victoriacross.ir/sub/clash-meta?url=${encodeURIComponent(freedomConfig)}&remote_config=&udp=true&ss_uot=false&show_host=false&forced_ws0rtt=false`,
+      `https://revil-sub.pages.dev/sub/clash-meta?url=${encodeURIComponent(freedomConfig)}&remote_config=&udp=true&ss_uot=false&show_host=false&forced_ws0rtt=false`,
     )}`;
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(freedomConfig)}`;
 
-//  const htmlTemplateUrl = new URL(CONSTANTS.HTML_URL, request.url).toString();
-    console.log(`Fetching HTML from: ${htmlTemplateUrl}`);
-    const response = await fetch(htmlTemplateUrl);
-
+    console.log(`Fetching HTML from external URL: ${CONSTANTS.HTML_URL}`);
+    const response = await fetch(CONSTANTS.HTML_URL);
+    
     if (!response.ok) {
       throw new Error(`Failed to fetch HTML from GitHub Pages: ${response.status} ${response.statusText} (URL: ${CONSTANTS.HTML_URL})`);
     }
