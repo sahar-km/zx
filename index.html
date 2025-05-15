@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cantarell&family=Courier+Prime&family=Fira+Code&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cantarell&family=Courier+Prime&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -18,19 +18,12 @@
             }
 
             @font-face {
-                font-family: 'Aldine401 Normal';
+                font-family: 'Aldine 401 BT Web';
                 src:
                   url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2') format('woff2'),
                   url('https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/Aldine401_Mersedeh.ttf') format('truetype');
                 font-weight: normal; font-style: normal; font-display: swap;
             }
-
-             @font-face {
-                font-family: 'Aldine 401';
-                src:
-                  url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401BT-RomanA.woff2') format('woff2');
-                font-weight: 500; font-style: normal; font-display: swap;
-            }
            
             @font-face {
                 font-family: 'Aldine721 BdCn BT';
@@ -40,22 +33,15 @@
             }
            
             @font-face {
-                font-family: 'Styrene B LC;
-                src:
-                  url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Medium.woff2') format('woff2');
-                font-weight: 500; font-style: normal; font-display: swap;
-            }
-           
-            @font-face {
                 font-family: 'Styrene B LC';
                 src:
-                  url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2') format('woff2'),
-                  url('https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/StyreneBLC-Regular.ttf') format('truetype');
-                font-weight: normal; font-style: normal; font-display: swap;
+                  url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Medium.woff2') format('woff2'),
+                  url('https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2') format('woff2');
+                font-weight: normal; font-style: normal; font-display: swap;
             }
 
             @font-face {
-              font-family: 'MONO';
+              font-family: 'Di';
               src:
                 url('https://pub-e9cd5dd357214439993a02fd0684592e.r2.dev/1047a18a743f1fb96de17bffe2242740.woff2') format('woff2');
               font-weight: 400; font-style: normal; font-display: swap;
@@ -84,15 +70,14 @@
               --transition-speed-medium: 0.3s;
               --transition-speed-long: 0.6s;
 
-              --aldine-normal: 'Aldine401 Normal';
+              --aldine: 'Aldine 401 BT Web';
               --aldine-bold: 'Aldine721 BdCn BT';
-              --aldine: 'Aldine401';
-              --font-mono: 'MONO';
+              --font-mono: 'Di';
               --font-styrb: 'Styrene B LC';
 
-              --serif: var(--aldine-normal), 'Times New Roman', Times, Georgia, ui-serif, serif;
+              --serif: var(--aldine), 'Times New Roman', Times, Georgia, ui-serif, serif;
               --sans-serif: var(--font-styrb), 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Roboto, Arial, 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
-              --mono-serif: var(--font-mono), 'Roboto Mono', 'Cantarell', 'Courier Prime', SFMono-Regular, 'Fira Code', monospace;
+              --mono-serif: var(--font-mono), 'Roboto Mono', Cantarell, Courier Prime, SFMono-Regular, monospace;
             }
 
             body {
@@ -143,7 +128,6 @@
             .header p {
               color: var(--text-secondary);
               font-size: 12px;
-              font-weight: 400;
             }
 
             .config-card {
@@ -184,8 +168,8 @@
             .config-content pre {
               overflow-x: auto;
               font-family: var(--mono-serif);
-              font-size: 0.9em;
-              font-style: normal;
+              font-size: 0.8em;
+              font-weight: 400;
               line-height: 1.5;
               color: var(--text-primary);
               margin: 0;
@@ -208,15 +192,14 @@
             }
 
             .attribute span {
-              font-size: 13px;
+              font-size: 12px;
               font-weight: 400;
               color: var(--text-secondary);
             }
 
             .attribute strong {
               font-family: var(--serif);
-              font-size: 16px;
-              font-weight: 400;
+              font-size: 14px;
               color: var(--accent-secondary);
               word-break: break-all;
             }
@@ -483,12 +466,12 @@
 
             .status-active {
               background-color: #be9b7b;
-              box-shadow: 0 0 4px 2px #b3a89d;
+              box-shadow: 0 0 3px 2px #be9b7b;
             }
 
             .status-inactive {
               background-color: #ab0e03;
-              box-shadow: 0 0 4px 2px #ff1100;
+              box-shadow: 0 0 3px 2px #ff1100;
             }
 
             @keyframes pulse {
@@ -508,7 +491,7 @@
               .header p { font-size: 12px; }
               .config-card { padding: 16px; }
               .config-title { font-size: 18px; }
-              .config-content pre { font-size: 12px; padding-right: 65px; }
+              .config-content pre { padding-right: 65px; }
               .attributes { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
               .client-buttons { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
               .button { padding: 8px 12px; font-size: 12px; }
@@ -525,7 +508,7 @@
               .config-card { padding: 10px; }
               .config-title { font-size: 18px; }
               .config-content { padding: 12px; }
-              .config-content pre { font-size: 11px; padding-right: 60px; }
+              .config-content pre { padding-right: 60px; }
               .attributes { grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px; }
               .attribute strong { font-size: 13px; }
               .attribute span { font-size: 11px; }
@@ -542,7 +525,7 @@
               .config-card { padding: 8px; }
               .config-title { font-size: 14px; }
               .config-content { padding: 8px; }
-              .config-content pre { font-size: 10px; padding-right: 50px; }
+              .config-content pre { padding-right: 50px; }
               .attributes { gap: 8px; }
               .attribute strong { font-size: 13px; }
               .client-buttons { grid-template-columns: 1fr; }
@@ -581,7 +564,7 @@
             <span>Status:</span>
             <strong>
               <span class="status-indicator status-active" aria-hidden="true"></span>
-              <span id="proxy-status">Active</span>
+              <strong id="proxy-status">Active</strong>
             </strong>
           </div>
           <div class="attribute">
@@ -705,7 +688,7 @@
         </div>
       </div>
       <div class="footer">
-        <p>© <span id="current-year">{{YEAR}}</span> Diana - All Rights Reserved</p>
+        <p>© <span id="current-year">{{YEAR}}</span> REvil - All Rights Reserved</p>
         <p>Secure. Private. Fast.</p>
       </div>
     </div>
@@ -791,9 +774,8 @@
       }
       function formatDateTime(date) {
         return date.toLocaleString('en-US', {
-          day: 'numeric',
           month: 'long',
-          year: 'numeric',
+          day: 'numeric',
           hour: 'numeric',
           minute: 'numeric',
           hour12: true,
@@ -819,7 +801,7 @@
       function setupImportLinks() {}
       initializeProxyData();
       checkProxyStatus();
-      setInterval(checkProxyStatus, 60000);
+      setInterval(checkProxyStatus, 50000);
     </script>
   </body>
 </html>
