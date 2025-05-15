@@ -556,13 +556,13 @@ async function handleUDPOutBound(webSocket, streamResponseHeader, log) {
 
             if (webSocket.readyState === WS_READY_STATE_OPEN) { // Using WS_READY_STATE_OPEN
               log(`dns query success, length: ${udpSize}`);
-              if (isHeaderSent) {
+              if (isProtocolHeaderSent) {
                 webSocket.send(await new Blob([udpSizeBuffer, dnsQueryResult]).arrayBuffer());
               } else {
                 webSocket.send(
                   await new Blob([streamResponseHeader, udpSizeBuffer, dnsQueryResult]).arrayBuffer(),
                 );
-                isHeaderSent = true;
+                isProtocolHeaderSent = true;
               }
             }
           } catch (error) {
@@ -598,13 +598,13 @@ async function getDianaConfig(currentUuid, hostName) {
     const commonParams =
       `encryption=none&host=${hostName}&type=${networkType}` + `&security=tls&sni=${hostName}`;
 
-    // Config URLs from Code 1 (paths /api/v4 and /api/v2?ed=2048)
+    // paths /api/v2 and /index?ed=2048)
     const freedomConfig =
-      `${baseUrl}?path=/api/v4&eh=Sec-WebSocket-Protocol` +
+      `${baseUrl}?path=/api/v2&eh=Sec-WebSocket-Protocol` +
       `&ed=2560&${commonParams}&fp=chrome&alpn=h3#${hostName}`;
 
     const dreamConfig =
-      `${baseUrl}?path=/assets?ed=2048&${commonParams}` + 
+      `${baseUrl}?path=/index?ed%3D2560&${commonParams}` + 
       `&fp=randomized&alpn=h2,http/1.1#${hostName}`; 
 
     // Other URLs from Code 1's getDianaConfig
