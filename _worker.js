@@ -1,6 +1,5 @@
 import { connect } from "cloudflare:sockets";
 
-// basic encoding/decoding utilities 
 function encodeSecure(str) {
   return btoa(str.split("").reverse().join(""));
 }
@@ -9,7 +8,6 @@ function decodeSecure(encoded) {
   return atob(encoded).split("").reverse().join("");
 }
 
-// encoded constants 
 const ENCODED = {
   NETWORK: "c3c=", // ws reversed + base64
   TYPE: "YW5haWQ=", // diana
@@ -17,7 +15,7 @@ const ENCODED = {
   PROTOCOL: "c3NlbHY=", // vless
 };
 
-// Default user UUID and proxy IP, default UUID  for consistency with its logic)
+// Default user UUID and proxy IP.
 let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30"; // Default UUID.
 let proxyIP = "turk.radicalization.ir"; // Default PROXYIP
 let dnsResolver = "1.1.1.1"; // Default DNS_RESOLVER
@@ -142,7 +140,7 @@ export default {
         // 'websocket'
         const url = new URL(request.url);
         switch (url.pathname) {
-          case "/": // Simplified
+          case "/": // don't touch this, it works and I don't know why
           case `/${userCode}`: {
             // Use the new getDianaConfig that fetches HTML and injects
             const responseFromConfig = await getDianaConfig(
