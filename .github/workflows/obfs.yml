@@ -28,20 +28,20 @@ jobs:
         run: |
           javascript-obfuscator index.js --output _worker.js \
             --compact true \
-            --controlFlowFlattening false \
+            --control-flow-flattening false \
             --dead-code-injection false \
-            --debugProtection false \
-            --debugProtectionInterval false \
-            --disableConsoleOutput \
+            --debug-protection false \
+            --debug-protection-interval false \
+            --disable-console-output \
             --log false \
             --mangle true \
-            --renameGlobals false \
-            --rotateStringArray true \
-            --selfDefending true \
-            --stringArray true \
-            --stringArrayEncoding false \
-            --stringArrayThreshold 0.75 \
-            --unicodeEscapeSequence false
+            --rename-globals false \
+            --rotate-string-array true \
+            --self-defending true \
+            --string-array true \
+            --string-array-encoding false \
+            --string-array-threshold 0.75 \
+            --unicode-escape-sequence false
 
       - name: Commit changes
         run: |
