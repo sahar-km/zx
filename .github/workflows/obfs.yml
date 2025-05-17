@@ -29,7 +29,6 @@ jobs:
         run: |
           javascript-obfuscator index.js --output _worker.js \
           --compact true \
-          --controlFlowFlattening false \
           --dead-code-injection false \
           --debugProtection false \
           --debugProtectionInterval false \
