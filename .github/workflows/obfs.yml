@@ -10,12 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+          
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -28,27 +27,28 @@ jobs:
       - name: Obfuscate code
         run: |
           javascript-obfuscator index.js --output _worker.js \
-          --compact true \
-          --dead-code-injection false \
-          --debugProtection false \
-          --debugProtectionInterval false \
-          --disableConsoleOutput \
-          --log false \
-          --mangle true \
-          --renameGlobals false \
-          --rotateStringArray true \
-          --selfDefending true \
-          --stringArray true \
-          --stringArrayEncoding false \
-          --stringArrayThreshold 0.75 \
-          --unicodeEscapeSequence false
+            --compact true \
+            --controlFlowFlattening false \
+            --dead-code-injection false \
+            --debugProtection false \
+            --debugProtectionInterval false \
+            --disableConsoleOutput \
+            --log false \
+            --mangle true \
+            --renameGlobals false \
+            --rotateStringArray true \
+            --selfDefending true \
+            --stringArray true \
+            --stringArrayEncoding false \
+            --stringArrayThreshold 0.75 \
+            --unicodeEscapeSequence false
 
       - name: Commit changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add _worker.js
-          git commit -m "Secured and refined _worker.js logic" || echo "No changes to commit"
+          git commit -m "Secured and refined _worker.js logic"
 
       - name: Push changes
         run: |
