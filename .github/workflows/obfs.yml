@@ -23,7 +23,7 @@ jobs:
           check-latest: false
 
       - name: Install dependencies
-         run: npm install -g javascript-obfuscator
+        run: npm install -g javascript-obfuscator
 
       - name: Obfuscate code
         run: |
