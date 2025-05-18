@@ -34,6 +34,7 @@ jobs:
             --debug-protection-interval false \
             --disable-console-output \
             --log false \
+            --mangle true \
             --rename-globals false \
             --rotate-string-array true \
             --self-defending true \
