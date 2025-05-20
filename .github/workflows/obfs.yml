@@ -17,11 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Use Node.js 18.x
+      - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: "18" 
-          cache: 'npm'
+          node-version: "20" 
+        # cache: 'npm'
 
       - name: Generate intermediate worker file
         run: node build-worker.js
