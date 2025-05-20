@@ -1,4 +1,4 @@
-name: Obfs
+name: Build and Obfuscate Worker
 
 on:
   push:
@@ -6,28 +6,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  obfuscate:
+  build_and_obfuscate:
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
         with:
-          node-version: "16"
-          check-latest: false
+          node-version: "18" 
+          cache: 'npm'
 
-      - name: Install dependencies
+      - name: Generate intermediate worker file
+        run: node build-worker.js
+
+      - name: Install javascript-obfuscator
         run: npm install -g javascript-obfuscator
 
-      - name: Obfuscate code
+      - name: Obfuscate worker code
         run: |
-          javascript-obfuscator index.js --output _worker.js --self-defending false \
+          javascript-obfuscator _intermediate_worker.js --output _worker.js \
+          --self-defending false \
           --compact true \
           --control-flow-flattening true \
           --control-flow-flattening-threshold 1 \
@@ -41,15 +46,21 @@ jobs:
           --transform-object-keys true \
           --unicode-escape-sequence true
 
-      - name: Commit changes
+      - name: Commit and push _worker.js
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add _worker.js
-          git commit -m "Obfuscate _worker.js" || echo "No changes to commit"
+          if ! git diff --staged --quiet; then
+            git commit -m "Build: Generate and obfuscate _worker.js"
+          else
+            echo "No changes to commit for _worker.js"
+          fi
 
       - name: Push changes
+        if: success()
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
+        # force: false
