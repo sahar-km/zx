@@ -1,713 +1,719 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VLESS Proxy Configuration</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
-    <link href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
-    <link  href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Metrophobic&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      @font-face {
-        font-family: "Aldine 401 BT Web";
-        src:
-          url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2") format("woff2"),
-          url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/Aldine401_Mersedeh.ttf") format("truetype");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VLESS Proxy Configuration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
+  <link
+    href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Metrophobic&family=Roboto+Mono:wght@100..700&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      @font-face {
-        font-family: "Styrene B LC";
-        src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2");
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-      }
+    @font-face {
+      font-family: "Aldine 401 BT Web";
+      src:
+        url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2") format("woff2"),
+        url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/Aldine401_Mersedeh.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
 
-      :root {
-        --background-primary: #2a2421;
-        --background-secondary: #35302c;
-        --background-tertiary: #413b35;
-        --border-color: #5a4f45;
-        --border-color-hover: #766a5f;
-        --text-primary: #e5dfd6;
-        --text-secondary: #b3a89d;
-        --text-accent: #ffffff;
-        --accent-primary: #be9b7b;
-        --accent-secondary: #d4b595;
-        --accent-tertiary: #8d6e5c;
-        --accent-primary-darker: #8a6f56;
-        --button-text-primary: #2a2421;
-        --button-text-secondary: var(--text-primary);
-        --shadow-color: rgba(0, 0, 0, 0.35);
-        --shadow-color-accent: rgba(190, 155, 123, 0.4);
-        --border-radius: 8px;
-        --transition-speed: 0.2s;
-        --transition-speed-fast: 0.1s;
-        --transition-speed-medium: 0.3s;
-        --transition-speed-long: 0.6s;
-        --status-success: #70b570;
-        --status-error: #e05d44;
-        --status-warning: #e0bc44;
-        --status-info: #4f90c4;
+    @font-face {
+      font-family: "Styrene B LC";
+      src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
 
-        --serif: 'Aldine 401 BT Web', 'Times New Roman', Times, Georgia, ui-serif, serif;
-        --aldine: "Aldine 401 BT Web", serif;
-        --sans-serif: "Styrene B LC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
-          "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
-        --mono-serif: "Fira Code", "Roboto Mono", Cantarell, Courier Prime, SFMono-Regular, monospace;
-      }
+    :root {
+      --background-primary: #2a2421;
+      --background-secondary: #35302c;
+      --background-tertiary: #413b35;
+      --border-color: #5a4f45;
+      --border-color-hover: #766a5f;
+      --text-primary: #e5dfd6;
+      --text-secondary: #b3a89d;
+      --text-accent: #ffffff;
+      --accent-primary: #be9b7b;
+      --accent-secondary: #d4b595;
+      --accent-tertiary: #8d6e5c;
+      --accent-primary-darker: #8a6f56;
+      --button-text-primary: #2a2421;
+      --button-text-secondary: var(--text-primary);
+      --shadow-color: rgba(0, 0, 0, 0.35);
+      --shadow-color-accent: rgba(190, 155, 123, 0.4);
+      --border-radius: 8px;
+      --transition-speed: 0.2s;
+      --transition-speed-fast: 0.1s;
+      --transition-speed-medium: 0.3s;
+      --transition-speed-long: 0.6s;
+      --status-success: #70b570;
+      --status-error: #e05d44;
+      --status-warning: #e0bc44;
+      --status-info: #4f90c4;
 
-      body {
-        font-family: var(--sans-serif);
-        font-size: 16px;
-        font-weight: 400;
-        font-style: normal;
-        background-color: var(--background-primary);
-        color: var(--text-primary);
-        padding: 3rem;
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+      --serif: 'Aldine 401 BT Web', 'Times New Roman', Times, Georgia, ui-serif, serif;
+      --aldine: "Aldine 401 BT Web", serif;
+      --sans-serif: "Styrene B LC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
+        "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      --mono-serif: "Fira Code", "Roboto Mono", Cantarell, Courier Prime, SFMono-Regular, monospace;
+    }
 
-      .container {
-        max-width: 800px;
-        margin: 20px auto;
-        padding: 0 12px;
-        border-radius: var(--border-radius);
-        box-shadow:
-          0 6px 15px rgba(0, 0, 0, 0.2),
-          0 0 25px 8px var(--shadow-color-accent);
-        transition: box-shadow var(--transition-speed-medium) ease;
-      }
+    body {
+      font-family: var(--sans-serif);
+      font-size: 16px;
+      font-weight: 400;
+      font-style: normal;
+      background-color: var(--background-primary);
+      color: var(--text-primary);
+      padding: 3rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
 
-      .container:hover {
-        box-shadow:
-          0 8px 20px rgba(0, 0, 0, 0.25),
-          0 0 35px 10px var(--shadow-color-accent);
-      }
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 12px;
+      border-radius: var(--border-radius);
+      box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.2),
+        0 0 25px 8px var(--shadow-color-accent);
+      transition: box-shadow var(--transition-speed-medium) ease;
+    }
 
-      .header {
-        text-align: center;
-        margin-bottom: 40px;
-        padding-top: 30px;
-      }
+    .container:hover {
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.25),
+        0 0 35px 10px var(--shadow-color-accent);
+    }
 
-      .header h1 {
-        font-family: var(--serif);
-        font-weight: 400;
-        font-size: 2rem;
-        color: var(--text-accent);
-        margin-top: 0px;
-        margin-bottom: 2px;
-      }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-top: 30px;
+    }
 
-      .header p {
-        color: var(--text-secondary);
-        font-size: 12px;
-        font-weight: 400;
-      }
+    .header h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 2rem;
+      color: var(--text-accent);
+      margin-top: 0px;
+      margin-bottom: 2px;
+    }
 
-      .config-card {
-        background: var(--background-secondary);
-        border-radius: var(--border-radius);
-        padding: 20px;
-        margin-bottom: 24px;
-        border: 1px solid var(--border-color);
-        transition:
-          border-color var(--transition-speed) ease,
-          box-shadow var(--transition-speed) ease;
-      }
+    .header p {
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 400;
+    }
 
-      .config-card:hover {
-        border-color: var(--border-color-hover);
-        box-shadow: 0 4px 8px var(--shadow-color);
-      }
+    .config-card {
+      background: var(--background-secondary);
+      border-radius: var(--border-radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border-color);
+      transition:
+        border-color var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    }
 
-      .config-title {
-        font-family: var(--aldine);
-        font-size: 22px;
-        font-weight: 400;
-        color: var(--accent-secondary);
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      
-      .config-title .refresh-btn {
-        font-size: 12px;
-        padding: 4px 10px;
-        border-radius: 4px;
-        color: var(--text-secondary);
-        background-color: var(--background-tertiary);
-        border: 1px solid var(--border-color);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-      
-      .config-title .refresh-btn:hover {
-        color: var(--text-primary);
-        border-color: var(--border-color-hover);
-      }
-      
-      .refresh-icon {
-        width: 12px;
-        height: 12px;
-        stroke: currentColor;
-      }
+    .config-card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 4px 8px var(--shadow-color);
+    }
 
-      .config-content {
-        position: relative;
-        background: var(--background-tertiary);
-        border-radius: var(--border-radius);
-        padding: 16px;
-        margin-bottom: 20px;
-        border: 1px solid var(--border-color);
-      }
+    .config-title {
+      font-family: var(--aldine);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--accent-secondary);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-      .config-content pre {
-        overflow-x: auto;
-        font-family: var(--mono-serif);
-        font-size: 12px;
-        font-weight: 400;
-        line-height: 1.5;
-        color: var(--text-primary);
-        margin: 0;
-        white-space: pre-wrap;
-        word-break: break-all;
-        padding-right: 4em;
-      }
+    .config-title .refresh-btn {
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      background-color: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-      .attributes {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 18px;
-        margin-bottom: 16px;
-      }
+    .config-title .refresh-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-color-hover);
+    }
 
-      .attribute {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
+    .refresh-icon {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+    }
 
-      .attribute span {
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--text-secondary);
-      }
+    .config-content {
+      position: relative;
+      background: var(--background-tertiary);
+      border-radius: var(--border-radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
 
-      .attribute strong {
-        font-family: var(--aldine);
-        font-size: 16px;
-        font-weight: 400;
-        color: var(--accent-secondary);
-        word-break: break-all;
-      }
+    .config-content pre {
+      overflow-x: auto;
+      font-family: var(--mono-serif);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-primary);
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      padding-right: 4em;
+    }
 
-      .button {
-        display: inline-flex;
-        position: relative;
-        overflow: hidden;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 8px 16px;
-        border-radius: var(--border-radius);
-        font-style: normal;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        border: 1px solid var(--border-color);
-        background-color: var(--background-tertiary);
-        color: var(--button-text-secondary);
-        transition:
-          background-color var(--transition-speed) ease,
-          border-color var(--transition-speed) ease,
-          color var(--transition-speed) ease,
-          transform var(--transition-speed) ease,
-          box-shadow var(--transition-speed) ease;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-        text-decoration: none;
-        z-index: 1;
-      }
+    .attributes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 16px;
+    }
 
-      .button:focus-visible {
-        outline: 2px solid var(--accent-primary);
-        outline-offset: 2px;
-      }
+    .attribute {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
 
-      .button:disabled {
+    .attribute span {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .attribute strong {
+      font-family: var(--aldine);
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--accent-secondary);
+      word-break: break-all;
+    }
+
+    .button {
+      display: inline-flex;
+      position: relative;
+      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: var(--border-radius);
+      font-style: normal;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background-color: var(--background-tertiary);
+      color: var(--button-text-secondary);
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      text-decoration: none;
+      z-index: 1;
+    }
+
+    .button:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .button:not(.copy-buttons):not(.client-btn):hover {
+      background-color: #4d453e;
+      border-color: var(--border-color-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .button:not(.copy-buttons):not(.client-btn):active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: none;
+    }
+
+    .copy-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 6px 12px;
+      font-family: var(--aldine);
+      font-size: 12px;
+      font-weight: 600;
+      background-color: var(--background-tertiary);
+      color: var(--accent-secondary);
+
+      border-color: var(--border-color);
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    }
+
+    .copy-buttons::before,
+    .client-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform var(--transition-speed-long) ease;
+      z-index: -1;
+    }
+
+    .copy-buttons:hover::before,
+    .client-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .copy-buttons:hover {
+      background-color: #4d453e;
+      color: var(--accent-primary);
+      border-color: var(--border-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
+    }
+
+    .copy-buttons:active {
+      transform-origin: center;
+      transform: translateY(0px) scale(0.98);
+      transition: transform var(--transition-speed-fast) ease-in-out;
+      box-shadow: none;
+    }
+
+    .client-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .client-btn {
+      width: 100%;
+      background-color: var(--accent-primary);
+      color: var(--background-tertiary);
+      border-color: var(--accent-primary-darker);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .client-btn::before {
+      left: -100%;
+      transition: transform 0.6s ease;
+      z-index: 1;
+    }
+
+    .client-btn::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-tertiary), var(--accent-secondary));
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 0;
+    }
+
+    .client-btn:hover {
+      transform: translateY(-3px);
+      background-color: var(--accent-secondary);
+      color: var(--button-text-primary);
+      box-shadow: 0 5px 15px rgba(190, 155, 123, 0.5);
+      border-color: var(--accent-secondary);
+    }
+
+    .client-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .client-btn:hover::after {
+      opacity: 1;
+      bottom: 0;
+    }
+
+    .client-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+      background-color: var(--accent-primary-darker);
+    }
+
+    .client-btn .client-icon {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.3s ease;
+    }
+
+    .client-btn:hover .client-icon {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .client-btn .button-text {
+      position: relative;
+      z-index: 2;
+      transition: letter-spacing 0.3s ease;
+    }
+
+    .client-btn:hover .button-text {
+      letter-spacing: 0.5px;
+    }
+
+    .client-icon {
+      display: flex;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background-color: var(--background-secondary);
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .client-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      fill: var(--accent-secondary);
+    }
+
+    .button.copied {
+      background-color: var(--accent-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--background-tertiary) !important;
+    }
+
+    .button.error {
+      background-color: #c74a3b !important;
+      border-color: #a13b2f !important;
+      color: var(--text-accent) !important;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      padding-bottom: 40px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+
+    .footer p {
+      margin-bottom: 0px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--background-primary);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+      border: 2px solid var(--background-primary);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--border-color-hover);
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-color) var(--background-primary);
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-indicator-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .status-active .status-indicator-dot {
+      background-color: var(--status-success);
+      box-shadow: 0 0 5px 1px var(--status-success);
+    }
+
+    .status-inactive .status-indicator-dot {
+      background-color: var(--status-error);
+      box-shadow: 0 0 5px 1px var(--status-error);
+    }
+
+    .status-warning .status-indicator-dot {
+      background-color: var(--status-warning);
+      box-shadow: 0 0 5px 1px var(--status-warning);
+    }
+
+    @keyframes pulse {
+      0% {
         opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-        box-shadow: none;
-        transition: opacity var(--transition-speed) ease;
+        transform: scale(0.85);
       }
 
-      .button:not(.copy-buttons):not(.client-btn):hover {
-        background-color: #4d453e;
-        border-color: var(--border-color-hover);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px var(--shadow-color);
-      }
-
-      .button:not(.copy-buttons):not(.client-btn):active {
-        transform: translateY(0px) scale(0.98);
-        box-shadow: none;
-      }
-
-      .copy-buttons {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        padding: 6px 12px;
-        font-family: var(--aldine);
-        font-size: 12px;
-        font-weight: 600;
-        background-color: var(--background-tertiary);
-        color: var(--accent-secondary);
-
-        border-color: var(--border-color);
-        transition:
-          background-color var(--transition-speed) ease,
-          border-color var(--transition-speed) ease,
-          color var(--transition-speed) ease,
-          transform var(--transition-speed) ease,
-          box-shadow var(--transition-speed) ease;
-      }
-
-      .copy-buttons::before,
-      .client-btn::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transform: translateX(-100%);
-        transition: transform var(--transition-speed-long) ease;
-        z-index: -1;
-      }
-
-      .copy-buttons:hover::before,
-      .client-btn:hover::before {
-        transform: translateX(100%);
-      }
-
-      .copy-buttons:hover {
-        background-color: #4d453e;
-        color: var(--accent-primary);
-        border-color: var(--border-color-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px var(--shadow-color);
-      }
-
-      .copy-buttons:active {
-        transform-origin: center;
-        transform: translateY(0px) scale(0.98);
-        transition: transform var(--transition-speed-fast) ease-in-out;
-        box-shadow: none;
-      }
-
-      .client-buttons {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 12px;
-        margin-top: 16px;
-      }
-
-      .client-btn {
-        width: 100%;
-        background-color: var(--accent-primary);
-        color: var(--background-tertiary);
-        border-color: var(--accent-primary-darker);
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-      }
-
-      .client-btn::before {
-        left: -100%;
-        transition: transform 0.6s ease;
-        z-index: 1;
-      }
-
-      .client-btn::after {
-        content: "";
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 100%;
-        height: 5px;
-        background: linear-gradient(90deg, var(--accent-tertiary), var(--accent-secondary));
-        opacity: 0;
-        transition: all 0.3s ease;
-        z-index: 0;
-      }
-
-      .client-btn:hover {
-        transform: translateY(-3px);
-        background-color: var(--accent-secondary);
-        color: var(--button-text-primary);
-        box-shadow: 0 5px 15px rgba(190, 155, 123, 0.5);
-        border-color: var(--accent-secondary);
-      }
-
-      .client-btn:hover::before {
-        transform: translateX(100%);
-      }
-
-      .client-btn:hover::after {
+      50% {
         opacity: 1;
-        bottom: 0;
+        transform: scale(1);
       }
 
-      .client-btn:active {
-        transform: translateY(0) scale(0.98);
-        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-        background-color: var(--accent-primary-darker);
+      100% {
+        opacity: 0.6;
+        transform: scale(0.85);
+      }
+    }
+
+    .loading .status-indicator-dot {
+      background-color: var(--status-info);
+      box-shadow: 0 0 5px 1px var(--status-info);
+      animation: pulse 1.5s infinite;
+    }
+
+    a:focus,
+    button:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    /* New IP info section */
+    .ip-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 24px;
+    }
+
+    .ip-info-section {
+      background-color: var(--background-tertiary);
+      border-radius: var(--border-radius);
+      padding: 16px;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .ip-info-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .ip-info-header svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--accent-secondary);
+    }
+
+    .ip-info-header h3 {
+      font-family: var(--aldine);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--accent-secondary);
+      margin: 0;
+    }
+
+    .ip-info-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ip-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .ip-info-item .label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ip-info-item .value {
+      font-size: 14px;
+      color: var(--text-primary);
+      word-break: break-all;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-yes {
+      background-color: rgba(112, 181, 112, 0.15);
+      color: var(--status-success);
+      border: 1px solid rgba(112, 181, 112, 0.3);
+    }
+
+    .badge-no {
+      background-color: rgba(224, 93, 68, 0.15);
+      color: var(--status-error);
+      border: 1px solid rgba(224, 93, 68, 0.3);
+    }
+
+    .badge-neutral {
+      background-color: rgba(79, 144, 196, 0.15);
+      color: var(--status-info);
+      border: 1px solid rgba(79, 144, 196, 0.3);
+    }
+
+    .skeleton {
+      display: block;
+      background: linear-gradient(90deg, var(--background-tertiary) 25%, var(--background-secondary) 50%, var(--background-tertiary) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 4px;
+      height: 16px;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
       }
 
-      .client-btn .client-icon {
-        position: relative;
-        z-index: 2;
-        transition: transform 0.3s ease;
+      100% {
+        background-position: -200% 0;
       }
+    }
 
-      .client-btn:hover .client-icon {
-        transform: rotate(15deg) scale(1.1);
-      }
+    .country-flag {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-right: 5px;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
 
-      .client-btn .button-text {
-        position: relative;
-        z-index: 2;
-        transition: letter-spacing 0.3s ease;
-      }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
 
-      .client-btn:hover .button-text {
-        letter-spacing: 0.5px;
-      }
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 200px;
+      background-color: var(--background-secondary);
+      color: var(--text-primary);
+      text-align: center;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-      .client-icon {
-        display: flex;
-        width: 18px;
-        height: 18px;
-        border-radius: 6px;
-        background-color: var(--background-secondary);
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-      }
+    .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: var(--border-color) transparent transparent transparent;
+    }
 
-      .client-icon svg {
-        width: 14px;
-        height: 14px;
-        fill: currentColor;
-        fill: var(--accent-secondary);
-      }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
 
-      .button.copied {
-        background-color: var(--accent-secondary) !important;
-        border-color: var(--border-color) !important;
-        color: var(--background-tertiary) !important;
-      }
-
-      .button.error {
-        background-color: #c74a3b !important;
-        border-color: #a13b2f !important;
-        color: var(--text-accent) !important;
-      }
-
-      .footer {
-        text-align: center;
-        margin-top: 20px;
-        padding-bottom: 40px;
-        color: var(--text-secondary);
-        font-size: 12px;
-      }
-
-      .footer p {
-        margin-bottom: 0px;
-      }
-
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: var(--background-primary);
-        border-radius: 4px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: var(--border-color);
-        border-radius: 4px;
-        border: 2px solid var(--background-primary);
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--border-color-hover);
-      }
-
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: var(--border-color) var(--background-primary);
-      }
-
-      .status-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .status-indicator-dot {
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-      }
-
-      .status-active .status-indicator-dot {
-        background-color: var(--status-success);
-        box-shadow: 0 0 5px 1px var(--status-success);
-      }
-
-      .status-inactive .status-indicator-dot {
-        background-color: var(--status-error);
-        box-shadow: 0 0 5px 1px var(--status-error);
-      }
-      
-      .status-warning .status-indicator-dot {
-        background-color: var(--status-warning);
-        box-shadow: 0 0 5px 1px var(--status-warning);
-      }
-
-      @keyframes pulse {
-        0% {
-          opacity: 0.6;
-          transform: scale(0.85);
-        }
-
-        50% {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        100% {
-          opacity: 0.6;
-          transform: scale(0.85);
-        }
-      }
-
-      .loading .status-indicator-dot {
-        background-color: var(--status-info);
-        box-shadow: 0 0 5px 1px var(--status-info);
-        animation: pulse 1.5s infinite;
-      }
-
-      a:focus, button:focus {
-        outline: 2px solid var(--accent-primary);
-        outline-offset: 2px;
-      }
-      
-      /* New IP info section */
-      .ip-info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-        gap: 24px;
-      }
-      
-      .ip-info-section {
-        background-color: var(--background-tertiary);
-        border-radius: var(--border-radius);
-        padding: 16px;
-        border: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-      
-      .ip-info-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 10px;
-      }
-      
-      .ip-info-header svg {
-        width: 20px;
-        height: 20px;
-        stroke: var(--accent-secondary);
-      }
-      
-      .ip-info-header h3 {
-        font-family: var(--aldine);
-        font-size: 18px;
-        font-weight: 400;
-        color: var(--accent-secondary);
-        margin: 0;
-      }
-      
-      .ip-info-content {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      
-      .ip-info-item {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-      }
-      
-      .ip-info-item .label {
-        font-size: 11px;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      
-      .ip-info-item .value {
-        font-size: 14px;
-        color: var(--text-primary);
-        word-break: break-all;
-      }
-      
-      .badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3px 8px;
-        border-radius: 12px;
-        font-size: 11px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      
-      .badge-yes {
-        background-color: rgba(112, 181, 112, 0.15);
-        color: var(--status-success);
-        border: 1px solid rgba(112, 181, 112, 0.3);
-      }
-      
-      .badge-no {
-        background-color: rgba(224, 93, 68, 0.15);
-        color: var(--status-error);
-        border: 1px solid rgba(224, 93, 68, 0.3);
-      }
-      
-      .badge-neutral {
-        background-color: rgba(79, 144, 196, 0.15);
-        color: var(--status-info);
-        border: 1px solid rgba(79, 144, 196, 0.3);
-      }
-      
-      .skeleton {
-        display: block;
-        background: linear-gradient(90deg, var(--background-tertiary) 25%, var(--background-secondary) 50%, var(--background-tertiary) 75%);
-        background-size: 200% 100%;
-        animation: loading 1.5s infinite;
-        border-radius: 4px;
-        height: 16px;
-      }
-      
-      @keyframes loading {
-        0% {
-          background-position: 200% 0;
-        }
-        100% {
-          background-position: -200% 0;
-        }
-      }
-      
-      .country-flag {
-        display: inline-block;
-        width: 16px;
-        height: 16px;
-        margin-right: 5px;
-        border-radius: 2px;
-        vertical-align: middle;
-      }
-      
-      .tooltip {
-        position: relative;
-        display: inline-block;
-      }
-      
-      .tooltip .tooltip-text {
-        visibility: hidden;
-        width: 200px;
-        background-color: var(--background-secondary);
-        color: var(--text-primary);
-        text-align: center;
-        border-radius: 6px;
-        padding: 8px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -100px;
-        opacity: 0;
-        transition: opacity 0.3s;
-        font-size: 12px;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-      
-      .tooltip .tooltip-text::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        margin-left: -5px;
-        border-width: 5px;
-        border-style: solid;
-        border-color: var(--border-color) transparent transparent transparent;
-      }
-      
-      .tooltip:hover .tooltip-text {
-        visibility: visible;
-        opacity: 1;
-      }
-      
-      .help-icon {
-        display: inline-flex;
-        width: 14px;
-        height: 14px;
-        background-color: var(--background-tertiary);
-        border: 1px solid var(--border-color);
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        color: var(--text-secondary);
-        margin-left: 4px;
-        cursor: help;
-      }
+    .help-icon {
+      display: inline-flex;
+      width: 14px;
+      height: 14px;
+      background-color: var(--background-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-left: 4px;
+      cursor: help;
+    }
 
     @media (max-width: 768px) {
       body { padding: 20px; }
@@ -766,494 +772,492 @@
     @media (min-width: 768px) { .container { max-width: 720px; } }
     @media (min-width: 1024px) { .container { max-width: 800px; } }
 
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1>VLESS Proxy Configuration</h1>
-        <p>Copy the configuration or import directly into your client</p>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>VLESS Proxy Configuration</h1>
+      <p>Copy the configuration or import directly into your client</p>
+    </div>
+
+    <!-- Enhanced Proxy Info Card -->
+    <div class="config-card">
+      <div class="config-title">
+        <span>Network Information</span>
+        <button id="refresh-ip-info" class="refresh-btn" aria-label="Refresh IP information">
+          <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+          </svg>
+          Refresh
+        </button>
       </div>
-      
-      <!-- Enhanced Proxy Info Card -->
-      <div class="config-card">
-        <div class="config-title">
-          <span>Network Information</span>
-          <button id="refresh-ip-info" class="refresh-btn" aria-label="Refresh IP information">
-            <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+
+      <div class="ip-info-grid">
+        <!-- Proxy Server Info -->
+        <div class="ip-info-section">
+          <div class="ip-info-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
-            Refresh
-          </button>
-        </div>
-        
-        <div class="ip-info-grid">
-          <!-- Proxy Server Info -->
-          <div class="ip-info-section">
-            <div class="ip-info-header">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-              <h3>Proxy Server</h3>
-            </div>
-            <div class="ip-info-content">
-              <div class="ip-info-item">
-                <div class="label">Proxy IP/Host</div>
-                <div id="proxy-ip" class="value">
-                  <span class="skeleton" style="width: 140px;"></span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">Status</div>
-                <div id="proxy-status" class="value status-indicator loading">
-                  <span class="status-indicator-dot"></span>
-                  <span>Checking...</span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">Last Updated</div>
-                <div id="last-updated" class="value">
-                  <span class="skeleton" style="width: 160px;"></span>
-                </div>
-              </div>
-            </div>
+            <h3>Proxy Server</h3>
           </div>
-          
-          <!-- Your IP Info -->
-          <div class="ip-info-section">
-            <div class="ip-info-header">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
-                <path d="M12 2a10 10 0 0 1 10 10h-10V2z"></path>
-                <path d="M12 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
-                <path d="M12 17a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
-                <path d="M20 17a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
-              </svg>
-              <h3>Your Connection</h3>
-            </div>
-            <div class="ip-info-content">
-              <div class="ip-info-item">
-                <div class="label">Public IP</div>
-                <div id="user-ip" class="value">
-                  <span class="skeleton" style="width: 120px;"></span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">Location</div>
-                <div id="user-location" class="value">
-                  <span class="skeleton" style="width: 140px;"></span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">ISP</div>
-                <div id="user-isp" class="value">
-                  <span class="skeleton" style="width: 150px;"></span>
-                </div>
+          <div class="ip-info-content">
+            <div class="ip-info-item">
+              <div class="label">Proxy IP/Host</div>
+              <div id="proxy-ip" class="value">
+                <span class="skeleton" style="width: 140px;"></span>
               </div>
             </div>
-          </div>
-          
-          <!-- Connection Security -->
-          <div class="ip-info-section">
-            <div class="ip-info-header">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-              </svg>
-              <h3>Security Info</h3>
+            <div class="ip-info-item">
+              <div class="label">Status</div>
+              <div id="proxy-status" class="value status-indicator loading">
+                <span class="status-indicator-dot"></span>
+                <span>Checking...</span>
+              </div>
             </div>
-            <div class="ip-info-content">
-              <div class="ip-info-item">
-                <div class="label">
-                  Using Proxy
-                  <span class="help-icon tooltip">?
-                    <span class="tooltip-text">Indicates whether you're currently accessing this page through a proxy connection.</span>
-                  </span>
-                </div>
-                <div id="using-proxy" class="value">
-                  <span class="skeleton" style="width: 60px;"></span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">Hosting Provider</div>
-                <div id="hosting-provider" class="value">
-                  <span class="skeleton" style="width: 100px;"></span>
-                </div>
-              </div>
-              <div class="ip-info-item">
-                <div class="label">Reverse DNS</div>
-                <div id="reverse-dns" class="value">
-                  <span class="skeleton" style="width: 140px;"></span>
-                </div>
+            <div class="ip-info-item">
+              <div class="label">Last Updated</div>
+              <div id="last-updated" class="value">
+                <span class="skeleton" style="width: 160px;"></span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- Proxy Info Card -->
-      <div class="config-card">
-        <div class="config-title">Proxy Information</div>
-        <div class="attributes">
-          <div class="attribute">
-            <span>Proxy IP / Host:</span>
-            <strong id="proxy-ip-display">{{PROXY_IP}}</strong>
-          </div>
-          <div class="attribute">
-            <span>Status:</span>
-            <strong>
-              <div class="status-indicator status-active">
-                <span class="status-indicator-dot" aria-hidden="true"></span>
-                <span id="proxy-status-display">Active</span>
-              </div>
-            </strong>
-          </div>
-          <div class="attribute">
-            <span>Last Updated:</span>
-            <strong id="last-updated-display">{{LAST_UPDATED}}</strong>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Xray Core Clients -->
-      <div class="config-card">
-        <div class="config-title">Xray Core Clients</div>
-        <div class="config-content">
-          <button
-            class="button copy-buttons"
-            onclick="copyToClipboard(this, '{{DREAM_CONFIG}}')"
-            aria-label="Copy Xray Core configuration">
-            Copy
-          </button>
-          <pre id="xray-config">{{DREAM_CONFIG}}</pre>
-        </div>
-        <div class="client-buttons">
-          <!-- Hiddify -->
-          
-            href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}"
-            class="button client-btn"
-            aria-label="Import configuration to Hiddify client">
-            <span class="client-icon">
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <!-- Hiddify Logo - Stylized H with Shield -->
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              </svg>
-            </span>
-            <span class="button-text">Import to Hiddify</span>
-          </a>
 
-          <!-- V2rayNG -->
-          
-            href="v2rayng://install-config?url={{DREAM_CONFIG_ENCODED}}"
-            class="button client-btn"
-            aria-label="Import configuration to V2rayNG client">
-            <span class="client-icon">
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <!-- V2rayNG Logo - V2 with Network -->
-                <path d="M12 2L4 5v6c0 5.5 3.5 10.7 8 12.3 4.5-1.6 8-6.8 8-12.3V5l-8-3z" />
-              </svg>
-            </span>
-            <span class="button-text">Import to V2rayNG</span>
-          </a>
+        <!-- Your IP Info -->
+        <div class="ip-info-section">
+          <div class="ip-info-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+              <path d="M12 2a10 10 0 0 1 10 10h-10V2z"></path>
+              <path d="M12 9.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
+              <path d="M12 17a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
+              <path d="M20 17a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path>
+            </svg>
+            <h3>Your Connection</h3>
+          </div>
+          <div class="ip-info-content">
+            <div class="ip-info-item">
+              <div class="label">Public IP</div>
+              <div id="user-ip" class="value">
+                <span class="skeleton" style="width: 120px;"></span>
+              </div>
+            </div>
+            <div class="ip-info-item">
+              <div class="label">Location</div>
+              <div id="user-location" class="value">
+                <span class="skeleton" style="width: 140px;"></span>
+              </div>
+            </div>
+            <div class="ip-info-item">
+              <div class="label">ISP</div>
+              <div id="user-isp" class="value">
+                <span class="skeleton" style="width: 150px;"></span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <!-- Sing-Box Core Clients -->
-      <div class="config-card">
-        <div class="config-title">Sing-Box Core Clients</div>
-        <div class="config-content">
-          <button
-            class="button copy-buttons"
-            onclick="copyToClipboard(this, '{{FREEDOM_CONFIG}}')"
-            aria-label="Copy Sing-Box configuration">
-            Copy
-          </button>
-          <pre id="singbox-config">{{FREEDOM_CONFIG}}</pre>
+        <!-- Connection Security -->
+        <div class="ip-info-section">
+          <div class="ip-info-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <h3>Security Info</h3>
+          </div>
+          <div class="ip-info-content">
+            <div class="ip-info-item">
+              <div class="label">
+                Using Proxy
+                <span class="help-icon tooltip">?
+                  <span class="tooltip-text">Indicates whether you're currently accessing this page through a proxy
+                    connection.</span>
+                </span>
+              </div>
+              <div id="using-proxy" class="value">
+                <span class="skeleton" style="width: 60px;"></span>
+              </div>
+            </div>
+            <div class="ip-info-item">
+              <div class="label">Hosting Provider</div>
+              <div id="hosting-provider" class="value">
+                <span class="skeleton" style="width: 100px;"></span>
+              </div>
+            </div>
+            <div class="ip-info-item">
+              <div class="label">Reverse DNS</div>
+              <div id="reverse-dns" class="value">
+                <span class="skeleton" style="width: 140px;"></span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="client-buttons">
-          <!-- Clash Meta -->
-          <a href="{{CLASH_META_URL}}" class="button client-btn">
-            <span class="client-icon">
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <!-- Clash Meta Logo - Stylized C with network nodes -->
-                <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
-              </svg>
-            </span>
-            <span class="button-text">Import to Clash Meta</span>
-          </a>
-
-          <!-- NekoBox -->
-          <a href="{{NEKOBOX_URL}}" class="button client-btn" aria-label="Import configuration to NekoBox client">
-            <span class="client-icon">
-              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <!-- NekoBox Logo - Cat/Box stylized -->
-                <path
-                  d="M20,8h-3V6c0-1.1-0.9-2-2-2H9C7.9,4,7,4.9,7,6v2H4C2.9,8,2,8.9,2,10v9c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2v-9 C22,8.9,21.1,8,20,8z M9,6h6v2H9V6z M20,19H4v-2h16V19z M20,15H4v-5h3v1c0,0.55,0.45,1,1,1h1.5c0.28,0,0.5-0.22,0.5-0.5v-0.5h4v0.5 c0,0.28,0.22,0.5,0.5,0.5H16c0.55,0,1-0.45,1-1v-1h3V15z" />
-                <circle cx="8.5" cy="13.5" r="1" />
-                <circle cx="15.5" cy="13.5" r="1" />
-                <path d="M12,15.5c-0.55,0-1-0.45-1-1h2C13,15.05,12.55,15.5,12,15.5z" />
-              </svg>
-            </span>
-            <span class="button-text">Import to NekoBox</span>
-          </a>
-        </div>
-      </div>
-      
-      <div class="footer">
-        <p>© <span id="current-year">{{YEAR}}</span> REvil - All Rights Reserved</p>
-        <p>Secure. Private. Fast.</p>
       </div>
     </div>
-    
-    <script>
-      // Function to copy content to clipboard
-      function copyToClipboard(button, text) {
-        const originalText = button.textContent;
-        const isClientBtn = button.classList.contains("client-btn");
-        const originalIconHTML = isClientBtn ? button.querySelector(".client-icon")?.innerHTML : null;
 
-        button.disabled = true;
-        button.classList.remove("copied", "error");
+    <!-- Proxy Info Card -->
+    <div class="config-card">
+      <div class="config-title">Proxy Information</div>
+      <div class="attributes">
+        <div class="attribute">
+          <span>Proxy IP / Host:</span>
+          <strong id="proxy-ip-display">{{PROXY_IP}}</strong>
+        </div>
+        <div class="attribute">
+          <span>Status:</span>
+          <strong>
+            <div class="status-indicator status-active">
+              <span class="status-indicator-dot" aria-hidden="true"></span>
+              <span id="proxy-status-display">Active</span>
+            </div>
+          </strong>
+        </div>
+        <div class="attribute">
+          <span>Last Updated:</span>
+          <strong id="last-updated-display">{{LAST_UPDATED}}</strong>
+        </div>
+      </div>
+    </div>
 
-        if (isClientBtn && button.querySelector(".client-icon")) {
-          button.querySelector(".client-icon").style.display = "none";
-        }
-        if (isClientBtn && button.querySelector(".button-text")) {
-          button.querySelector(".button-text").style.fontWeight = "500";
-        }
+    <!-- Xray Core Clients -->
+    <div class="config-card">
+      <div class="config-title">Xray Core Clients</div>
+      <div class="config-content">
+        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{DREAM_CONFIG}}')"
+          aria-label="Copy Xray Core configuration">
+          Copy
+        </button>
+        <pre id="xray-config">{{DREAM_CONFIG}}</pre>
+      </div>
+      <div class="client-buttons">
+        <!-- Hiddify -->
+        <a href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}" class="button client-btn"
+          aria-label="Import configuration to Hiddify client">
+          <span class="client-icon">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <!-- Hiddify Logo - Stylized H with Shield -->
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+            </svg>
+          </span>
+          <span class="button-text">Import to Hiddify</span>
+          </a>
+          
+          <!-- V2rayNG -->
+          <a href="v2rayng://install-config?url={{DREAM_CONFIG_ENCODED}}"
+          class="button client-btn"
+          aria-label="Import configuration to V2rayNG client">
+          <span class="client-icon">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <!-- V2rayNG Logo - V2 with Network -->
+              <path d="M12 2L4 5v6c0 5.5 3.5 10.7 8 12.3 4.5-1.6 8-6.8 8-12.3V5l-8-3z" />
+            </svg>
+          </span>
+          <span class="button-text">Import to V2rayNG</span>
+          </a>
+        </div>
+      </div>
 
-        navigator.clipboard
-          .writeText(text)
-          .then(() => {
-            button.textContent = "Copied!";
-            button.classList.add("copied");
+    <!-- Sing-Box Core Clients -->
+    <div class="config-card">
+      <div class="config-title">Sing-Box Core Clients</div>
+      <div class="config-content">
+        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{FREEDOM_CONFIG}}')"
+          aria-label="Copy Sing-Box configuration">
+          Copy
+        </button>
+        <pre id="singbox-config">{{FREEDOM_CONFIG}}</pre>
+      </div>
+      <div class="client-buttons">
+        <!-- Clash Meta -->
+        <a href="{{CLASH_META_URL}}" class="button client-btn">
+          <span class="client-icon">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <!-- Clash Meta Logo - Stylized C with network nodes -->
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+            </svg>
+          </span>
+          <span class="button-text">Import to Clash Meta</span>
+        </a>
 
-            setTimeout(() => {
-              if (isClientBtn && originalIconHTML) {
-                const textSpan = button.querySelector(".button-text") || document.createElement("span");
-                textSpan.className = "button-text";
-                textSpan.textContent = originalText;
+        <!-- NekoBox -->
+        <a href="{{NEKOBOX_URL}}" class="button client-btn" aria-label="Import configuration to NekoBox client">
+          <span class="client-icon">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <!-- NekoBox Logo - Cat/Box stylized -->
+              <path
+                d="M20,8h-3V6c0-1.1-0.9-2-2-2H9C7.9,4,7,4.9,7,6v2H4C2.9,8,2,8.9,2,10v9c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2v-9 C22,8.9,21.1,8,20,8z M9,6h6v2H9V6z M20,19H4v-2h16V19z M20,15H4v-5h3v1c0,0.55,0.45,1,1,1h1.5c0.28,0,0.5-0.22,0.5-0.5v-0.5h4v0.5 c0,0.28,0.22,0.5,0.5,0.5H16c0.55,0,1-0.45,1-1v-1h3V15z" />
+              <circle cx="8.5" cy="13.5" r="1" />
+              <circle cx="15.5" cy="13.5" r="1" />
+              <path d="M12,15.5c-0.55,0-1-0.45-1-1h2C13,15.05,12.55,15.5,12,15.5z" />
+            </svg>
+          </span>
+          <span class="button-text">Import to NekoBox</span>
+        </a>
+      </div>
+    </div>
 
-                const iconSpan = document.createElement("span");
-                iconSpan.className = "client-icon";
-                iconSpan.innerHTML = originalIconHTML;
-                iconSpan.style.display = "";
+    <div class="footer">
+      <p>© <span id="current-year">{{YEAR}}</span> REvil - All Rights Reserved</p>
+      <p>Secure. Private. Fast.</p>
+    </div>
+  </div>
 
-                button.innerHTML = "";
-                button.appendChild(iconSpan);
-                button.appendChild(textSpan);
-              } else {
-                button.textContent = originalText;
-              }
-              button.classList.remove("copied");
-              button.disabled = false;
-              if (isClientBtn && button.querySelector(".button-text")) {
-                button.querySelector(".button-text").style.fontWeight = "";
-              }
-            }, 1200);
-          })
-          .catch((err) => {
-            console.error("Failed to copy text: ", err);
-            button.textContent = "Error";
-            button.classList.add("error");
+  <script>
+    // Function to copy content to clipboard
+    function copyToClipboard(button, text) {
+      const originalText = button.textContent;
+      const isClientBtn = button.classList.contains("client-btn");
+      const originalIconHTML = isClientBtn ? button.querySelector(".client-icon")?.innerHTML : null;
 
-            setTimeout(() => {
-              if (isClientBtn && originalIconHTML) {
-                const textSpan = button.querySelector(".button-text") || document.createElement("span");
-                textSpan.className = "button-text";
-                textSpan.textContent = originalText;
+      button.disabled = true;
+      button.classList.remove("copied", "error");
 
-                const iconSpan = document.createElement("span");
-                iconSpan.className = "client-icon";
-                iconSpan.innerHTML = originalIconHTML;
-                iconSpan.style.display = "";
-
-                button.innerHTML = "";
-                button.appendChild(iconSpan);
-                button.appendChild(textSpan);
-              } else {
-                button.textContent = originalText;
-              }
-              button.classList.remove("error");
-              button.disabled = false;
-              if (isClientBtn && button.querySelector(".button-text")) {
-                button.querySelector(".button-text").style.fontWeight = "";
-              }
-            }, 1500);
-          });
+      if (isClientBtn && button.querySelector(".client-icon")) {
+        button.querySelector(".client-icon").style.display = "none";
       }
-      
-      // Format date and time
-      function formatDateTime(date) {
-        return date.toLocaleString("en-US", {
-          month: "long",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-          hour12: false
+      if (isClientBtn && button.querySelector(".button-text")) {
+        button.querySelector(".button-text").style.fontWeight = "500";
+      }
+
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          button.textContent = "Copied!";
+          button.classList.add("copied");
+
+          setTimeout(() => {
+            if (isClientBtn && originalIconHTML) {
+              const textSpan = button.querySelector(".button-text") || document.createElement("span");
+              textSpan.className = "button-text";
+              textSpan.textContent = originalText;
+
+              const iconSpan = document.createElement("span");
+              iconSpan.className = "client-icon";
+              iconSpan.innerHTML = originalIconHTML;
+              iconSpan.style.display = "";
+
+              button.innerHTML = "";
+              button.appendChild(iconSpan);
+              button.appendChild(textSpan);
+            } else {
+              button.textContent = originalText;
+            }
+            button.classList.remove("copied");
+            button.disabled = false;
+            if (isClientBtn && button.querySelector(".button-text")) {
+              button.querySelector(".button-text").style.fontWeight = "";
+            }
+          }, 1200);
+        })
+        .catch((err) => {
+          console.error("Failed to copy text: ", err);
+          button.textContent = "Error";
+          button.classList.add("error");
+
+          setTimeout(() => {
+            if (isClientBtn && originalIconHTML) {
+              const textSpan = button.querySelector(".button-text") || document.createElement("span");
+              textSpan.className = "button-text";
+              textSpan.textContent = originalText;
+
+              const iconSpan = document.createElement("span");
+              iconSpan.className = "client-icon";
+              iconSpan.innerHTML = originalIconHTML;
+              iconSpan.style.display = "";
+
+              button.innerHTML = "";
+              button.appendChild(iconSpan);
+              button.appendChild(textSpan);
+            } else {
+              button.textContent = originalText;
+            }
+            button.classList.remove("error");
+            button.disabled = false;
+            if (isClientBtn && button.querySelector(".button-text")) {
+              button.querySelector(".button-text").style.fontWeight = "";
+            }
+          }, 1500);
         });
-      }
-      
-      // Get country flag emoji
-      function getFlagEmoji(countryCode) {
-        if (!countryCode) return '';
-        const codePoints = countryCode
-          .toUpperCase()
-          .split('')
-          .map(char => 127397 + char.charCodeAt());
-        return String.fromCodePoint(...codePoints);
-      }
-      
-      // Fetch IP information from API
-      async function fetchIPInfo(ipAddress = '') {
-        let apiUrl = 'https://ip-api.com/json';
-        
-        if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
-          apiUrl += `/${ipAddress}`;
-        }
-        
-        apiUrl += '?fields=country,city,isp,reverse,hosting,query,countryCode';
-        
-        try {
-          const response = await fetch(apiUrl);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return await response.json();
-        } catch (error) {
-          console.error('Error fetching IP data:', error);
-          return null;
-        }
-      }
-      
-      // Update the IP info sections with fetched data
-      function updateIPInfoDisplay(data, section) {
-        if (!data) {
-          if (section === 'user') {
-            document.getElementById('user-ip').innerHTML = 'Failed to load';
-            document.getElementById('user-location').innerHTML = 'Failed to load';
-            document.getElementById('user-isp').innerHTML = 'Failed to load';
-          } else {
-            document.getElementById('proxy-ip').innerHTML = 'Failed to load';
-            document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Unavailable';
-            document.getElementById('proxy-status').className = 'value status-indicator status-inactive';
-          }
-          return;
-        }
-        
-        const currentTime = formatDateTime(new Date());
-        
-        if (section === 'user') {
-          document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
-          
-          const locationHtml = data.countryCode ? 
-            `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country} flag"> ${data.city || ''}, ${data.country || 'Unknown'}` :
-            'Unknown';
-          document.getElementById('user-location').innerHTML = locationHtml;
-          
-          document.getElementById('user-isp').innerHTML = data.isp || 'Unknown';
-          document.getElementById('using-proxy').innerHTML = data.hosting ? 
-            '<span class="badge badge-yes">YES</span>' : 
-            '<span class="badge badge-no">NO</span>';
-          document.getElementById('hosting-provider').innerHTML = data.hosting ? 
-            '<span class="badge badge-neutral">YES</span>' : 
-            '<span class="badge badge-no">NO</span>';
-          document.getElementById('reverse-dns').innerHTML = data.reverse || 'No reverse DNS record';
-        } else {
-          const proxyIP = '{{PROXY_IP}}';
-          document.getElementById('proxy-ip').innerHTML = proxyIP === '{{PROXY_IP}}' ? 'Not configured' : proxyIP;
-          document.getElementById('last-updated').innerHTML = currentTime;
-          
-          const proxyStatus = data && data.query ? 'status-active' : 'status-inactive';
-          const statusText = data && data.query ? 'Active' : 'Inactive';
-          document.getElementById('proxy-status').className = `value status-indicator ${proxyStatus}`;
-          document.getElementById('proxy-status').innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
-          
-          // Update the original proxy display section too
-          document.getElementById('proxy-status-display').textContent = statusText;
-          document.querySelector('.status-indicator').className = `status-indicator ${proxyStatus}`;
-        }
-        
-        // Update both last-updated displays
-        document.getElementById('last-updated-display').textContent = currentTime;
-      }
-      
-      // Initialize the proxy data and fetch IP information
-      async function initializeData() {
-        const currentYear = new Date().getFullYear();
-        document.getElementById('current-year').textContent = currentYear;
-        
-        // Get the proxy IP from template variable or use a default value for testing
-        const proxyIP = '{{PROXY_IP}}';
-        if (proxyIP !== '{{PROXY_IP}}') {
-          document.getElementById('proxy-ip-display').textContent = proxyIP;
-        }
-        
-        // Set initial loading state
-        document.getElementById('proxy-status').className = 'value status-indicator loading';
-        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
-        
-        // Fetch user's IP information
-        const userIPData = await fetchIPInfo();
-        updateIPInfoDisplay(userIPData, 'user');
-        
-        // Fetch proxy IP information if available
-        if (proxyIP !== '{{PROXY_IP}}') {
-          const proxyIPData = await fetchIPInfo(proxyIP);
-          updateIPInfoDisplay(proxyIPData, 'proxy');
-        } else {
-          // If no proxy IP is configured
-          document.getElementById('proxy-ip').innerHTML = 'Not configured';
-          document.getElementById('proxy-status').className = 'value status-indicator status-warning';
-          document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
-          
-          // Update the original display too
-          document.getElementById('proxy-status-display').textContent = 'Not configured';
-          document.querySelector('.status-indicator').className = 'status-indicator status-warning';
-        }
-        
-        const dateTime = formatDateTime(new Date());
-        document.getElementById('last-updated').innerHTML = dateTime;
-        document.getElementById('last-updated-display').textContent = dateTime;
-      }
-      
-      // Refresh IP information
-      async function refreshIPInfo() {
-        // Reset to loading state
-        document.getElementById('user-ip').innerHTML = '<span class="skeleton" style="width: 120px;"></span>';
-        document.getElementById('user-location').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
-        document.getElementById('user-isp').innerHTML = '<span class="skeleton" style="width: 150px;"></span>';
-        document.getElementById('using-proxy').innerHTML = '<span class="skeleton" style="width: 60px;"></span>';
-        document.getElementById('hosting-provider').innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
-        document.getElementById('reverse-dns').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
-        
-        document.getElementById('proxy-ip').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
-        document.getElementById('proxy-status').className = 'value status-indicator loading';
-        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
-        
-        // Fetch updated data
-        const userIPData = await fetchIPInfo();
-        updateIPInfoDisplay(userIPData, 'user');
-        
-        const proxyIP = '{{PROXY_IP}}';
-        if (proxyIP !== '{{PROXY_IP}}') {
-          const proxyIPData = await fetchIPInfo(proxyIP);
-          updateIPInfoDisplay(proxyIPData, 'proxy');
-        } else {
-          document.getElementById('proxy-ip').innerHTML = 'Not configured';
-          document.getElementById('proxy-status').className = 'value status-indicator status-warning';
-          document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
-        }
-      }
-      
-      // Set up event listeners
-      document.addEventListener('DOMContentLoaded', function() {
-        initializeData();
-        
-        // Add event listener for refresh button
-        document.getElementById('refresh-ip-info').addEventListener('click', refreshIPInfo);
+    }
+
+    // Format date and time
+    function formatDateTime(date) {
+      return date.toLocaleString("en-US", {
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        hour12: false
       });
-    </script>
-  </body>
+    }
+
+    // Get country flag emoji
+    function getFlagEmoji(countryCode) {
+      if (!countryCode) return '';
+      const codePoints = countryCode
+        .toUpperCase()
+        .split('')
+        .map(char => 127397 + char.charCodeAt());
+      return String.fromCodePoint(...codePoints);
+    }
+
+    // Fetch IP information from API
+    async function fetchIPInfo(ipAddress = '') {
+      let apiUrl = 'https://ip-api.com/json';
+
+      if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
+        apiUrl += `/${ipAddress}`;
+      }
+
+      apiUrl += '?fields=country,city,isp,reverse,hosting,query,countryCode';
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching IP data:', error);
+        return null;
+      }
+    }
+
+    // Update the IP info sections with fetched data
+    function updateIPInfoDisplay(data, section) {
+      if (!data) {
+        if (section === 'user') {
+          document.getElementById('user-ip').innerHTML = 'Failed to load';
+          document.getElementById('user-location').innerHTML = 'Failed to load';
+          document.getElementById('user-isp').innerHTML = 'Failed to load';
+        } else {
+          document.getElementById('proxy-ip').innerHTML = 'Failed to load';
+          document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Unavailable';
+          document.getElementById('proxy-status').className = 'value status-indicator status-inactive';
+        }
+        return;
+      }
+
+      const currentTime = formatDateTime(new Date());
+
+      if (section === 'user') {
+        document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
+
+        const locationHtml = data.countryCode ?
+          `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country} flag"> ${data.city || ''}, ${data.country || 'Unknown'}` :
+          'Unknown';
+        document.getElementById('user-location').innerHTML = locationHtml;
+
+        document.getElementById('user-isp').innerHTML = data.isp || 'Unknown';
+        document.getElementById('using-proxy').innerHTML = data.hosting ?
+          '<span class="badge badge-yes">YES</span>' :
+          '<span class="badge badge-no">NO</span>';
+        document.getElementById('hosting-provider').innerHTML = data.hosting ?
+          '<span class="badge badge-neutral">YES</span>' :
+          '<span class="badge badge-no">NO</span>';
+        document.getElementById('reverse-dns').innerHTML = data.reverse || 'No reverse DNS record';
+      } else {
+        const proxyIP = '{{PROXY_IP}}';
+        document.getElementById('proxy-ip').innerHTML = proxyIP === '{{PROXY_IP}}' ? 'Not configured' : proxyIP;
+        document.getElementById('last-updated').innerHTML = currentTime;
+
+        const proxyStatus = data && data.query ? 'status-active' : 'status-inactive';
+        const statusText = data && data.query ? 'Active' : 'Inactive';
+        document.getElementById('proxy-status').className = `value status-indicator ${proxyStatus}`;
+        document.getElementById('proxy-status').innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
+
+        // Update the original proxy display section too
+        document.getElementById('proxy-status-display').textContent = statusText;
+        document.querySelector('.status-indicator').className = `status-indicator ${proxyStatus}`;
+      }
+
+      // Update both last-updated displays
+      document.getElementById('last-updated-display').textContent = currentTime;
+    }
+
+    // Initialize the proxy data and fetch IP information
+    async function initializeData() {
+      const currentYear = new Date().getFullYear();
+      document.getElementById('current-year').textContent = currentYear;
+
+      // Get the proxy IP from template variable or use a default value for testing
+      const proxyIP = '{{PROXY_IP}}';
+      if (proxyIP !== '{{PROXY_IP}}') {
+        document.getElementById('proxy-ip-display').textContent = proxyIP;
+      }
+
+      // Set initial loading state
+      document.getElementById('proxy-status').className = 'value status-indicator loading';
+      document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
+
+      // Fetch user's IP information
+      const userIPData = await fetchIPInfo();
+      updateIPInfoDisplay(userIPData, 'user');
+
+      // Fetch proxy IP information if available
+      if (proxyIP !== '{{PROXY_IP}}') {
+        const proxyIPData = await fetchIPInfo(proxyIP);
+        updateIPInfoDisplay(proxyIPData, 'proxy');
+      } else {
+        // If no proxy IP is configured
+        document.getElementById('proxy-ip').innerHTML = 'Not configured';
+        document.getElementById('proxy-status').className = 'value status-indicator status-warning';
+        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
+
+        // Update the original display too
+        document.getElementById('proxy-status-display').textContent = 'Not configured';
+        document.querySelector('.status-indicator').className = 'status-indicator status-warning';
+      }
+
+      const dateTime = formatDateTime(new Date());
+      document.getElementById('last-updated').innerHTML = dateTime;
+      document.getElementById('last-updated-display').textContent = dateTime;
+    }
+
+    // Refresh IP information
+    async function refreshIPInfo() {
+      // Reset to loading state
+      document.getElementById('user-ip').innerHTML = '<span class="skeleton" style="width: 120px;"></span>';
+      document.getElementById('user-location').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
+      document.getElementById('user-isp').innerHTML = '<span class="skeleton" style="width: 150px;"></span>';
+      document.getElementById('using-proxy').innerHTML = '<span class="skeleton" style="width: 60px;"></span>';
+      document.getElementById('hosting-provider').innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
+      document.getElementById('reverse-dns').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
+
+      document.getElementById('proxy-ip').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
+      document.getElementById('proxy-status').className = 'value status-indicator loading';
+      document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
+
+      // Fetch updated data
+      const userIPData = await fetchIPInfo();
+      updateIPInfoDisplay(userIPData, 'user');
+
+      const proxyIP = '{{PROXY_IP}}';
+      if (proxyIP !== '{{PROXY_IP}}') {
+        const proxyIPData = await fetchIPInfo(proxyIP);
+        updateIPInfoDisplay(proxyIPData, 'proxy');
+      } else {
+        document.getElementById('proxy-ip').innerHTML = 'Not configured';
+        document.getElementById('proxy-status').className = 'value status-indicator status-warning';
+        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
+      }
+    }
+
+    // Set up event listeners
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeData();
+
+      // Add event listener for refresh button
+      document.getElementById('refresh-ip-info').addEventListener('click', refreshIPInfo);
+    });
+  </script>
+</body>
 </html>
