@@ -774,6 +774,7 @@
 
   </style>
 </head>
+<!-- The Worker will inject data-proxy-ip="YOUR_PROXY_IP" here -->
 <body>
   <div class="container">
     <div class="header">
@@ -913,7 +914,7 @@
         <div class="attribute">
           <span>Status:</span>
           <strong>
-            <div class="status-indicator status-active">
+            <div class="status-indicator status-active" id="proxy-info-status-indicator">
               <span class="status-indicator-dot" aria-hidden="true"></span>
               <span id="proxy-status-display">Active</span>
             </div>
@@ -1099,7 +1100,7 @@
       });
     }
 
-    // Get country flag emoji
+    // Get country flag emoji (Not used directly in current IP info, but kept for potential future use)
     function getFlagEmoji(countryCode) {
       if (!countryCode) return '';
       const codePoints = countryCode
@@ -1113,142 +1114,202 @@
     async function fetchIPInfo(ipAddress = '') {
       let apiUrl = 'https://ip-api.com/json';
 
+      // IMPORTANT: We need to check if ipAddress is the placeholder string.
+      // The Worker should replace the data-proxy-ip attribute.
+      // If ipAddress is still '{{PROXY_IP}}', it means it wasn't replaced or is not a valid IP for query.
       if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
         apiUrl += `/${ipAddress}`;
+      } else if (ipAddress === "{{PROXY_IP}}") {
+        // If it's the placeholder, don't append it to the URL,
+        // so fetchIPInfo() without a valid IP will effectively fetch the user's IP.
+        // Or, we can explicitly return null or an error for the proxy section later.
+        // For now, let it fetch user's IP if placeholder is passed,
+        // and handle display logic in updateIPInfoDisplay.
       }
 
-      apiUrl += '?fields=country,city,isp,reverse,hosting,query,countryCode';
+
+      apiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query'; // Added status and message for error handling
 
       try {
         const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        const data = await response.json();
+        if (!response.ok || data.status === 'fail') {
+          console.error('IP-API Error:', data.message || 'Network response was not ok for ' + (ipAddress || 'user IP'));
+          return { query: ipAddress || 'Error', error: data.message || 'Failed to fetch' }; // Return an object indicating error
         }
-        return await response.json();
+        return data;
       } catch (error) {
-        console.error('Error fetching IP data:', error);
-        return null;
+        console.error('Error fetching IP data for ' + (ipAddress || 'user IP') + ':', error);
+        return { query: ipAddress || 'Error', error: 'Network error' }; // Return an object indicating error
       }
     }
 
     // Update the IP info sections with fetched data
     function updateIPInfoDisplay(data, section) {
-      if (!data) {
+      const currentTime = formatDateTime(new Date());
+      // Update common "Last Updated" field in the Network Information card
+      const lastUpdatedElem = document.getElementById('last-updated');
+      if (lastUpdatedElem) lastUpdatedElem.innerHTML = currentTime;
+      // Update "Last Updated" in the "Proxy Information" card
+      const lastUpdatedDisplayElem = document.getElementById('last-updated-display');
+      if (lastUpdatedDisplayElem && lastUpdatedDisplayElem.textContent.includes("{{") ) { // Update only if it's placeholder
+         lastUpdatedDisplayElem.textContent = currentTime;
+      }
+
+
+      if (!data || data.error) {
+        const errorMessage = data ? (data.message || data.error || 'Failed to load') : 'Failed to load';
         if (section === 'user') {
-          document.getElementById('user-ip').innerHTML = 'Failed to load';
-          document.getElementById('user-location').innerHTML = 'Failed to load';
-          document.getElementById('user-isp').innerHTML = 'Failed to load';
-        } else {
-          document.getElementById('proxy-ip').innerHTML = 'Failed to load';
-          document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Unavailable';
-          document.getElementById('proxy-status').className = 'value status-indicator status-inactive';
+          document.getElementById('user-ip').innerHTML = errorMessage;
+          document.getElementById('user-location').innerHTML = 'N/A';
+          document.getElementById('user-isp').innerHTML = 'N/A';
+          // Security info might also depend on user IP data
+          document.getElementById('using-proxy').innerHTML = '<span class="badge badge-neutral">Unknown</span>';
+          document.getElementById('hosting-provider').innerHTML = '<span class="badge badge-neutral">Unknown</span>';
+          document.getElementById('reverse-dns').innerHTML = 'N/A';
+        } else if (section === 'proxy') {
+          // This is the proxy IP info in the "Network Information" card
+          const proxyIpElem = document.getElementById('proxy-ip');
+          const proxyStatusElem = document.getElementById('proxy-status');
+          if (proxyIpElem) proxyIpElem.innerHTML = data && data.query && data.query !== '{{PROXY_IP}}' ? data.query : 'Error fetching';
+
+          if(proxyStatusElem){
+            proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${errorMessage}`;
+            proxyStatusElem.className = 'value status-indicator status-error';
+          }
+
+          // Also update the separate "Proxy Information" card
+          const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
+          const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
+          if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = 'Error';
+          if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = 'status-indicator status-error';
         }
         return;
       }
 
-      const currentTime = formatDateTime(new Date());
-
       if (section === 'user') {
         document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
-
         const locationHtml = data.countryCode ?
-          `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country} flag"> ${data.city || ''}, ${data.country || 'Unknown'}` :
-          'Unknown';
-        document.getElementById('user-location').innerHTML = locationHtml;
+          `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country || ''} flag"> ${data.city || ''}${data.city && data.country ? ', ' : ''}${data.country || 'Unknown'}` :
+          (data.city || data.country || 'Unknown');
+        document.getElementById('user-location').innerHTML = locationHtml || 'N/A';
+        document.getElementById('user-isp').innerHTML = data.isp || 'N/A';
 
-        document.getElementById('user-isp').innerHTML = data.isp || 'Unknown';
+        // Update security info based on user's IP
         document.getElementById('using-proxy').innerHTML = data.hosting ?
           '<span class="badge badge-yes">YES</span>' :
           '<span class="badge badge-no">NO</span>';
-        document.getElementById('hosting-provider').innerHTML = data.hosting ?
-          '<span class="badge badge-neutral">YES</span>' :
+        document.getElementById('hosting-provider').innerHTML = data.hosting ? // This usually refers to if the IP itself is a hosting/VPN IP
+          '<span class="badge badge-yes">YES</span>' : // If user IP is a known hosting/VPN, they are likely using one
           '<span class="badge badge-no">NO</span>';
         document.getElementById('reverse-dns').innerHTML = data.reverse || 'No reverse DNS record';
-      } else {
-        const proxyIP = '{{PROXY_IP}}';
-        document.getElementById('proxy-ip').innerHTML = proxyIP === '{{PROXY_IP}}' ? 'Not configured' : proxyIP;
-        document.getElementById('last-updated').innerHTML = currentTime;
 
-        const proxyStatus = data && data.query ? 'status-active' : 'status-inactive';
-        const statusText = data && data.query ? 'Active' : 'Inactive';
-        document.getElementById('proxy-status').className = `value status-indicator ${proxyStatus}`;
-        document.getElementById('proxy-status').innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
+      } else if (section === 'proxy') {
+        // This is for the "Proxy Server" section in "Network Information"
+        const proxyIpElem = document.getElementById('proxy-ip');
+        const proxyStatusElem = document.getElementById('proxy-status');
 
-        // Update the original proxy display section too
-        document.getElementById('proxy-status-display').textContent = statusText;
-        document.querySelector('.status-indicator').className = `status-indicator ${proxyStatus}`;
+        // The proxy IP for display should come from the data attribute, not necessarily data.query if API fails
+        const configuredProxyIP = document.body.dataset.proxyIp || "{{PROXY_IP}}";
+        if (proxyIpElem) proxyIpElem.innerHTML = (configuredProxyIP === "{{PROXY_IP}}" || !configuredProxyIP) ? 'Not Configured' : configuredProxyIP;
+
+        const isActive = data.query && data.query === configuredProxyIP && data.status === 'success';
+        const statusText = isActive ? 'Active' : ( (configuredProxyIP === "{{PROXY_IP}}" || !configuredProxyIP) ? 'Not Configured' : 'Inactive/Error');
+        const statusClass = isActive ? 'status-active' : ( (configuredProxyIP === "{{PROXY_IP}}" || !configuredProxyIP) ? 'status-warning' : 'status-error');
+        
+        if(proxyStatusElem){
+            proxyStatusElem.className = `value status-indicator ${statusClass}`;
+            proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
+        }
+
+        // Update the original "Proxy Information" card as well
+        const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
+        const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
+        if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusText;
+        if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClass}`;
       }
-
-      // Update both last-updated displays
-      document.getElementById('last-updated-display').textContent = currentTime;
     }
 
     // Initialize the proxy data and fetch IP information
     async function initializeData() {
-      const currentYear = new Date().getFullYear();
-      document.getElementById('current-year').textContent = currentYear;
-
-      // Get the proxy IP from template variable or use a default value for testing
-      const proxyIP = '{{PROXY_IP}}';
-      if (proxyIP !== '{{PROXY_IP}}') {
-        document.getElementById('proxy-ip-display').textContent = proxyIP;
+      const currentYearElem = document.getElementById('current-year');
+      if (currentYearElem && currentYearElem.textContent.includes("{{")) { // Update only if it's placeholder
+        currentYearElem.textContent = new Date().getFullYear();
       }
 
-      // Set initial loading state
-      document.getElementById('proxy-status').className = 'value status-indicator loading';
-      document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
+
+      // Get the proxy IP from the data attribute on the body tag
+      const configuredProxyIP = document.body.dataset.proxyIp; // This should be set by your Worker
+
+      // Update the display for proxy IP in the "Proxy Information" card first
+      const proxyIpDisplayElem = document.getElementById('proxy-ip-display');
+      if (proxyIpDisplayElem) {
+          if (configuredProxyIP && configuredProxyIP !== "{{PROXY_IP}}") {
+            proxyIpDisplayElem.textContent = configuredProxyIP;
+          } else {
+            proxyIpDisplayElem.textContent = "{{PROXY_IP}}"; // Or "Not Configured"
+          }
+      }
+      
+      // Set initial loading state for "Network Information" card's proxy section
+      const proxyStatusNetInfoElem = document.getElementById('proxy-status');
+      if (proxyStatusNetInfoElem) {
+        proxyStatusNetInfoElem.className = 'value status-indicator loading';
+        proxyStatusNetInfoElem.innerHTML = '<span class="status-indicator-dot"></span>Checking...';
+      }
+      // Also for the "Proxy Information" card
+      const proxyStatusInfoCardElem = document.getElementById('proxy-status-display');
+      const proxyIndicatorInfoCardElem = document.getElementById('proxy-info-status-indicator');
+       if(proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
+       if(proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
+
 
       // Fetch user's IP information
-      const userIPData = await fetchIPInfo();
+      const userIPData = await fetchIPInfo(); // Fetches client's public IP
       updateIPInfoDisplay(userIPData, 'user');
 
-      // Fetch proxy IP information if available
-      if (proxyIP !== '{{PROXY_IP}}') {
-        const proxyIPData = await fetchIPInfo(proxyIP);
+      // Fetch proxy IP information if a valid proxy IP is configured
+      if (configuredProxyIP && configuredProxyIP !== "{{PROXY_IP}}") {
+        const proxyIPData = await fetchIPInfo(configuredProxyIP);
         updateIPInfoDisplay(proxyIPData, 'proxy');
       } else {
-        // If no proxy IP is configured
-        document.getElementById('proxy-ip').innerHTML = 'Not configured';
-        document.getElementById('proxy-status').className = 'value status-indicator status-warning';
-        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
-
-        // Update the original display too
-        document.getElementById('proxy-status-display').textContent = 'Not configured';
-        document.querySelector('.status-indicator').className = 'status-indicator status-warning';
+        // If no valid proxy IP is configured by the worker
+        updateIPInfoDisplay({ query: '{{PROXY_IP}}', error: 'Not Configured' }, 'proxy');
       }
 
-      const dateTime = formatDateTime(new Date());
-      document.getElementById('last-updated').innerHTML = dateTime;
-      document.getElementById('last-updated-display').textContent = dateTime;
+      // Last updated times are now set within updateIPInfoDisplay to ensure they reflect fetch times
     }
 
     // Refresh IP information
     async function refreshIPInfo() {
-      // Reset to loading state
+      // Reset to loading state for User Connection
       document.getElementById('user-ip').innerHTML = '<span class="skeleton" style="width: 120px;"></span>';
       document.getElementById('user-location').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
       document.getElementById('user-isp').innerHTML = '<span class="skeleton" style="width: 150px;"></span>';
+      // Reset Security Info
       document.getElementById('using-proxy').innerHTML = '<span class="skeleton" style="width: 60px;"></span>';
       document.getElementById('hosting-provider').innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
       document.getElementById('reverse-dns').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
 
+      // Reset to loading state for Proxy Server in Network Information
       document.getElementById('proxy-ip').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
-      document.getElementById('proxy-status').className = 'value status-indicator loading';
-      document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Checking...';
-
-      // Fetch updated data
-      const userIPData = await fetchIPInfo();
-      updateIPInfoDisplay(userIPData, 'user');
-
-      const proxyIP = '{{PROXY_IP}}';
-      if (proxyIP !== '{{PROXY_IP}}') {
-        const proxyIPData = await fetchIPInfo(proxyIP);
-        updateIPInfoDisplay(proxyIPData, 'proxy');
-      } else {
-        document.getElementById('proxy-ip').innerHTML = 'Not configured';
-        document.getElementById('proxy-status').className = 'value status-indicator status-warning';
-        document.getElementById('proxy-status').innerHTML = '<span class="status-indicator-dot"></span>Not configured';
+      const proxyStatusNetInfoElem = document.getElementById('proxy-status');
+      if(proxyStatusNetInfoElem){
+        proxyStatusNetInfoElem.className = 'value status-indicator loading';
+        proxyStatusNetInfoElem.innerHTML = '<span class="status-indicator-dot"></span>Checking...';
       }
+      document.getElementById('last-updated').innerHTML = '<span class="skeleton" style="width: 160px;"></span>';
+      
+      // Reset "Proxy Information" card status
+      const proxyStatusInfoCardElem = document.getElementById('proxy-status-display');
+      const proxyIndicatorInfoCardElem = document.getElementById('proxy-info-status-indicator');
+      if(proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
+      if(proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
+      document.getElementById('last-updated-display').innerHTML = '<span class="skeleton" style="width: 160px;"></span>';
+
+
+      // Re-fetch all data
+      await initializeData(); // initializeData now handles fetching for both user and proxy
     }
 
     // Set up event listeners
@@ -1256,7 +1317,10 @@
       initializeData();
 
       // Add event listener for refresh button
-      document.getElementById('refresh-ip-info').addEventListener('click', refreshIPInfo);
+      const refreshButton = document.getElementById('refresh-ip-info');
+      if (refreshButton) {
+        refreshButton.addEventListener('click', refreshIPInfo);
+      }
     });
   </script>
 </body>
