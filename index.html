@@ -1112,18 +1112,20 @@
 
     // Fetch IP information from API
     async function fetchIPInfo(ipAddress = '') {
-      let apiUrl = 'http://ip-api.com/json'; // Use HTTP for the free plan
+      let apiUrlBase = 'http://ip-api.com/json'; // Use HTTP for the free plan
+      let finalApiUrl = apiUrlBase;
 
-      if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
-        apiUrl += /${ipAddress};
+    // Check if ipAddress is provided and is not the placeholder string
+      if (ipAddress && ipAddress !== "{{PROXY_IP}}") { // <-- این شرط رو هم به حالت قبل برگردوندم
+        finalApiUrl = `${apiUrlBase}/${ipAddress}`; // <--- اصلاح شده
       } else if (ipAddress === "{{PROXY_IP}}") {
         // Let it fetch user's IP if placeholder is passed,
       }
 
-      apiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
+      finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
 
       try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(finalApiUrl);
         const data = await response.json();
         // Check for API-level failure status
         if (data.status === 'fail') { // 'fail' is the status for errors from ip-api.com
