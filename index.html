@@ -1112,36 +1112,34 @@
 
     // Fetch IP information from API
     async function fetchIPInfo(ipAddress = '') {
-      let apiUrlBase = 'http://ip-api.com/json'; // Use HTTP for the free plan
+      let apiUrlBase = 'http://ip-api.com/json';
       let finalApiUrl = apiUrlBase;
-
-    // Check if ipAddress is provided and is not the placeholder string
-      if (ipAddress && ipAddress !== "{{PROXY_IP}}") { // <-- این شرط رو هم به حالت قبل برگردوندم
-        finalApiUrl = `${apiUrlBase}/${ipAddress}`; // <--- اصلاح شده
-      } else if (ipAddress === "{{PROXY_IP}}") {
-        // Let it fetch user's IP if placeholder is passed,
+    
+      if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
+        finalApiUrl = ${apiUrlBase}/${ipAddress};
       }
-
       finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
-
+    
+      // console.log("Attempting to fetch:", finalApiUrl); // For debugging
+    
       try {
         const response = await fetch(finalApiUrl);
         const data = await response.json();
-        // Check for API-level failure status
-        if (data.status === 'fail') { // 'fail' is the status for errors from ip-api.com
-          console.error('IP-API Error for ' + (ipAddress || 'user IP') + ':', data.message);
-          // Return an object that mimics a failed structure but includes the query and API message
+    
+        if (data.status === 'fail') {
+          console.error('IP-API Error for query "' + (ipAddress  data.query  'user IP (current client)') + '":', data.message, "(URL: " + finalApiUrl + ")");
           return { query: ipAddress  data.query  'Error', error: true, message: data.message || 'API request failed', api_status: data.status };
         }
-        // If HTTP response itself is not ok, but API status wasn't 'fail' (less common for this API)
         if (!response.ok) {
-            console.error('Network response was not ok for ' + (ipAddress || 'user IP'));
-            return { query: ipAddress || 'Error', error: true, message: 'Network response error: ' + response.status, api_status: 'network_error' };
+          console.error('Network response was not ok for query "' + (ipAddress || 'user IP (current client)') + '": ' + response.status, "(URL: " + finalApiUrl + ")");
+          return { query: ipAddress || 'Error', error: true, message: 'Network error: ' + response.status, api_status: 'network_error' };
         }
-        return data; // data should have status: 'success' here
+        console.log("Successfully fetched for " + (data.query || ipAddress) + ":", data); // For debugging success
+        return data;
       } catch (error) {
-        console.error('Error fetching IP data for ' + (ipAddress || 'user IP') + ':', error);
-        return { query: ipAddress || 'Error', error: true, message: 'General fetch error: ' + error.message, api_status: 'exception' };
+        console.error('General fetch error for query "' + (ipAddress || 'user IP (current client)') + '":', error.message, "(URL: " + finalApiUrl + ")");
+        // For general fetch errors, ipAddress is more reliable if available, as data.query won't exist
+        return { query: ipAddress || 'Error', error: true, message: 'Fetch exception: ' + error.message, api_status: 'exception' };
       }
     }
 
