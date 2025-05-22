@@ -1123,7 +1123,7 @@
 
       try {
         const response = await fetch(finalApiUrl);
-        const data = await response.json(); // Assuming response is always JSON, even for errors from ip-api
+        const data = await response.json();
 
         // Check for API-level failure (e.g., invalid IP for ip-api.com)
         if (data.status === 'fail') {
@@ -1131,12 +1131,10 @@
           return { query: (ipAddress || data.query || 'Error'), error: true, message: (data.message || 'API request failed'), api_status: data.status };
         }
 
-        // Check for HTTP-level errors (e.g., 404, 500 from the network, not ip-api's 'fail' status)
-        // This check should come AFTER trying to parse JSON, as ip-api might return 200 OK with a JSON body containing 'fail' status.
-        // However, if the server itself returns a non-200, response.ok will be false.
+        // Check for HTTP-level errors (e.g., 404, 500 from the network)
+        // This should be checked AFTER data.status === 'fail' because ip-api often returns 200 OK
+        // with a JSON body indicating failure via its own 'status' field.
         if (!response.ok) {
-          // This case might be less common if ip-api always returns 200 with a status field,
-          // but good to have for general network issues.
           console.error('Network response was not ok for query "' + (ipAddress || 'user IP (current client)') + '": ' + response.status, "(URL: " + finalApiUrl + ")");
           return { query: (ipAddress || 'Error'), error: true, message: ('Network error: ' + response.status), api_status: 'network_error' };
         }
