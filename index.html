@@ -152,22 +152,57 @@
     }
 
     .config-title .refresh-btn {
+      position: relative;
+      overflow: hidden;
+      font-family: var(--aldine);
       font-size: 12px;
-      padding: 4px 10px;
+      padding: 6px 12px;
       border-radius: 4px;
-      color: var(--text-secondary);
+      color: var(--accent-secondary);
       background-color: var(--background-tertiary);
       border: 1px solid var(--border-color);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 4px;
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
     }
-
+    
+    .config-title .refresh-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform var(--transition-speed-long) ease;
+      z-index: -1;
+    }
+    
     .config-title .refresh-btn:hover {
-      color: var(--text-primary);
+      background-color: #4d453e;
+      color: var(--accent-primary);
       border-color: var(--border-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
     }
+    
+    .config-title .refresh-btn:hover::before {
+      transform: translateX(100%);
+    }
+    
+    .config-title .refresh-btn:active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: none;
+    }
+  }
 
     .refresh-icon {
       width: 12px;
@@ -1016,34 +1051,34 @@
       const originalText = button.textContent;
       const isClientBtn = button.classList.contains("client-btn");
       const originalIconHTML = isClientBtn ? button.querySelector(".client-icon")?.innerHTML : null;
-
+    
       button.disabled = true;
       button.classList.remove("copied", "error");
-
+    
       if (isClientBtn && button.querySelector(".client-icon")) {
         button.querySelector(".client-icon").style.display = "none";
       }
       if (isClientBtn && button.querySelector(".button-text")) {
         button.querySelector(".button-text").style.fontWeight = "500";
       }
-
+    
       navigator.clipboard
         .writeText(text)
         .then(() => {
           button.textContent = "Copied!";
           button.classList.add("copied");
-
+    
           setTimeout(() => {
             if (isClientBtn && originalIconHTML) {
-              const textSpan = button.querySelector(".button-text") || document.createElement("span");
+              const textSpan = document.createElement("span");
               textSpan.className = "button-text";
               textSpan.textContent = originalText;
-
+    
               const iconSpan = document.createElement("span");
               iconSpan.className = "client-icon";
               iconSpan.innerHTML = originalIconHTML;
               iconSpan.style.display = "";
-
+    
               button.innerHTML = "";
               button.appendChild(iconSpan);
               button.appendChild(textSpan);
@@ -1064,15 +1099,15 @@
 
           setTimeout(() => {
             if (isClientBtn && originalIconHTML) {
-              const textSpan = button.querySelector(".button-text") || document.createElement("span");
+              const textSpan = document.createElement("span");
               textSpan.className = "button-text";
               textSpan.textContent = originalText;
-
+    
               const iconSpan = document.createElement("span");
               iconSpan.className = "client-icon";
               iconSpan.innerHTML = originalIconHTML;
               iconSpan.style.display = "";
-
+    
               button.innerHTML = "";
               button.appendChild(iconSpan);
               button.appendChild(textSpan);
@@ -1098,54 +1133,48 @@
         hour12: false
       });
     }
-
+    
     // Get country flag emoji
     function getFlagEmoji(countryCode) {
       if (!countryCode) return '';
       const codePoints = countryCode
         .toUpperCase()
         .split('')
-        .map(char => 127397 + char.charCodeAt(0)); // Added (0) for charCodeAt
+        .map(char => 127397 + char.charCodeAt(0));
       return String.fromCodePoint(...codePoints);
     }
-
-    // Fetch IP information from API
+    
+    // Fetch IP information from ipinfo.io
     async function fetchIPInfo(ipAddress = '') {
-      let apiUrlBase = 'http://ip-api.com/json';
-      let finalApiUrl = apiUrlBase;
-
-      if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
-        finalApiUrl = `${apiUrlBase}/${ipAddress}`;
-      }
-      finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
-
-      // console.log("Attempting to fetch:", finalApiUrl); // For debugging
-
+      const apiToken = 'free'; // ipinfo.io allows free access without token for limited use
+      let apiUrl = `https://ipinfo.io/${ipAddress ? ipAddress + '/' : ''}json?token=${apiToken}`;
+    
       try {
-        const response = await fetch(finalApiUrl);
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+          throw new Error(`Network error: ${response.status}`);
+        }
         const data = await response.json();
 
-        // Check for API-level failure (e.g., invalid IP for ip-api.com)
-        if (data.status === 'fail') {
-          console.error('IP-API Error for query "' + (ipAddress || data.query || 'user IP (current client)') + '":', data.message, "(URL: " + finalApiUrl + ")");
-          return { query: (ipAddress || data.query || 'Error'), error: true, message: (data.message || 'API request failed'), api_status: data.status };
-        }
-
-        // Check for HTTP-level errors (e.g., 404, 500 from the network)
-        // This should be checked AFTER data.status === 'fail' because ip-api often returns 200 OK
-        // with a JSON body indicating failure via its own 'status' field.
-        if (!response.ok) {
-          console.error('Network response was not ok for query "' + (ipAddress || 'user IP (current client)') + '": ' + response.status, "(URL: " + finalApiUrl + ")");
-          return { query: (ipAddress || 'Error'), error: true, message: ('Network error: ' + response.status), api_status: 'network_error' };
-        }
-        
-        // If we reach here, data.status should be 'success' and response.ok should be true
-        // console.log("Successfully fetched for " + (data.query || ipAddress) + ":", data);
-        return data;
-
-      } catch (error) { // Catches errors from fetch() itself (e.g., network down) or from response.json() if response isn't valid JSON
-        console.error('General fetch/JSON parse error for query "' + (ipAddress || 'user IP (current client)') + '":', error.message, "(URL: " + finalApiUrl + ")");
-        return { query: (ipAddress || 'Error'), error: true, message: ('Fetch/JSON exception: ' + error.message), api_status: 'exception' };
+        // Map ipinfo.io response to expected format
+        return {
+          status: 'success',
+          query: data.ip || ipAddress || 'Unknown',
+          country: data.country || 'Unknown',
+          countryCode: data.country || '',
+          city: data.city || 'Unknown',
+          isp: data.org || 'Unknown',
+          reverse: data.hostname || 'No reverse DNS record',
+          hosting: data.org?.includes('Hosting') || false
+        };
+      } catch (error) {
+        console.error(`Fetch error for ${ipAddress || 'user IP'}:`, error.message);
+        return {
+          query: ipAddress || 'Error',
+          error: true,
+          message: error.message || 'API request failed',
+          api_status: 'exception'
+        };
       }
     }
 
@@ -1156,13 +1185,12 @@
       if (lastUpdatedElem) lastUpdatedElem.innerHTML = currentTime;
       const lastUpdatedDisplayElem = document.getElementById('last-updated-display');
       if (lastUpdatedDisplayElem && lastUpdatedDisplayElem.textContent.includes("{{")) {
-         lastUpdatedDisplayElem.textContent = currentTime;
+        lastUpdatedDisplayElem.textContent = currentTime;
       }
-
-      if (!data || data.error || data.status === 'fail') {
+    
+      if (!data || data.error || data.status !== 'success') {
         const errorMessage = data ? (data.message || 'Failed to load') : 'Failed to load';
-        // console.log(`Error for section ${section}:`, errorMessage, data);
-
+        
         if (section === 'user') {
           document.getElementById('user-ip').innerHTML = errorMessage;
           document.getElementById('user-location').innerHTML = 'N/A';
@@ -1174,92 +1202,84 @@
           const configuredProxyIP = document.body.dataset.proxyIp || "{{PROXY_IP}}";
           const proxyIpElem = document.getElementById('proxy-ip');
           const proxyStatusElem = document.getElementById('proxy-status');
-
+    
           if (proxyIpElem) {
             proxyIpElem.innerHTML = (configuredProxyIP === "{{PROXY_IP}}" || !configuredProxyIP) ? 'Not Configured' : configuredProxyIP;
           }
           
-          let statusTextForProxy = 'Error';
+          let statusTextForProxy = `Error (${errorMessage})`;
           let statusClassForProxy = 'status-error';
-
+    
           if (configuredProxyIP === "{{PROXY_IP}}" || !configuredProxyIP) {
             statusTextForProxy = 'Not Configured';
             statusClassForProxy = 'status-warning';
-          } else {
-            // Corrected template literal for statusTextForProxy
-            statusTextForProxy = `Error (${errorMessage.substring(0,30)}${errorMessage.length > 30 ? '...' : ''})`;
           }
-
-          if(proxyStatusElem){
-            // Corrected template literals for innerHTML and className
+    
+          if (proxyStatusElem) {
             proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusTextForProxy}`;
             proxyStatusElem.className = `value status-indicator ${statusClassForProxy}`;
           }
-
+    
           const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
           const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
-
-          if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusTextForProxy;
-          if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClassForProxy}`;
+          if (proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusTextForProxy;
+          if (proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClassForProxy}`;
         }
         return;
       }
 
-      if (section === 'user') {
-        document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
-        // Corrected template literal for locationHtml
-        const locationHtml = data.countryCode ?
-          `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country || ''} flag"> ${data.city || ''}${data.city && data.country ? ', ' : ''}${data.country || 'Unknown'}` :
-          (data.city || data.country || 'Unknown');
-        document.getElementById('user-location').innerHTML = locationHtml || 'N/A';
-        document.getElementById('user-isp').innerHTML = data.isp || 'N/A';
-        document.getElementById('using-proxy').innerHTML = data.hosting ?
-          '<span class="badge badge-yes">YES</span>' :
-          '<span class="badge badge-no">NO</span>';
-        document.getElementById('hosting-provider').innerHTML = data.hosting ?
-          '<span class="badge badge-yes">YES</span>' :
-          '<span class="badge badge-no">NO</span>';
-        document.getElementById('reverse-dns').innerHTML = data.reverse || 'No reverse DNS record';
+  if (section === 'user') {
+    document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
+    const locationHtml = data.countryCode ?
+      `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country || ''} flag"> ${data.city || ''}${data.city && data.country ? ', ' : ''}${data.country || 'Unknown'}` :
+      (data.city || data.country || 'Unknown');
+    document.getElementById('user-location').innerHTML = locationHtml;
+    document.getElementById('user-isp').innerHTML = data.isp || 'N/A';
+    document.getElementById('using-proxy').innerHTML = data.hosting ?
+      '<span class="badge badge-yes">YES</span>' :
+      '<span class="badge badge-no">NO</span>';
+    document.getElementById('hosting-provider').innerHTML = data.hosting ?
+      '<span class="badge badge-yes">YES</span>' :
+      '<span class="badge badge-no">NO</span>';
+    document.getElementById('reverse-dns').innerHTML = data.reverse || 'No reverse DNS record';
+  } else if (section === 'proxy') {
+    const configuredProxyIP = document.body.dataset.proxyIp || "{{PROXY_IP}}";
+    const proxyIpElem = document.getElementById('proxy-ip');
+    const proxyStatusElem = document.getElementById('proxy-status');
 
-      } else if (section === 'proxy') {
-        const configuredProxyIP = document.body.dataset.proxyIp || "{{PROXY_IP}}";
-        const proxyIpElem = document.getElementById('proxy-ip');
-        const proxyStatusElem = document.getElementById('proxy-status');
+    if (proxyIpElem) proxyIpElem.innerHTML = configuredProxyIP;
 
-        if (proxyIpElem) proxyIpElem.innerHTML = configuredProxyIP;
-
-        const isActive = data.query && data.query === configuredProxyIP && data.status === 'success';
-        const statusText = isActive ? 'Active' : 'Inactive/Mismatch';
-        const statusClass = isActive ? 'status-active' : 'status-error';
-        
-        if(proxyStatusElem){
-            // Corrected template literals
-            proxyStatusElem.className = `value status-indicator ${statusClass}`;
-            proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
-        }
-
-        const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
-        const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
-        if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusText;
-        if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClass}`;
-      }
+    const isActive = data.query && data.query === configuredProxyIP && data.status === 'success';
+    const statusText = isActive ? 'Active' : 'Inactive/Mismatch';
+    const statusClass = isActive ? 'status-active' : 'status-error';
+    
+    if (proxyStatusElem) {
+      proxyStatusElem.className = `value status-indicator ${statusClass}`;
+      proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
     }
+
+    const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
+    const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
+    if (proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusText;
+    if (proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClass}`;
+  }
+}
 
     // Initialize the proxy data and fetch IP information
     async function initializeData() {
       const currentYearElem = document.getElementById('current-year');
       if (currentYearElem && currentYearElem.textContent.includes("{{")) {
-        currentYearElem.textContent = new Date().getFullYear().toString(); // Added toString()
+        currentYearElem.textContent = new Date().getFullYear().toString();
       }
-
+    
       const configuredProxyIP = document.body.dataset.proxyIp;
       const proxyIpDisplayElem = document.getElementById('proxy-ip-display');
       if (proxyIpDisplayElem) {
-          if (configuredProxyIP && configuredProxyIP !== "{{PROXY_IP}}") {
-            proxyIpDisplayElem.textContent = configuredProxyIP;
-          } else {
-            proxyIpDisplayElem.textContent = "{{PROXY_IP}}";
-          }
+        if (configuredProxyIP && configuredProxyIP !== "{{PROXY_IP}}") {
+          proxyIpDisplayElem.textContent = configuredProxyIP;
+        } else {
+          proxyIpDisplayElem.textContent = "Not Configured";
+        }
       }
       
       const proxyStatusNetInfoElem = document.getElementById('proxy-status');
@@ -1269,17 +1289,17 @@
       }
       const proxyStatusInfoCardElem = document.getElementById('proxy-status-display');
       const proxyIndicatorInfoCardElem = document.getElementById('proxy-info-status-indicator');
-       if(proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
-       if(proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
-
+      if (proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
+      if (proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
+    
       const userIPData = await fetchIPInfo();
       updateIPInfoDisplay(userIPData, 'user');
-
+    
       if (configuredProxyIP && configuredProxyIP !== "{{PROXY_IP}}") {
         const proxyIPData = await fetchIPInfo(configuredProxyIP);
         updateIPInfoDisplay(proxyIPData, 'proxy');
       } else {
-        updateIPInfoDisplay({ query: '{{PROXY_IP}}', error: true, message: 'Not Configured' }, 'proxy'); // Changed error to true
+        updateIPInfoDisplay({ query: '{{PROXY_IP}}', error: true, message: 'Not Configured' }, 'proxy');
       }
     }
 
@@ -1291,10 +1311,10 @@
       document.getElementById('using-proxy').innerHTML = '<span class="skeleton" style="width: 60px;"></span>';
       document.getElementById('hosting-provider').innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
       document.getElementById('reverse-dns').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
-
+    
       document.getElementById('proxy-ip').innerHTML = '<span class="skeleton" style="width: 140px;"></span>';
       const proxyStatusNetInfoElem = document.getElementById('proxy-status');
-      if(proxyStatusNetInfoElem){
+      if (proxyStatusNetInfoElem) {
         proxyStatusNetInfoElem.className = 'value status-indicator loading';
         proxyStatusNetInfoElem.innerHTML = '<span class="status-indicator-dot"></span>Checking...';
       }
@@ -1302,21 +1322,20 @@
       
       const proxyStatusInfoCardElem = document.getElementById('proxy-status-display');
       const proxyIndicatorInfoCardElem = document.getElementById('proxy-info-status-indicator');
-      if(proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
-      if(proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
-      const lastUpdatedDisplayElem = document.getElementById('last-updated-display'); // Get the element
-      if (lastUpdatedDisplayElem) { // Check if it exists
-          lastUpdatedDisplayElem.innerHTML = '<span class="skeleton" style="width: 160px;"></span>';
+      if (proxyStatusInfoCardElem) proxyStatusInfoCardElem.textContent = "Checking...";
+      if (proxyIndicatorInfoCardElem) proxyIndicatorInfoCardElem.className = "status-indicator loading";
+      const lastUpdatedDisplayElem = document.getElementById('last-updated-display');
+      if (lastUpdatedDisplayElem) {
+        lastUpdatedDisplayElem.innerHTML = '<span class="skeleton" style="width: 160px;"></span>';
       }
-
-
+    
       await initializeData();
     }
-
+    
     // Set up event listeners
     document.addEventListener('DOMContentLoaded', function () {
       initializeData();
-
+    
       const refreshButton = document.getElementById('refresh-ip-info');
       if (refreshButton) {
         refreshButton.addEventListener('click', refreshIPInfo);
