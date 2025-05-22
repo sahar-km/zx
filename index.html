@@ -1117,30 +1117,37 @@
       if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
         finalApiUrl = `${apiUrlBase}/${ipAddress}`;
       }
-      // If ipAddress is empty or still the placeholder, finalApiUrl remains apiUrlBase (fetches user's IP)
-      // THEN, append query parameters.
       finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
 
       // console.log("Attempting to fetch:", finalApiUrl); // For debugging
 
       try {
         const response = await fetch(finalApiUrl);
-        const data = await response.json();
+        const data = await response.json(); // Assuming response is always JSON, even for errors from ip-api
 
+        // Check for API-level failure (e.g., invalid IP for ip-api.com)
         if (data.status === 'fail') {
-          // Corrected console.error and return object
           console.error('IP-API Error for query "' + (ipAddress || data.query || 'user IP (current client)') + '":', data.message, "(URL: " + finalApiUrl + ")");
           return { query: (ipAddress || data.query || 'Error'), error: true, message: (data.message || 'API request failed'), api_status: data.status };
         }
+
+        // Check for HTTP-level errors (e.g., 404, 500 from the network, not ip-api's 'fail' status)
+        // This check should come AFTER trying to parse JSON, as ip-api might return 200 OK with a JSON body containing 'fail' status.
+        // However, if the server itself returns a non-200, response.ok will be false.
         if (!response.ok) {
+          // This case might be less common if ip-api always returns 200 with a status field,
+          // but good to have for general network issues.
           console.error('Network response was not ok for query "' + (ipAddress || 'user IP (current client)') + '": ' + response.status, "(URL: " + finalApiUrl + ")");
           return { query: (ipAddress || 'Error'), error: true, message: ('Network error: ' + response.status), api_status: 'network_error' };
         }
+        
+        // If we reach here, data.status should be 'success' and response.ok should be true
         // console.log("Successfully fetched for " + (data.query || ipAddress) + ":", data);
         return data;
-      } catch (error) {
-        console.error('General fetch error for query "' + (ipAddress || 'user IP (current client)') + '":', error.message, "(URL: " + finalApiUrl + ")");
-        return { query: (ipAddress || 'Error'), error: true, message: ('Fetch exception: ' + error.message), api_status: 'exception' };
+
+      } catch (error) { // Catches errors from fetch() itself (e.g., network down) or from response.json() if response isn't valid JSON
+        console.error('General fetch/JSON parse error for query "' + (ipAddress || 'user IP (current client)') + '":', error.message, "(URL: " + finalApiUrl + ")");
+        return { query: (ipAddress || 'Error'), error: true, message: ('Fetch/JSON exception: ' + error.message), api_status: 'exception' };
       }
     }
 
