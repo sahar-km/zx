@@ -917,9 +917,9 @@
         <pre id="xray-config">{{DREAM_CONFIG}}</pre>
       </div>
       <div class="client-buttons">
-        <!-- Hiddify -->
         
-          href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}"
+        <!-- Hiddify -->
+        <a href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}"
           class="button client-btn"
           aria-label="Import configuration to Hiddify client">
           <span class="client-icon">
@@ -931,8 +931,7 @@
         </a>
 
         <!-- V2rayNG -->
-        
-          href="v2rayng://install-config?url={{DREAM_CONFIG_ENCODED}}"
+        <a href="v2rayng://install-config?url={{DREAM_CONFIG_ENCODED}}"
           class="button client-btn"
           aria-label="Import configuration to V2rayNG client">
           <span class="client-icon">
@@ -1152,17 +1151,28 @@
     }
 
     function showError(prefix, message = "Could not load data") {
-      const section = document.querySelector(`#${prefix}-ip`).closest('.ip-info-section');
-      if (section) {
-        const content = section.querySelector('.ip-info-content');
-        content.innerHTML = `<div style="color: var(--text-secondary); text-align: center; padding: 20px;">${message}</div>`;
-      }
+      const ipElement = document.getElementById(`${prefix}-ip`);
+      const locationElement = document.getElementById(`${prefix}-location`);
+      const ispElement = document.getElementById(`${prefix}-isp`);
+      const typeElement = document.getElementById(`${prefix}-type`);
+      const proxyElement = document.getElementById(`${prefix}-proxy`);
+
+      const errorMessage = "N/A";
+      
+      if (ipElement) ipElement.textContent = errorMessage;
+      if (locationElement) locationElement.textContent = errorMessage;
+      if (ispElement) ispElement.textContent = errorMessage;
+      if (typeElement) typeElement.textContent = errorMessage;
+      if (proxyElement) proxyElement.textContent = errorMessage;
+
+      console.log(`${prefix} data loading failed: ${message}`);
     }
 
     async function loadNetworkInfo() {
       try {
         // Load proxy server info
         if (proxyIP && proxyIP !== "" && proxyIP !== "{{PROXY_IP}}") {
+          console.log('Loading proxy info for IP:', proxyIP);
           const proxyData = await fetchIPInfo(proxyIP);
           if (proxyData) {
             updateIPDisplay(proxyData, 'proxy');
@@ -1170,10 +1180,12 @@
             showError('proxy', 'Could not load proxy server data');
           }
         } else {
+          console.log('Proxy IP not available or placeholder:', proxyIP);
           showError('proxy', 'Proxy IP not available');
         }
 
         // Load client info
+        console.log('Loading client info...');
         const clientData = await fetchIPInfo();
         if (clientData) {
           updateIPDisplay(clientData, 'client');
@@ -1183,28 +1195,39 @@
 
       } catch (error) {
         console.error('Network info loading failed:', error);
+        showError('proxy', 'Error loading data');
+        showError('client', 'Error loading data');
       }
     }
 
     // Refresh button functionality
-    document.getElementById('refresh-ip-info').addEventListener('click', function() {
+    document.getElementById('refresh-ip-info')?.addEventListener('click', function() {
       const button = this;
       const icon = button.querySelector('.refresh-icon');
       
       // Disable button and add rotation animation
       button.disabled = true;
-      icon.style.animation = 'spin 1s linear infinite';
+      if (icon) icon.style.animation = 'spin 1s linear infinite';
       
-      // Reset skeleton loaders
-      document.querySelectorAll('.skeleton').forEach(skeleton => {
-        skeleton.style.display = 'block';
-      });
+      // Reset to skeleton loaders
+      const resetToSkeleton = (prefix) => {
+        const elements = ['ip', 'location', 'isp', 'type', 'proxy'];
+        elements.forEach(elem => {
+          const element = document.getElementById(`${prefix}-${elem}`);
+          if (element) {
+            element.innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
+          }
+        });
+      };
+
+      resetToSkeleton('proxy');
+      resetToSkeleton('client');
 
       // Reload network info
       loadNetworkInfo().finally(() => {
         setTimeout(() => {
           button.disabled = false;
-          icon.style.animation = '';
+          if (icon) icon.style.animation = '';
         }, 1000);
       });
     });
@@ -1220,7 +1243,10 @@
     document.head.appendChild(style);
 
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', loadNetworkInfo);
-  </script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Page loaded, initializing network info...');
+      loadNetworkInfo();
+    });
+</script>
 </body>
 </html>
