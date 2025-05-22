@@ -1115,7 +1115,7 @@
       let finalApiUrl = apiUrlBase;
 
       if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
-        finalApiUrl = ${apiUrlBase}/${ipAddress};
+        finalApiUrl = `${apiUrlBase}/${ipAddress}`;
       }
       // If ipAddress is empty or still the placeholder, finalApiUrl remains apiUrlBase (fetches user's IP)
       // THEN, append query parameters.
