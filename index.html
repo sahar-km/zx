@@ -1010,7 +1010,7 @@
     </div>
   </div>
 
-  <script>
+    <script>
     // Function to copy content to clipboard
     function copyToClipboard(button, text) {
       const originalText = button.textContent;
@@ -1129,8 +1129,8 @@
 
         if (data.status === 'fail') {
           // Corrected console.error and return object
-          console.error('IP-API Error for query "' + (ipAddress  data.query  'user IP (current client)') + '":', data.message, "(URL: " + finalApiUrl + ")");
-          return { query: (ipAddress  data.query  'Error'), error: true, message: (data.message || 'API request failed'), api_status: data.status };
+          console.error('IP-API Error for query "' + (ipAddress || data.query || 'user IP (current client)') + '":', data.message, "(URL: " + finalApiUrl + ")");
+          return { query: (ipAddress || data.query || 'Error'), error: true, message: (data.message || 'API request failed'), api_status: data.status };
         }
         if (!response.ok) {
           console.error('Network response was not ok for query "' + (ipAddress || 'user IP (current client)') + '": ' + response.status, "(URL: " + finalApiUrl + ")");
@@ -1154,9 +1154,9 @@
          lastUpdatedDisplayElem.textContent = currentTime;
       }
 
-      if (!data  data.error  data.status === 'fail') {
+      if (!data || data.error || data.status === 'fail') {
         const errorMessage = data ? (data.message || 'Failed to load') : 'Failed to load';
-        // console.log(Error for section ${section}:, errorMessage, data);
+        // console.log(`Error for section ${section}:`, errorMessage, data);
 
         if (section === 'user') {
           document.getElementById('user-ip').innerHTML = errorMessage;
@@ -1182,20 +1182,20 @@
             statusClassForProxy = 'status-warning';
           } else {
             // Corrected template literal for statusTextForProxy
-            statusTextForProxy = Error (${errorMessage.substring(0,30)}${errorMessage.length > 30 ? '...' : ''});
+            statusTextForProxy = `Error (${errorMessage.substring(0,30)}${errorMessage.length > 30 ? '...' : ''})`;
           }
 
           if(proxyStatusElem){
             // Corrected template literals for innerHTML and className
-            proxyStatusElem.innerHTML = <span class="status-indicator-dot"></span>${statusTextForProxy};
-            proxyStatusElem.className = value status-indicator ${statusClassForProxy};
+            proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusTextForProxy}`;
+            proxyStatusElem.className = `value status-indicator ${statusClassForProxy}`;
           }
 
           const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
           const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
 
           if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusTextForProxy;
-          if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = status-indicator ${statusClassForProxy};
+          if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClassForProxy}`;
         }
         return;
       }
@@ -1204,8 +1204,8 @@
         document.getElementById('user-ip').innerHTML = data.query || 'Unknown';
         // Corrected template literal for locationHtml
         const locationHtml = data.countryCode ?
-          <img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country || ''} flag"> ${data.city || ''}${data.city && data.country ? ', ' : ''}${data.country || 'Unknown'} :
-          (data.c data.country y || 'Unknown');
+          `<img src="https://flagcdn.com/24x18/${data.countryCode.toLowerCase()}.png" class="country-flag" alt="${data.country || ''} flag"> ${data.city || ''}${data.city && data.country ? ', ' : ''}${data.country || 'Unknown'}` :
+          (data.city || data.country || 'Unknown');
         document.getElementById('user-location').innerHTML = locationHtml || 'N/A';
         document.getElementById('user-isp').innerHTML = data.isp || 'N/A';
         document.getElementById('using-proxy').innerHTML = data.hosting ?
@@ -1229,14 +1229,14 @@
         
         if(proxyStatusElem){
             // Corrected template literals
-            proxyStatusElem.className = value status-indicator ${statusClass};
-            proxyStatusElem.innerHTML = <span class="status-indicator-dot"></span>${statusText};
+            proxyStatusElem.className = `value status-indicator ${statusClass}`;
+            proxyStatusElem.innerHTML = `<span class="status-indicator-dot"></span>${statusText}`;
         }
 
         const proxyStatusDisplayElem = document.getElementById('proxy-status-display');
         const proxyInfoStatusIndicatorElem = document.getElementById('proxy-info-status-indicator');
         if(proxyStatusDisplayElem) proxyStatusDisplayElem.textContent = statusText;
-        if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = status-indicator ${statusClass};
+        if(proxyInfoStatusIndicatorElem) proxyInfoStatusIndicatorElem.className = `status-indicator ${statusClass}`;
       }
     }
 
