@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,7 +10,7 @@
   <link
     href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
   <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Metrophobic&family=Roboto+Mono:wght@100..700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap"
     rel="stylesheet">
   <style>
     * {
@@ -1115,10 +1114,12 @@
       let apiUrlBase = 'http://ip-api.com/json';
       let finalApiUrl = apiUrlBase;
     
+      // Check if ipAddress is provided and is not the placeholder string
       if (ipAddress && ipAddress !== "{{PROXY_IP}}") {
-        finalApiUrl = ${apiUrlBase}/${ipAddress};
-      }
-      finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
+        finalApiUrl = `${apiUrlBase}/${ipAddress}`;
+      } else if (ipAddress === "{{PROXY_IP}}") {
+        // Let it fetch user's IP if placeholder is passed,
+        finalApiUrl += '?fields=status,message,country,countryCode,city,isp,reverse,hosting,query';
     
       // console.log("Attempting to fetch:", finalApiUrl); // For debugging
     
