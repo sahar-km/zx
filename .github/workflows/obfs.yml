@@ -1,8 +1,8 @@
-name: Build and Obfuscate Worker
+name: Obfuscate
 
 on:
-  push:
-    branches: [main]
+#  push:
+#    branches: [main]
   workflow_dispatch:
 
 jobs:
