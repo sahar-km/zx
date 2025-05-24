@@ -1072,7 +1072,7 @@
 
     // New access key for ipapi.com if you decide to keep it for client info
     const accessKey = "da626202971b190cedd872444cd0b8a6"; 
-
+    
     /**
      * Fetches IP information from ipapi.com (for client info)
      * @param {string | null} ip - IP address to lookup. If null, fetches client IP.
@@ -1100,7 +1100,7 @@
     /**
      * Updates the display for IP information using data from ipapi.com
      * @param {object | null} data - IP data.
-     * @param {string} prefix - 'client' or 'proxy'.
+     * @param {string} prefix - 'client'.
      */
     function updateIpapiDisplay(data, prefix) {
       if (!data) return;
@@ -1109,7 +1109,7 @@
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
-        type: document.getElementById(`${prefix}-type`), // Used for proxy connection type, not client
+        // type: document.getElementById(`${prefix}-type`), // Not directly used for client from ipapi.com in this context
         proxy: document.getElementById(`${prefix}-proxy`) // Only for client
       };
 
@@ -1136,14 +1136,6 @@
         elements.isp.textContent = data.connection?.isp || data.org || "N/A";
       }
       
-      // 'Connection Type' for proxy server, using ASN from ipapi.com
-      if (elements.type && prefix === 'proxy') {
-          const connectionType = data.connection?.asn ? 
-            `AS${data.connection.asn}` : 
-            (data.connection?.type || "Unknown");
-          elements.type.textContent = connectionType;
-      }
-
       // 'Proxy Detection' for client
       if (elements.proxy && prefix === 'client') {
         const isProxy = data.security?.is_proxy;
@@ -1166,8 +1158,13 @@
      */
     async function fetchIpApiIoInfo(ip) {
       try {
+        // Ensure the URL is correctly formed and absolute
         const response = await fetch(`https://ip-api.io/json/${ip}`);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            // Log the status for debugging
+            console.error(`ip-api.io fetch failed with status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
         return data;
       } catch (error) {
@@ -1195,10 +1192,11 @@
         elements.ip.textContent = geo.ip || "N/A";
       }
       if (elements.location) {
-        elements.location.textContent = geo.country_name ? `${geo.country_flag} ${geo.city}, ${geo.country_name}` : 'N/A';
+        // ip-api.io provides country_flag directly
+        elements.location.innerHTML = `${geo.country_flag || ''} ${geo.city || 'N/A'}, ${geo.country_name || 'N/A'}`;
       }
       if (elements.isp) {
-        elements.isp.textContent = geo.isp || 'N/A';
+        elements.isp.textContent = geo.isp || geo.org || 'N/A'; // Use org as fallback
       }
       if (elements.type) {
         elements.type.textContent = geo.connection_type || 'N/A';
@@ -1210,7 +1208,7 @@
       const locationElement = document.getElementById(`${prefix}-location`);
       const ispElement = document.getElementById(`${prefix}-isp`);
       const typeElement = document.getElementById(`${prefix}-type`);
-      const proxyElement = document.getElementById(`${prefix}-proxy`);
+      const proxyElement = document.getElementById(`${prefix}-proxy`); // For client only
 
       const errorMessage = "N/A";
       
@@ -1218,7 +1216,7 @@
       if (locationElement) locationElement.textContent = errorMessage;
       if (ispElement) ispElement.textContent = errorMessage;
       if (typeElement) typeElement.textContent = errorMessage;
-      if (proxyElement) proxyElement.textContent = errorMessage;
+      if (proxyElement && prefix === 'client') proxyElement.innerHTML = '<span class="badge badge-no">N/A</span>'; // Provide N/A badge for proxy detection
 
       console.log(`${prefix} data loading failed: ${message}`);
     }
@@ -1226,39 +1224,52 @@
     async function loadNetworkInfo() {
       try {
         // --- Load Proxy Server Info (using ip-api.io and DNS resolution) ---
-        // Get the proxy IP/domain directly from the data-proxy-ip attribute
         const proxyDomainOrIp = document.body.getAttribute('data-proxy-ip');
         let resolvedProxyIp = proxyDomainOrIp; // Start with the value from the attribute
         
         // Only proceed if proxyDomainOrIp has a meaningful value
-        if (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp !== "unknown") { // Add checks for N/A or unknown if worker might inject them
+        if (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp !== "unknown") {
           // Attempt to resolve domain to IP if it's not already an IP
           if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomainOrIp)) { // Simple IP regex
             try {
               console.log('Attempting to resolve proxy domain:', proxyDomainOrIp);
-              const dnsRes = await fetch('[https://dns.google/resolve?name=](https://dns.google/resolve?name=)' + proxyDomainOrIp + '&type=A');
+              // CORRECTED URL CONSTRUCTION: Ensure it's an absolute URL
+              const dnsRes = await fetch(`https://dns.google/resolve?name=${proxyDomainOrIp}&type=A`);
+              
+              if (!dnsRes.ok) {
+                  // If DNS resolution fails, log it and possibly fall back or throw
+                  const errorText = await dnsRes.text();
+                  console.error(`DNS lookup HTTP error! Status: ${dnsRes.status}, Response: ${errorText}`);
+                  throw new Error(`DNS lookup failed with status: ${dnsRes.status}`);
+              }
+
               const dnsData = await dnsRes.json();
+              
               if (dnsData.Answer && dnsData.Answer.length > 0) {
                 const ipAnswer = dnsData.Answer.find(a => a.type === 1); // Type 1 is A record
                 if (ipAnswer) {
                   resolvedProxyIp = ipAnswer.data;
                   console.log('Proxy domain resolved to IP:', resolvedProxyIp);
                 } else {
-                  console.warn('No A record found for proxy domain:', proxyDomainOrIp);
+                  console.warn('No A record (type 1) found for proxy domain:', proxyDomainOrIp);
+                  // If no A record, proceed with domain, ip-api.io might handle it gracefully
                 }
               } else {
                 console.warn('DNS lookup returned no answers for proxy domain:', proxyDomainOrIp);
+                // If no answers, proceed with domain
               }
             } catch (e) {
               console.error('DNS resolution for proxy domain failed:', e);
-              // Fallback to the domain if DNS fails, ip-api.io might still handle it
+              // If DNS resolution completely fails, resolvedProxyIp remains the domain.
+              // ip-api.io might handle domains, or it might fail as seen (Error 3).
+              // We'll rely on the subsequent fetchIpApiIoInfo to catch failures.
             }
           } else {
             console.log('Proxy IP is already an IP or directly provided:', proxyDomainOrIp);
           }
-    
+
           // Now lookup geolocation for the (resolved or original) proxy IP/domain
-          if (resolvedProxyIp) {
+          if (resolvedProxyIp) { // Ensure resolvedProxyIp is not null/empty after DNS attempt
             const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp);
             if (proxyGeoData) {
               updateIpApiIoDisplay(proxyGeoData, 'proxy');
@@ -1272,7 +1283,7 @@
           console.log('Proxy IP from data attribute is empty, N/A, or unknown:', proxyDomainOrIp);
           showError('proxy', 'Proxy IP not available');
         }
-    
+
         // --- Load Client Info (using ipapi.com as it was) ---
         console.log('Loading client info...');
         const clientData = await fetchIpapiInfo();
@@ -1281,7 +1292,7 @@
         } else {
           showError('client', 'Could not load your connection data from ipapi.com');
         }
-    
+
       } catch (error) {
         console.error('Overall network info loading failed:', error);
         showError('proxy', 'Error loading data');
