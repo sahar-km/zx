@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VLESS Proxy Configuration</title>
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400..700;1,400..700&family=Fira+Code:wght@300..700&family=Inter:opsz,wght@14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -25,7 +25,17 @@
 
     @font-face {
       font-family: "Styrene B LC";
-      src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2");
+      src: 
+        url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2"),
+        url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/StyreneBLC-Regular.ttf") format("truetype");
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Styrene B LC";
+      src:
+        url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Medium.woff2") format("woff2"),
+        url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/StyreneBLC-Medium.ttf") format("truetype");
       font-weight: 500; font-style: normal; font-display: swap;
     }
 
@@ -56,7 +66,7 @@
       --status-warning: #e0bc44;
       --status-info: #4f90c4;
 
-      --serif: 'Aldine 401 BT Web', 'Times New Roman', Times, Georgia, ui-serif, serif;
+      --serif: "Aldine 401 BT Web", "Times New Roman", Times, Georgia, ui-serif, serif;
       --sans-serif: "Styrene B LC", "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Color Emoji", sans-serif;
       --mono-serif: "Fira Code", "Roboto Mono", Cantarell, Courier Prime, SFMono-Regular, monospace;
     }
@@ -619,6 +629,7 @@
     }
 
     .ip-info-item .value {
+      font-family: var(--serif);
       font-size: 14px;
       color: var(--text-primary);
       word-break: break-all;
