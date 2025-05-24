@@ -1226,15 +1226,17 @@
     async function loadNetworkInfo() {
       try {
         // --- Load Proxy Server Info (using ip-api.io and DNS resolution) ---
-        const proxyDomain = document.body.getAttribute('data-proxy-ip');
-        let resolvedProxyIp = proxyDomain; // Start with the domain
+        // Get the proxy IP/domain directly from the data-proxy-ip attribute
+        const proxyDomainOrIp = document.body.getAttribute('data-proxy-ip');
+        let resolvedProxyIp = proxyDomainOrIp; // Start with the value from the attribute
         
-        if (proxyDomain && proxyDomain !== "" && proxyDomain !== "{{PROXY_IP}}") {
+        // Only proceed if proxyDomainOrIp has a meaningful value
+        if (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp !== "unknown") { // Add checks for N/A or unknown if worker might inject them
           // Attempt to resolve domain to IP if it's not already an IP
-          if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomain)) { // Simple IP regex
+          if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomainOrIp)) { // Simple IP regex
             try {
-              console.log('Attempting to resolve proxy domain:', proxyDomain);
-              const dnsRes = await fetch('https://dns.google/resolve?name=' + proxyDomain + '&type=A');
+              console.log('Attempting to resolve proxy domain:', proxyDomainOrIp);
+              const dnsRes = await fetch('[https://dns.google/resolve?name=](https://dns.google/resolve?name=)' + proxyDomainOrIp + '&type=A');
               const dnsData = await dnsRes.json();
               if (dnsData.Answer && dnsData.Answer.length > 0) {
                 const ipAnswer = dnsData.Answer.find(a => a.type === 1); // Type 1 is A record
@@ -1242,20 +1244,20 @@
                   resolvedProxyIp = ipAnswer.data;
                   console.log('Proxy domain resolved to IP:', resolvedProxyIp);
                 } else {
-                  console.warn('No A record found for proxy domain:', proxyDomain);
+                  console.warn('No A record found for proxy domain:', proxyDomainOrIp);
                 }
               } else {
-                console.warn('DNS lookup returned no answers for proxy domain:', proxyDomain);
+                console.warn('DNS lookup returned no answers for proxy domain:', proxyDomainOrIp);
               }
             } catch (e) {
               console.error('DNS resolution for proxy domain failed:', e);
-              // Fallback to the domain if DNS fails
+              // Fallback to the domain if DNS fails, ip-api.io might still handle it
             }
           } else {
-            console.log('Proxy IP is already an IP:', proxyDomain);
+            console.log('Proxy IP is already an IP or directly provided:', proxyDomainOrIp);
           }
-
-          // Now lookup geolocation for the (resolved) proxy IP
+    
+          // Now lookup geolocation for the (resolved or original) proxy IP/domain
           if (resolvedProxyIp) {
             const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp);
             if (proxyGeoData) {
@@ -1264,13 +1266,13 @@
               showError('proxy', 'Could not load proxy server data from ip-api.io');
             }
           } else {
-              showError('proxy', 'Proxy IP could not be determined');
+              showError('proxy', 'Proxy IP could not be determined or resolved.');
           }
         } else {
-          console.log('Proxy IP not available or placeholder:', proxyIP);
+          console.log('Proxy IP from data attribute is empty, N/A, or unknown:', proxyDomainOrIp);
           showError('proxy', 'Proxy IP not available');
         }
-
+    
         // --- Load Client Info (using ipapi.com as it was) ---
         console.log('Loading client info...');
         const clientData = await fetchIpapiInfo();
@@ -1279,7 +1281,7 @@
         } else {
           showError('client', 'Could not load your connection data from ipapi.com');
         }
-
+    
       } catch (error) {
         console.error('Overall network info loading failed:', error);
         showError('proxy', 'Error loading data');
