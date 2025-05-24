@@ -1098,56 +1098,62 @@
     }
 
     /**
-     * Updates the display for IP information using data from ipapi.com
-     * @param {object | null} data - IP data.
-     * @param {string} prefix - 'client'.
+     * Updates the display for IP information using data from ip-api.io
+     * @param {object | null} geo - IP data.
+     * @param {string} prefix - 'proxy'.
      */
-    function updateIpapiDisplay(data, prefix) {
-      if (!data) return;
+    function updateIpApiIoDisplay(geo, prefix) {
+      if (!geo) return;
 
       const elements = {
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
-        // type: document.getElementById(`${prefix}-type`), // Not directly used for client from ipapi.com in this context
-        proxy: document.getElementById(`${prefix}-proxy`) // Only for client
+        type: document.getElementById(`${prefix}-type`),
       };
 
       if (elements.ip) {
-        elements.ip.textContent = data.ip || "N/A";
+        elements.ip.textContent = geo.ip || "N/A";
       }
-
       if (elements.location) {
-        const location = [];
-        if (data.city) location.push(data.city);
-        if (data.country_name) location.push(data.country_name);
+        // ip-api.io provides country_flag directly, ensure we handle cases where city/country are missing
+        const city = geo.city || '';
+        const countryName = geo.country_name || '';
+        const flag = geo.country_flag || '';
         
-        const locationText = location.join(', ') || "N/A";
-        const flag = data.location?.country_flag_emoji || '';
-        
-        if (flag) {
-          elements.location.innerHTML = `<span class="country-flag">${flag}</span>${locationText}`;
+        let locationText = '';
+        if (city && countryName) {
+            locationText = `${city}, ${countryName}`;
+        } else if (city) {
+            locationText = city;
+        } else if (countryName) {
+            locationText = countryName;
         } else {
-          elements.location.textContent = locationText;
+            locationText = 'N/A';
         }
+        
+        elements.location.innerHTML = `${flag} ${locationText}`;
       }
-
       if (elements.isp) {
-        elements.isp.textContent = data.connection?.isp || data.org || "N/A";
+        // Prioritize ISP, then Organization, then AS name
+        elements.isp.textContent = geo.isp || geo.org || geo.as || 'N/A'; 
       }
-      
-      // 'Proxy Detection' for client
-      if (elements.proxy && prefix === 'client') {
-        const isProxy = data.security?.is_proxy;
-        const proxyType = data.security?.proxy_type;
-        
-        if (isProxy) {
-          const badgeClass = proxyType ? 'badge-neutral' : 'badge-yes';
-          const proxyText = proxyType ? `Yes (${proxyType})` : 'Yes';
-          elements.proxy.innerHTML = `<span class="badge ${badgeClass}">${proxyText}</span>`;
-        } else {
-          elements.proxy.innerHTML = '<span class="badge badge-no">No</span>';
+      if (elements.type) {
+        // ip-api.io doesn't directly provide "connection_type" often.
+        // We can try to use AS number or simply categorize based on basic info if available.
+        // For now, let's try to get AS name or number, if available
+        let connectionType = 'N/A';
+        if (geo.as) {
+            connectionType = geo.as.split(' ')[0] + ' Network'; // e.g., AS12345 Network
+            if (geo.as.includes('Verizon') || geo.as.includes('Comcast')) {
+                connectionType = 'Broadband'; // Example categorization
+            } else if (geo.as.includes('Mobile')) {
+                connectionType = 'Mobile';
+            }
+        } else if (geo.isp) {
+            connectionType = 'ISP Connection';
         }
+        elements.type.textContent = connectionType;
       }
     }
 
@@ -1174,32 +1180,61 @@
     }
 
     /**
-     * Updates the display for IP information using data from ip-api.io
-     * @param {object | null} geo - IP data.
-     * @param {string} prefix - 'proxy'.
+     * Updates the display for IP information using data from ipapi.com
+     * @param {object | null} data - IP data.
+     * @param {string} prefix - 'client'.
      */
-    function updateIpApiIoDisplay(geo, prefix) {
-      if (!geo) return;
+    function updateIpapiDisplay(data, prefix) {
+      if (!data) return;
 
       const elements = {
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
-        type: document.getElementById(`${prefix}-type`),
+        // type: document.getElementById(`${prefix}-type`), // Not directly used for client connection type display
+        proxy: document.getElementById(`${prefix}-proxy`) // Only for client
       };
 
       if (elements.ip) {
-        elements.ip.textContent = geo.ip || "N/A";
+        elements.ip.textContent = data.ip || "N/A";
       }
+
       if (elements.location) {
-        // ip-api.io provides country_flag directly
-        elements.location.innerHTML = `${geo.country_flag || ''} ${geo.city || 'N/A'}, ${geo.country_name || 'N/A'}`;
+        const location = [];
+        if (data.city) location.push(data.city);
+        if (data.country_name) location.push(data.country_name);
+        
+        const locationText = location.join(', ') || "N/A";
+        const flag = data.location?.country_flag_emoji || '';
+        
+        if (flag) {
+          elements.location.innerHTML = `<span class="country-flag">${flag}</span>${locationText}`;
+        } else {
+          elements.location.textContent = locationText;
+        }
       }
+
       if (elements.isp) {
-        elements.isp.textContent = geo.isp || geo.org || 'N/A'; // Use org as fallback
+        // ipapi.com often has 'connection.isp' or 'org'
+        elements.isp.textContent = data.connection?.isp || data.org || "N/A";
       }
-      if (elements.type) {
-        elements.type.textContent = geo.connection_type || 'N/A';
+      
+      // 'Proxy Detection' for client
+      if (elements.proxy && prefix === 'client') {
+        // ipapi.com uses security.is_proxy and security.proxy_type
+        const isProxy = data.security?.is_proxy;
+        const proxyType = data.security?.proxy_type;
+        
+        if (isProxy === true) { // Explicitly check for true
+          const badgeClass = proxyType ? 'badge-neutral' : 'badge-yes';
+          const proxyText = proxyType ? `Yes (${proxyType})` : 'Yes';
+          elements.proxy.innerHTML = `<span class="badge ${badgeClass}">${proxyText}</span>`;
+        } else if (isProxy === false) { // Explicitly check for false
+          elements.proxy.innerHTML = '<span class="badge badge-no">No</span>';
+        } else {
+          // If is_proxy is undefined, null, or not a boolean
+          elements.proxy.innerHTML = '<span class="badge badge-neutral">Unknown</span>';
+        }
       }
     }
 
