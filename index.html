@@ -4,14 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VLESS Proxy Configuration</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
-  <link
-    href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap"
-    rel="stylesheet">
+  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+  <link href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -24,17 +20,13 @@
       src:
         url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2") format("woff2"),
         url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/Aldine401_Mersedeh.ttf") format("truetype");
-      font-weight: 400;
-      font-style: normal;
-      font-display: swap;
+      font-weight: 400; font-style: normal; font-display: swap;
     }
 
     @font-face {
       font-family: "Styrene B LC";
       src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2");
-      font-weight: 500;
-      font-style: normal;
-      font-display: swap;
+      font-weight: 500; font-style: normal; font-display: swap;
     }
 
     :root {
@@ -65,9 +57,7 @@
       --status-info: #4f90c4;
 
       --serif: 'Aldine 401 BT Web', 'Times New Roman', Times, Georgia, ui-serif, serif;
-      --aldine: "Aldine 401 BT Web", serif;
-      --sans-serif: "Styrene B LC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
-        "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      --sans-serif: "Styrene B LC", "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Color Emoji", sans-serif;
       --mono-serif: "Fira Code", "Roboto Mono", Cantarell, Courier Prime, SFMono-Regular, monospace;
     }
 
@@ -139,7 +129,7 @@
     }
 
     .config-title {
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 22px;
       font-weight: 400;
       color: var(--accent-secondary);
@@ -154,7 +144,7 @@
     .config-title .refresh-btn {
       position: relative;
       overflow: hidden;
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 12px;
       padding: 6px 12px;
       border-radius: 4px;
@@ -251,7 +241,7 @@
     }
 
     .attribute strong {
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 16px;
       font-weight: 400;
       color: var(--accent-secondary);
@@ -317,7 +307,7 @@
       top: 10px;
       right: 10px;
       padding: 6px 12px;
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 12px;
       font-weight: 600;
       background-color: var(--background-tertiary);
@@ -602,7 +592,7 @@
     }
 
     .ip-info-header h3 {
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 18px;
       font-weight: 400;
       color: var(--accent-secondary);
@@ -807,7 +797,6 @@
 
   </style>
 </head>
-<!-- The Worker will inject data-proxy-ip="YOUR_PROXY_IP" here -->
 <body>
   <div class="container">
     <div class="header">
@@ -815,12 +804,11 @@
       <p>Copy the configuration or import directly into your client</p>
     </div>
 
-    <!-- Enhanced Proxy Info Card -->
     <div class="config-card">
       <div class="config-title">
         <span>Network Information</span>
         <button id="refresh-ip-info" class="refresh-btn" aria-label="Refresh IP information">
-          <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          <svg class="refresh-icon" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
           </svg>
@@ -829,10 +817,9 @@
       </div>
 
       <div class="ip-info-grid">
-        <!-- Proxy Server Info -->
         <div class="ip-info-section">
           <div class="ip-info-header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M15.5 2H8.6c-.4 0-.8.2-1.1.5-.3.3-.5.7-.5 1.1v16.8c0 .4.2.8.5 1.1.3.3.7.5 1.1.5h6.9c.4 0 .8-.2 1.1-.5.3-.3.5-.7.5-1.1V3.6c0-.4-.2-.8-.5-1.1-.3-.3-.7-.5-1.1-.5z"/>
               <circle cx="12" cy="18" r="1"/>
             </svg>
@@ -866,10 +853,9 @@
           </div>
         </div>
 
-        <!-- Client Info -->
         <div class="ip-info-section">
           <div class="ip-info-header">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>
             </svg>
             <h3>Your Connection</h3>
@@ -904,7 +890,6 @@
       </div>
     </div>
 
-    <!-- Xray Core Clients -->
     <div class="config-card">
       <div class="config-title">Xray Core Clients</div>
       <div class="config-content">
@@ -918,24 +903,22 @@
       </div>
       <div class="client-buttons">
         
-        <!-- Hiddify -->
         <a href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}"
           class="button client-btn"
           aria-label="Import configuration to Hiddify client">
           <span class="client-icon">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <svg aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
             </svg>
           </span>
           <span class="button-text">Import to Hiddify</span>
         </a>
 
-        <!-- V2rayNG -->
         <a href="v2rayng://install-config?url={{DREAM_CONFIG_ENCODED}}"
           class="button client-btn"
           aria-label="Import configuration to V2rayNG client">
           <span class="client-icon">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <svg aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2L4 5v6c0 5.5 3.5 10.7 8 12.3 4.5-1.6 8-6.8 8-12.3V5l-8-3z" />
             </svg>
           </span>
@@ -944,7 +927,6 @@
       </div>
     </div>
 
-    <!-- Sing-Box Core Clients -->
     <div class="config-card">
       <div class="config-title">Sing-Box Core Clients</div>
       <div class="config-content">
@@ -957,10 +939,9 @@
         <pre id="singbox-config">{{FREEDOM_CONFIG}}</pre>
       </div>
       <div class="client-buttons">
-        <!-- Clash Meta -->
         <a href="{{CLASH_META_URL}}" class="button client-btn">
           <span class="client-icon">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <svg aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
             </svg>
@@ -968,10 +949,9 @@
           <span class="button-text">Import to Clash Meta</span>
         </a>
 
-        <!-- NekoBox -->
         <a href="{{NEKOBOX_URL}}" class="button client-btn" aria-label="Import configuration to NekoBox client">
           <span class="client-icon">
-            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <svg aria-hidden="true" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)" viewBox="0 0 24 24" fill="currentColor">
               <path
                 d="M20,8h-3V6c0-1.1-0.9-2-2-2H9C7.9,4,7,4.9,7,6v2H4C2.9,8,2,8.9,2,10v9c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2v-9 C22,8.9,21.1,8,20,8z M9,6h6v2H9V6z M20,19H4v-2h16V19z M20,15H4v-5h3v1c0,0.55,0.45,1,1,1h1.5c0.28,0,0.5-0.22,0.5-0.5v-0.5h4v0.5 c0,0.28,0.22,0.5,0.5,0.5H16c0.55,0,1-0.45,1-1v-1h3V15z" />
               <circle cx="8.5" cy="13.5" r="1" />
@@ -1070,40 +1050,112 @@
     // Your existing global variables related to IP info
     const proxyIP = "{{PROXY_IP}}".trim(); // This comes from your worker
 
-    // New access key for ipapi.com if you decide to keep it for client info
-    const accessKey = "da626202971b190cedd872444cd0b8a6"; 
+    // API key for ipdata.co
+    const ipdataApiKey = "45d33281a59a93aeb7227414b15038f7a5a591c7e68962aa1c37d159"; 
     
     /**
-     * Fetches IP information from ipapi.com (for client info)
-     * @param {string | null} ip - IP address to lookup. If null, fetches client IP.
+     * Fetches client IP information from ipdata.co
      * @returns {Promise<object | null>} IP data or null on error.
      */
-    async function fetchIpapiInfo(ip = null) {
+    async function fetchIpdataClientInfo() {
       try {
-        const endpoint = ip ? 
-          `https://api.ipapi.com/api/${ip}?access_key=${accessKey}` :
-          `https://api.ipapi.com/api/check?access_key=${accessKey}`;
-
-        const response = await fetch(endpoint);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        
+        const response = await fetch(`https://api.ipdata.co/?api-key=${ipdataApiKey}`);
+        if (!response.ok) {
+          const errorText = await response.text();
+          // Try to parse errorText if it's JSON, otherwise use it as is
+          let detail = errorText;
+          try {
+            const errorJson = JSON.parse(errorText);
+            if (errorJson && errorJson.message) {
+              detail = errorJson.message;
+            }
+          } catch (e) { /* Ignore parsing error, use raw text */ }
+          throw new Error(`HTTP error! status: ${response.status}, message: ${detail}`);
+        }
         const data = await response.json();
-        if (data.error) throw new Error(data.error.info);
-        
+        // ipdata.co might return a JSON with a "message" field for errors (e.g., key issues)
+        if (data.message && response.status !== 200) { 
+            throw new Error(data.message);
+        }
         return data;
       } catch (error) {
-        console.error('IP API Error (ipapi.com):', error);
+        console.error('IP API Error (ipdata.co):', error);
         return null;
       }
     }
 
     /**
-     * Updates the display for IP information using data from ip-api.io
+     * Updates the display for client IP information using data from ipdata.co
+     * @param {object | null} data - IP data from ipdata.co.
+     */
+    function updateIpdataClientDisplay(data) {
+      const prefix = 'client';
+      if (!data) {
+        showError(prefix, 'Could not load data from ipdata.co');
+        return;
+      }
+
+      const elements = {
+        ip: document.getElementById(`${prefix}-ip`),
+        location: document.getElementById(`${prefix}-location`),
+        isp: document.getElementById(`${prefix}-isp`),
+        proxy: document.getElementById(`${prefix}-proxy`)
+      };
+
+      if (elements.ip) {
+        elements.ip.textContent = data.ip || "N/A";
+      }
+
+      if (elements.location) {
+        const flag = data.emoji_flag || '';
+        const city = data.city || '';
+        const countryName = data.country_name || '';
+        let locationText = 'N/A';
+        
+        // Construct location string: "🇩🇪 City, Country" or "🇩🇪 Country" or "🇩🇪 City" or "🇩🇪"
+        if (flag || city || countryName) {
+            locationText = flag;
+            if (city && countryName) {
+                locationText += ` ${city}, ${countryName}`;
+            } else if (countryName) {
+                locationText += ` ${countryName}`;
+            } else if (city) {
+                locationText += ` ${city}`;
+            }
+        }
+        elements.location.innerHTML = locationText.trim() || "N/A";
+      }
+
+      if (elements.isp) {
+        elements.isp.textContent = (data.asn && data.asn.name) || "N/A";
+      }
+      
+      if (elements.proxy) {
+        // User wants: "threat_is_proxy"
+        const isProxy = data.threat?.is_proxy;
+        
+        if (isProxy === true) {
+          elements.proxy.innerHTML = '<span class="badge badge-yes">Yes</span>';
+        } else if (isProxy === false) {
+          elements.proxy.innerHTML = '<span class="badge badge-no">No</span>';
+        } else {
+          // null, undefined, or any other value
+          elements.proxy.innerHTML = '<span class="badge badge-neutral">Unknown</span>';
+        }
+      }
+    }
+
+
+    /**
+     * Updates the display for IP information using data from ip-api.io (for Proxy Server)
      * @param {object | null} geo - IP data.
      * @param {string} prefix - 'proxy'.
      */
     function updateIpApiIoDisplay(geo, prefix) {
-      if (!geo) return;
+      if (!geo) {
+        showError(prefix, 'Could not load proxy data from ip-api.io');
+        return;
+      }
 
       const elements = {
         ip: document.getElementById(`${prefix}-ip`),
@@ -1116,38 +1168,33 @@
         elements.ip.textContent = geo.ip || "N/A";
       }
       if (elements.location) {
-        // ip-api.io provides country_flag directly, ensure we handle cases where city/country are missing
         const city = geo.city || '';
         const countryName = geo.country_name || '';
-        const flag = geo.country_flag || '';
+        const flag = geo.country_flag || ''; // ip-api.io provides HTML for flag
         
-        let locationText = '';
-        if (city && countryName) {
-            locationText = `${city}, ${countryName}`;
-        } else if (city) {
-            locationText = city;
-        } else if (countryName) {
-            locationText = countryName;
-        } else {
-            locationText = 'N/A';
+        let locationText = 'N/A';
+        if (flag || city || countryName) {
+            locationText = flag; // Flag first
+            if (city && countryName) {
+                locationText += ` ${city}, ${countryName}`;
+            } else if (countryName) {
+                locationText += ` ${countryName}`;
+            } else if (city) { // Less likely to have city without country, but handle
+                locationText += ` ${city}`;
+            }
         }
-        
-        elements.location.innerHTML = `${flag} ${locationText}`;
+        elements.location.innerHTML = locationText.trim() || "N/A";
       }
       if (elements.isp) {
-        // Prioritize ISP, then Organization, then AS name
         elements.isp.textContent = geo.isp || geo.org || geo.as || 'N/A'; 
       }
       if (elements.type) {
-        // ip-api.io doesn't directly provide "connection_type" often.
-        // We can try to use AS number or simply categorize based on basic info if available.
-        // For now, let's try to get AS name or number, if available
         let connectionType = 'N/A';
         if (geo.as) {
-            connectionType = geo.as.split(' ')[0] + ' Network'; // e.g., AS12345 Network
-            if (geo.as.includes('Verizon') || geo.as.includes('Comcast')) {
-                connectionType = 'Broadband'; // Example categorization
-            } else if (geo.as.includes('Mobile')) {
+            connectionType = geo.as.split(' ')[0] + ' Network'; 
+            if (geo.as.toLowerCase().includes('verizon') || geo.as.toLowerCase().includes('comcast')) {
+                connectionType = 'Broadband';
+            } else if (geo.as.toLowerCase().includes('mobile') || geo.isp?.toLowerCase().includes('mobile')) {
                 connectionType = 'Mobile';
             }
         } else if (geo.isp) {
@@ -1164,11 +1211,10 @@
      */
     async function fetchIpApiIoInfo(ip) {
       try {
-        // Ensure the URL is correctly formed and absolute
         const response = await fetch(`https://ip-api.io/json/${ip}`);
         if (!response.ok) {
-            // Log the status for debugging
-            console.error(`ip-api.io fetch failed with status: ${response.status}`);
+            const errorText = await response.text();
+            console.error(`ip-api.io fetch failed with status: ${response.status}, message: ${errorText}`);
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
@@ -1179,159 +1225,95 @@
       }
     }
 
-    /**
-     * Updates the display for IP information using data from ipapi.com
-     * @param {object | null} data - IP data.
-     * @param {string} prefix - 'client'.
-     */
-    function updateIpapiDisplay(data, prefix) {
-      if (!data) return;
-
-      const elements = {
-        ip: document.getElementById(`${prefix}-ip`),
-        location: document.getElementById(`${prefix}-location`),
-        isp: document.getElementById(`${prefix}-isp`),
-        // type: document.getElementById(`${prefix}-type`), // Not directly used for client connection type display
-        proxy: document.getElementById(`${prefix}-proxy`) // Only for client
-      };
-
-      if (elements.ip) {
-        elements.ip.textContent = data.ip || "N/A";
-      }
-
-      if (elements.location) {
-        const location = [];
-        if (data.city) location.push(data.city);
-        if (data.country_name) location.push(data.country_name);
-        
-        const locationText = location.join(', ') || "N/A";
-        const flag = data.location?.country_flag_emoji || '';
-        
-        if (flag) {
-          elements.location.innerHTML = `<span class="country-flag">${flag}</span>${locationText}`;
-        } else {
-          elements.location.textContent = locationText;
-        }
-      }
-
-      if (elements.isp) {
-        // ipapi.com often has 'connection.isp' or 'org'
-        elements.isp.textContent = data.connection?.isp || data.org || "N/A";
-      }
-      
-      // 'Proxy Detection' for client
-      if (elements.proxy && prefix === 'client') {
-        // ipapi.com uses security.is_proxy and security.proxy_type
-        const isProxy = data.security?.is_proxy;
-        const proxyType = data.security?.proxy_type;
-        
-        if (isProxy === true) { // Explicitly check for true
-          const badgeClass = proxyType ? 'badge-neutral' : 'badge-yes';
-          const proxyText = proxyType ? `Yes (${proxyType})` : 'Yes';
-          elements.proxy.innerHTML = `<span class="badge ${badgeClass}">${proxyText}</span>`;
-        } else if (isProxy === false) { // Explicitly check for false
-          elements.proxy.innerHTML = '<span class="badge badge-no">No</span>';
-        } else {
-          // If is_proxy is undefined, null, or not a boolean
-          elements.proxy.innerHTML = '<span class="badge badge-neutral">Unknown</span>';
-        }
-      }
-    }
-
     function showError(prefix, message = "Could not load data") {
       const ipElement = document.getElementById(`${prefix}-ip`);
       const locationElement = document.getElementById(`${prefix}-location`);
       const ispElement = document.getElementById(`${prefix}-isp`);
-      const typeElement = document.getElementById(`${prefix}-type`);
-      const proxyElement = document.getElementById(`${prefix}-proxy`); // For client only
+      const typeElement = document.getElementById(`${prefix}-type`); // Only for proxy
+      const proxyElement = document.getElementById(`${prefix}-proxy`); // Only for client
 
       const errorMessage = "N/A";
       
       if (ipElement) ipElement.textContent = errorMessage;
-      if (locationElement) locationElement.textContent = errorMessage;
+      if (locationElement) locationElement.innerHTML = errorMessage; // Use innerHTML for consistency if flags are involved
       if (ispElement) ispElement.textContent = errorMessage;
-      if (typeElement) typeElement.textContent = errorMessage;
-      if (proxyElement && prefix === 'client') proxyElement.innerHTML = '<span class="badge badge-no">N/A</span>'; // Provide N/A badge for proxy detection
 
-      console.log(`${prefix} data loading failed: ${message}`);
+      if (prefix === 'proxy' && typeElement) {
+        typeElement.textContent = errorMessage;
+      }
+      if (prefix === 'client' && proxyElement) {
+        proxyElement.innerHTML = `<span class="badge badge-neutral">N/A</span>`; 
+      }
+
+      console.warn(`${prefix} data loading failed: ${message}`); // Use warn for non-critical load failures
     }
 
     async function loadNetworkInfo() {
       try {
         // --- Load Proxy Server Info (using ip-api.io and DNS resolution) ---
         const proxyDomainOrIp = document.body.getAttribute('data-proxy-ip');
-        let resolvedProxyIp = proxyDomainOrIp; // Start with the value from the attribute
+        let resolvedProxyIp = proxyDomainOrIp; 
         
-        // Only proceed if proxyDomainOrIp has a meaningful value
-        if (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp !== "unknown") {
-          // Attempt to resolve domain to IP if it's not already an IP
-          if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomainOrIp)) { // Simple IP regex
+        if (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp !== "unknown" && proxyDomainOrIp.toLowerCase() !== "null") {
+          if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomainOrIp)) { 
             try {
               console.log('Attempting to resolve proxy domain:', proxyDomainOrIp);
-              // CORRECTED URL CONSTRUCTION: Ensure it's an absolute URL
-              const dnsRes = await fetch(`https://dns.google/resolve?name=${proxyDomainOrIp}&type=A`);
-              
+              const dnsRes = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(proxyDomainOrIp)}&type=A`);
               if (!dnsRes.ok) {
-                  // If DNS resolution fails, log it and possibly fall back or throw
                   const errorText = await dnsRes.text();
                   console.error(`DNS lookup HTTP error! Status: ${dnsRes.status}, Response: ${errorText}`);
-                  throw new Error(`DNS lookup failed with status: ${dnsRes.status}`);
+                  throw new Error(`DNS lookup failed for ${proxyDomainOrIp} with status: ${dnsRes.status}`);
               }
-
               const dnsData = await dnsRes.json();
-              
               if (dnsData.Answer && dnsData.Answer.length > 0) {
-                const ipAnswer = dnsData.Answer.find(a => a.type === 1); // Type 1 is A record
+                const ipAnswer = dnsData.Answer.find(a => a.type === 1); 
                 if (ipAnswer) {
                   resolvedProxyIp = ipAnswer.data;
-                  console.log('Proxy domain resolved to IP:', resolvedProxyIp);
+                  console.log('Proxy domain', proxyDomainOrIp, 'resolved to IP:', resolvedProxyIp);
                 } else {
                   console.warn('No A record (type 1) found for proxy domain:', proxyDomainOrIp);
-                  // If no A record, proceed with domain, ip-api.io might handle it gracefully
+                  // resolvedProxyIp remains the domain, ip-api.io might handle it.
                 }
               } else {
                 console.warn('DNS lookup returned no answers for proxy domain:', proxyDomainOrIp);
-                // If no answers, proceed with domain
               }
             } catch (e) {
               console.error('DNS resolution for proxy domain failed:', e);
-              // If DNS resolution completely fails, resolvedProxyIp remains the domain.
-              // ip-api.io might handle domains, or it might fail as seen (Error 3).
-              // We'll rely on the subsequent fetchIpApiIoInfo to catch failures.
             }
           } else {
             console.log('Proxy IP is already an IP or directly provided:', proxyDomainOrIp);
           }
 
-          // Now lookup geolocation for the (resolved or original) proxy IP/domain
-          if (resolvedProxyIp) { // Ensure resolvedProxyIp is not null/empty after DNS attempt
+          if (resolvedProxyIp) { 
             const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp);
-            if (proxyGeoData) {
+            if (proxyGeoData && !proxyGeoData.error) { // ip-api.io might return error in json
               updateIpApiIoDisplay(proxyGeoData, 'proxy');
             } else {
-              showError('proxy', 'Could not load proxy server data from ip-api.io');
+              showError('proxy', `Could not load proxy server data from ip-api.io. ${proxyGeoData?.error || ''}`);
             }
           } else {
               showError('proxy', 'Proxy IP could not be determined or resolved.');
           }
         } else {
-          console.log('Proxy IP from data attribute is empty, N/A, or unknown:', proxyDomainOrIp);
+          console.log('Proxy IP from data attribute is empty, N/A, null, or unknown:', proxyDomainOrIp);
           showError('proxy', 'Proxy IP not available');
         }
 
-        // --- Load Client Info (using ipapi.com as it was) ---
-        console.log('Loading client info...');
-        const clientData = await fetchIpapiInfo();
+        // --- Load Client Info (using ipdata.co) ---
+        console.log('Loading client info using ipdata.co...');
+        const clientData = await fetchIpdataClientInfo(); 
         if (clientData) {
-          updateIpapiDisplay(clientData, 'client');
+          updateIpdataClientDisplay(clientData); 
         } else {
-          showError('client', 'Could not load your connection data from ipapi.com');
+          // showError is called within fetchIpdataClientInfo or updateIpdataClientDisplay on failure
+          // but we can call it here as a fallback if clientData is null
+          showError('client', 'Could not load your connection data from ipdata.co');
         }
 
       } catch (error) {
         console.error('Overall network info loading failed:', error);
-        showError('proxy', 'Error loading data');
-        showError('client', 'Error loading data');
+        showError('proxy', `Error loading data: ${error.message}`);
+        showError('client', `Error loading data: ${error.message}`);
       }
     }
 
@@ -1343,13 +1325,20 @@
       button.disabled = true;
       if (icon) icon.style.animation = 'spin 1s linear infinite';
       
-      // Reset to skeleton loaders
       const resetToSkeleton = (prefix) => {
-        const elements = ['ip', 'location', 'isp', 'type', 'proxy'];
-        elements.forEach(elem => {
-          const element = document.getElementById(`${prefix}-${elem}`);
+        const elementsToReset = ['ip', 'location', 'isp'];
+        if (prefix === 'proxy') elementsToReset.push('type');
+        if (prefix === 'client') elementsToReset.push('proxy');
+
+        elementsToReset.forEach(elemKey => {
+          const element = document.getElementById(`${prefix}-${elemKey}`);
           if (element) {
-            element.innerHTML = '<span class="skeleton" style="width: 100px;"></span>';
+            // Ensure a minimum width for skeleton or it might collapse
+            let skeletonWidth = "100px";
+            if (elemKey === 'isp') skeletonWidth = "130px";
+            else if (elemKey === 'location') skeletonWidth = "110px";
+            else if (elemKey === 'ip') skeletonWidth = "120px";
+            element.innerHTML = `<span class="skeleton" style="width: ${skeletonWidth};"></span>`;
           }
         });
       };
@@ -1357,16 +1346,14 @@
       resetToSkeleton('proxy');
       resetToSkeleton('client');
 
-      // Reload network info
       loadNetworkInfo().finally(() => {
         setTimeout(() => {
           button.disabled = false;
           if (icon) icon.style.animation = '';
-        }, 1000);
+        }, 1000); // Add a small delay to prevent rapid clicking and allow UI to settle
       });
     });
 
-    // Add spin animation for refresh icon
     const style = document.createElement('style');
     style.textContent = `
       @keyframes spin {
@@ -1376,7 +1363,6 @@
     `;
     document.head.appendChild(style);
 
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
       console.log('Page loaded, initializing network info...');
       loadNetworkInfo();
