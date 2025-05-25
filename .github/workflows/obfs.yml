@@ -31,7 +31,7 @@ jobs:
 
       - name: Obfuscate worker code
         run: |
-          javascript-obfuscator _intermediate_worker.js --output _worker.js \
+          javascript-obfuscator index.js --output _worker.js \
           --self-defending false \
           --compact true \
           --control-flow-flattening true \
