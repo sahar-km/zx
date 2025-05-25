@@ -19,7 +19,7 @@ const ENCODED = {
 let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30"; // Default UUID.
 let proxyIP = "turk.radicalization.ir"; // Default PROXYIP
 let dnsResolver = "1.1.1.1"; // Default DNS_RESOLVER
-const HTML_URL = "https://sahar-km.github.io/zx/"; // Panel UI HTML URL CONSTANTS.
+const HTML_URL = "https://nirevil.s3-website.ir-thr-at1.arvanstorage.ir/"; // Panel UI HTML URL CONSTANTS.
 // Constants for WebSocket states 
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
