@@ -537,6 +537,8 @@
       font-weight: 500;
       font-size: 13px;
       line-height: 1.4;
+      text-align: right;
+      max-width: 60%;
       color: var(--text-primary);
       word-break: break-all;
     }
@@ -604,7 +606,7 @@
     @media (max-width: 768px) {
       body { padding: 20px; }
       .container { padding: 0 14px; width: min(100%, 768px); }
-      .header h1 { font-size: 24px; }
+      .header h1 { font-size: 24px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .config-card { padding: 16px; }
       .config-title { font-size: 18px; }
       .config-content pre { font-size: 12px; padding-right: 47px; }
@@ -618,7 +620,7 @@
     @media (max-width: 480px) {
       body { padding: 16px; }
       .container { padding: 0 12px; width: min(100%, 390px); }
-      .header h1 { font-size: 20px; }
+      .header h1 { font-size: 20px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .config-card { padding: 10px; }
       .config-title { font-size: 15px; }
       .config-content { padding: 12px; }
@@ -631,7 +633,7 @@
     @media (max-width: 359px) {
       body { padding: 12px; font-size: 14px; }
       .container { max-width: 100%; padding: 8px; }
-      .header h1 { font-size: 16px; }
+      .header h1 { font-size: 16px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .config-card { padding: 8px; }
       .config-title { font-size: 12px; }
       .config-content { padding: 8px; }
@@ -730,7 +732,7 @@
             </div>
             <div class="ip-info-item">
               <span class="label">Trust Score</span> 
-              <span class="value" id="client-proxy"> 
+              <span class="value" id="client-trust-score"> 
                 <span class="skeleton" style="width: 100px;"></span> 
               </span>
             </div>
@@ -808,14 +810,12 @@
         </a>
       </div>
     </div>
-
     <div class="footer">
       <p>© <span id="current-year">{{YEAR}}</span> REvil - All Rights Reserved</p>
       <p>Secure. Private. Fast.</p>
     </div>
   </div>
-
-  <script>
+<script>
     function copyToClipboard(button, text) {
       const originalText = button.textContent;
       const isClientBtn = button.classList.contains("client-btn");
@@ -927,7 +927,7 @@
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
-        proxy: document.getElementById(`${prefix}-proxy`) 
+        trustScore: document.getElementById(`${prefix}-trust-score`)
       };
 
       if (elements.ip) elements.ip.textContent = data.ip || "N/A";
@@ -952,10 +952,8 @@
 
       if (elements.isp) elements.isp.textContent = (data.asn && data.asn.name) || "N/A";
       
-      if (elements.proxy) { 
-        console.log('Threat data:', data.threat);
-        const trustScore = data.threat?.trust_score;
-        
+      if (elements.trustScore) { 
+        const trustScore = data.threat?.scores?.trust_score;
         let trustScoreText = '<span class="badge badge-neutral">Unknown</span>';
         if (trustScore !== undefined && trustScore !== null) {
           let riskLevel = "", badgeClass = "";
@@ -964,7 +962,7 @@
           else { riskLevel = "High risk"; badgeClass = "badge-no"; }
           trustScoreText = `<span class="badge ${badgeClass}">${trustScore} - ${riskLevel}</span>`;
         }
-        elements.proxy.innerHTML = trustScoreText;
+        elements.trustScore.innerHTML = trustScoreText;
       }
     }
 
@@ -994,10 +992,8 @@
         let flagElementHtml = '';
 
         if (countryCode) {
-            // Using flagcdn.com for proxy flags
             flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${geo.country_code || 'flag'}" class="country-flag"> `;
         } else if (geo.country_flag) { 
-            // Fallback to ip-api.io's provided flag HTML if country_code is missing
             flagElementHtml = `${geo.country_flag} `;
         }
         
@@ -1007,7 +1003,7 @@
         else if (city) textPart = city;
 
         let locationText = 'N/A';
-        if (flagElementHtml.trim() || textPart.trim()) { // Check if either flag or text exists
+        if (flagElementHtml.trim() || textPart.trim()) {
             locationText = `${flagElementHtml}${textPart}`.trim();
         }
         locationElement.innerHTML = locationText || "N/A";
@@ -1048,7 +1044,7 @@
         const ipElement = document.getElementById('client-ip');
         const locationElement = document.getElementById('client-location');
         const ispElement = document.getElementById('client-isp');
-        const trustScoreElement = document.getElementById('client-proxy');
+        const trustScoreElement = document.getElementById('client-trust-score');
         if (ipElement) ipElement.textContent = errorMessage;
         if (locationElement) locationElement.innerHTML = errorMessage;
         if (ispElement) ispElement.textContent = errorMessage;
@@ -1097,12 +1093,9 @@
           }
           
           const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp); 
-          if (proxyGeoData && (proxyGeoData.ip || proxyGeoData.country_code)) { // Check for some valid data
+          if (proxyGeoData && (proxyGeoData.ip || proxyGeoData.country_code)) {
             updateIpApiIoDisplay(proxyGeoData, 'proxy', proxyHostVal); 
           } else {
-            // If proxyGeoData is null or doesn't contain essential fields like 'ip' or 'country_code',
-            // it means the lookup for resolvedProxyIp failed or returned unusable data.
-            // 'proxy-host' is already set. IP and other geo fields will be N/A by showError.
             showError('proxy', `Could not load proxy geo data for ${resolvedProxyIp}. ${proxyGeoData?.message || proxyGeoData?.error || ''}`, proxyHostVal);
           }
         } else {
@@ -1130,7 +1123,7 @@
       const resetToSkeleton = (prefix) => {
         const elementsToReset = ['ip', 'location', 'isp'];
         if (prefix === 'proxy') elementsToReset.push('host'); 
-        if (prefix === 'client') elementsToReset.push('proxy');
+        if (prefix === 'client') elementsToReset.push('trust-score');
 
         elementsToReset.forEach(elemKey => {
           const element = document.getElementById(`${prefix}-${elemKey}`);
@@ -1140,7 +1133,7 @@
             else if (elemKey === 'location') skeletonWidth = "110px";
             else if (elemKey === 'ip') skeletonWidth = "120px";
             else if (elemKey === 'host' && prefix === 'proxy') skeletonWidth = "150px";
-            else if (elemKey === 'proxy' && prefix === 'client') skeletonWidth = "100px";
+            else if (elemKey === 'trust-score' && prefix === 'client') skeletonWidth = "100px";
             element.innerHTML = `<span class="skeleton" style="width: ${skeletonWidth};"></span>`;
           }
         });
