@@ -149,7 +149,7 @@
       overflow: hidden;
       font-family: var(--serif);
       font-size: 12px;
-      font-weight: 400;
+      font-weight: 600;
       padding: 6px 12px;
       border-radius: 4px;
       color: var(--accent-secondary);
@@ -539,7 +539,7 @@
       font-weight: 500;
       font-size: 13px;
       line-height: 1.4;
-      max-width: 60%;
+      max-width: 80%;
       color: var(--text-primary);
       word-break: break-all;
     }
@@ -607,7 +607,7 @@
     @media (max-width: 768px) {
       body { padding: 20px; }
       .container { padding: 0 14px; width: min(100%, 768px); }
-      .header h1 { font-size: 24px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .header h1 { font-size: 24px; }
       .config-card { padding: 16px; }
       .config-title { font-size: 18px; }
       .config-content pre { font-size: 12px; padding-right: 47px; }
@@ -621,7 +621,7 @@
     @media (max-width: 480px) {
       body { padding: 16px; }
       .container { padding: 0 12px; width: min(100%, 390px); }
-      .header h1 { font-size: 20px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .header h1 { font-size: 20px; }
       .config-card { padding: 10px; }
       .config-title { font-size: 15px; }
       .config-content { padding: 12px; }
@@ -634,7 +634,7 @@
     @media (max-width: 359px) {
       body { padding: 12px; font-size: 14px; }
       .container { max-width: 100%; padding: 8px; }
-      .header h1 { font-size: 16px; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+      .header h1 { font-size: 16px; }
       .config-card { padding: 8px; }
       .config-title { font-size: 12px; }
       .config-content { padding: 8px; }
@@ -968,51 +968,58 @@
     }
 
     function updateIpApiIoDisplay(geo, prefix, originalHost) {
-      const hostElement = document.getElementById(`${prefix}-host`);
-      if (hostElement) {
-        hostElement.textContent = originalHost || "N/A";
-      }
+  const hostElement = document.getElementById(`${prefix}-host`);
+  if (hostElement) {
+    hostElement.textContent = originalHost || "N/A";
+  }
 
-      const ipElement = document.getElementById(`${prefix}-ip`);
-      const locationElement = document.getElementById(`${prefix}-location`);
-      const ispElement = document.getElementById(`${prefix}-isp`);
+  const ipElement = document.getElementById(`${prefix}-ip`);
+  const locationElement = document.getElementById(`${prefix}-location`);
+  const ispElement = document.getElementById(`${prefix}-isp`);
 
-      if (!geo) {
-        if (ipElement) ipElement.textContent = "N/A";
-        if (locationElement) locationElement.innerHTML = "N/A";
-        if (ispElement) ispElement.textContent = "N/A";
-        return;
-      }
+  if (!geo) {
+    if (ipElement) ipElement.textContent = "N/A";
+    if (locationElement) locationElement.innerHTML = "N/A";
+    if (ispElement) ispElement.textContent = "N/A";
+    return;
+  }
 
-      if (ipElement) ipElement.textContent = geo.ip || "N/A";
-      
-      if (locationElement) {
-        const city = geo.city || '';
-        const countryName = geo.country_name || '';
-        const countryCode = geo.country_code ? geo.country_code.toLowerCase() : '';
-        let flagElementHtml = '';
+  if (ipElement) ipElement.textContent = geo.ip || "N/A";
+  
+  if (locationElement) {
+    const city = geo.city || '';
+    const countryName = geo.country_name || '';
+    const countryCode = geo.country_code ? geo.country_code.toLowerCase() : '';
+    let flagElementHtml = '';
 
-        if (countryCode) {
-            flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${geo.country_code || 'flag'}" class="country-flag"> `;
-        } else if (geo.country_flag) { 
-            flagElementHtml = `${geo.country_flag} `;
-        }
-        
-        let textPart = '';
-        if (city && countryName) textPart = `${city}, ${countryName}`;
-        else if (countryName) textPart = countryName;
-        else if (city) textPart = city;
-
-        let locationText = 'N/A';
-        if (flagElementHtml.trim() || textPart.trim()) {
-            locationText = `${flagElementHtml}${textPart}`.trim();
-        }
-        locationElement.innerHTML = locationText || "N/A";
-      }
-      if (ispElement) {
-        ispElement.textContent = geo.isp || geo.org || geo.as_name || geo.as || 'N/A';
-      }
+    if (countryCode) {
+      flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${geo.country_code || 'flag'}" class="country-flag"> `;
+    } else if (geo.country_flag) {
+      flagElementHtml = `${geo.country_flag} `;
     }
+    
+    let textPart = '';
+    if (city && countryName) textPart = `${city}, ${countryName}`;
+    else if (countryName) textPart = countryName;
+    else if (city) textPart = city;
+
+    let locationText = 'N/A';
+    if (flagElementHtml.trim() || textPart.trim()) {
+      locationText = `${flagElementHtml}${textPart}`.trim();
+    }
+    locationElement.innerHTML = locationText || "N/A";
+  }
+
+  if (ispElement) {
+    let ispValue = "N/A";
+    if (geo.isp) ispValue = geo.isp;
+    else if (geo.organisation) ispValue = geo.organisation;
+    else if (geo.org) ispValue = geo.org; 
+    else if (geo.as && geo.as.organization) ispValue = geo.as.organization;
+    else if (geo.as_name) ispValue = geo.as_name;
+    ispElement.textContent = ispValue;
+  }
+}
 
     async function fetchIpApiIoInfo(ip) {
       try {
