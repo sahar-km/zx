@@ -15,12 +15,11 @@ const ENCODED = {
   PROTOCOL: "c3NlbHY=", // vless
 };
 
-// Default user UUID and proxy IP.
-let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30"; // Default UUID.
-let proxyIP = "turk.radicalization.ir"; // Default PROXYIP
-let dnsResolver = "1.1.1.1"; // Default DNS_RESOLVER
-const HTML_URL = "https://nirevil.s3-website.ir-thr-at1.arvanstorage.ir/"; // Panel UI HTML URL CONSTANTS.
-// Constants for WebSocket states 
+// Default user UUID, proxyIP, DNS Resolver, UI panel and websucket states.
+let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30";
+let proxyIP = "turk.radicalization.ir";
+let dnsResolver = "1.1.1.1";
+const HTML_URL = "https://sahar-km.github.io/zx/"; // HTML UI Panel URL CONSTANTS (index.html file, built-in github pages). 
 const WS_READY_STATE_OPEN = 1;
 const WS_READY_STATE_CLOSING = 2;
 
