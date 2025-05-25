@@ -147,8 +147,8 @@
     .config-title .refresh-btn {
       position: relative;
       overflow: hidden;
-      font-family: var(--serif);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 500;
       padding: 6px 12px;
       border-radius: 4px;
       color: var(--accent-secondary);
@@ -282,9 +282,8 @@
       top: 10px;
       right: 10px;
       padding: 6px 12px;
-      font-family: var(--serif);
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 11px;
+      font-weight: 500;
       background-color: var(--background-tertiary);
       color: var(--accent-secondary);
       border-color: var(--border-color);
@@ -446,12 +445,10 @@
       padding-bottom: 40px;
       color: var(--text-secondary);
       font-size: 12px;
-      letter-spacing: 0.5px;
     }
 
     .footer p {
       margin-bottom: 0px;
-      letter-spacing: 0.5px;
     }
 
     ::-webkit-scrollbar {
@@ -956,7 +953,9 @@
       if (elements.isp) elements.isp.textContent = (data.asn && data.asn.name) || "N/A";
       
       if (elements.proxy) { 
-        const trustScore = data.threat?.scores?.trust_score;
+        console.log('Threat data:', data.threat);
+        const trustScore = data.threat?.trust_score;
+        
         let trustScoreText = '<span class="badge badge-neutral">Unknown</span>';
         if (trustScore !== undefined && trustScore !== null) {
           let riskLevel = "", badgeClass = "";
