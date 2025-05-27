@@ -416,11 +416,6 @@
       });
     }
 
-    // Scamalytics API Configuration - !IMPORTANT: Replace with your actual credentials
-    const scamalyticsUsername = "dianaclk01";
-    const scamalyticsApiKey = "c57eb62bbde89f00742cb3f92d7127f96132c9cea460f18c08fd5e62530c5604";
-    const scamalyticsApiBaseUrl = "https://api11.scamalytics.com/v3/";
-
     /**
      * Fetches the client's public IP address.
      * @returns {Promise<string|null>} IP address string or null on error.
@@ -440,157 +435,170 @@
     }
     
     /**
-     * Fetches client IP information from Scamalytics.
+     * Fetches client IP information from Scamalytics via the Cloudflare Worker.
      * @param {string} clientIp - The client's IP address.
      * @returns {Promise<object|null>} IP data or null on error.
      */
     async function fetchScamalyticsClientInfo(clientIp) {
       if (!clientIp) return null;
-      // IMPORTANT: Replace placeholders with your actual username and API key
-      if (scamalyticsUsername === "<YOUR_SCAMALYTICS_USERNAME>" || scamalyticsApiKey === "<YOUR_SCAMALYTICS_API_KEY>") {
-          console.error("Scamalytics username or API key not configured.");
-          alert("Scamalytics API is not configured. Please set username and API key in the script."); // User-facing alert
-          return null;
-      }
       try {
-        const url = `${scamalyticsApiBaseUrl}${scamalyticsUsername}/?key=${scamalyticsApiKey}&ip=${clientIp}`;
-        const response = await fetch(url);
+        const workerLookupUrl = `/scamalytics-lookup?ip=${encodeURIComponent(clientIp)}`; 
+        const response = await fetch(workerLookupUrl);
+    
         if (!response.ok) {
-          // Scamalytics might return errors in JSON even with non-200 codes [cite: 109, 110, 111]
-          let errorDetail = `HTTP error! status: ${response.status}`;
+          let errorDetail = `Worker request failed! status: ${response.status}`;
           try {
-            const errorData = await response.json();
-            if (errorData && errorData.scamalytics && errorData.scamalytics.status === 'error' && errorData.scamalytics.error) {
-                errorDetail = errorData.scamalytics.error;
-            } else if (errorData && errorData.error_message) { // General error structure
-                errorDetail = errorData.error_message;
+            const errorData = await response.json(); 
+             if (errorData && errorData.error) {
+                errorDetail = errorData.error;
+                if(errorData.details) errorDetail += ` Details: ${errorData.details}`;
+            } else if (errorData && errorData.scamalytics && errorData.scamalytics.error) { // Check Scamalytics specific error structure
+                 errorDetail = errorData.scamalytics.error;
+            } else if (response.statusText) {
+                errorDetail += ` - ${response.statusText}`;
             }
-          } catch (e) { /* Ignore if error response is not JSON */ }
+          } catch (e) { 
+            errorDetail += ` - ${await response.text()}`; // If not JSON, get text
+          }
           throw new Error(errorDetail);
         }
         const data = await response.json();
         if (data.scamalytics && data.scamalytics.status === 'error') {
-            throw new Error(data.scamalytics.error || 'Scamalytics API error');
+            throw new Error(data.scamalytics.error || 'Scamalytics API error via Worker');
+        }
+        if (data.error && !data.scamalytics) { // General error from worker proxy itself
+            throw new Error(data.error);
         }
         return data;
       } catch (error) {
-        console.error('Scamalytics API Error:', error);
+        console.error('Error fetching from Scamalytics via Worker:', error);
         return null;
       }
     }
-
+    
     /**
      * Updates the display for client IP information using data from Scamalytics.
      * @param {object|null} data - IP data from Scamalytics.
      */
     function updateScamalyticsClientDisplay(data) {
       const prefix = 'client';
+      // Check for a successful Scamalytics response structure
       if (!data || !data.scamalytics || data.scamalytics.status !== 'ok') {
-        showError(prefix, (data && data.scamalytics && data.scamalytics.error) || 'Could not load data from Scamalytics');
+        showError(prefix, (data && data.scamalytics && data.scamalytics.error) || 'Could not load client data from Scamalytics');
         return;
       }
-
+    
       const sa = data.scamalytics;
-      const dbip = data.external_datasources?.dbip;
-
+      const dbip = data.external_datasources?.dbip; // Use optional chaining
+    
       const elements = {
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
         proxy: document.getElementById(`${prefix}-proxy`) // For Risk Score
       };
-
-      if (elements.ip) elements.ip.textContent = sa.ip || "N/A"; // [cite: 10, 22]
-
+    
+      if (elements.ip) elements.ip.textContent = sa.ip || "N/A";
+    
       if (elements.location) {
-        const city = dbip?.ip_city || ''; // [cite: 15, 39]
-        const countryName = dbip?.ip_country_name || ''; // [cite: 15, 41]
-        const countryCode = dbip?.ip_country_code ? dbip.ip_country_code.toLowerCase() : ''; // [cite: 15, 38]
+        const city = dbip?.ip_city || ''; 
+        const countryName = dbip?.ip_country_name || ''; 
+        const countryCode = dbip?.ip_country_code ? dbip.ip_country_code.toLowerCase() : ''; 
         let locationString = 'N/A';
         let flagElementHtml = '';
-
+    
         if (countryCode) {
-          flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${dbip.ip_country_code}" class="country-flag"> `;
+          flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${dbip.ip_country_code || 'flag'}" class="country-flag"> `;
         }
-        
+    
         let textPart = '';
         if (city && countryName) textPart = `${city}, ${countryName}`;
         else if (countryName) textPart = countryName;
         else if (city) textPart = city;
-
-        if (flagElementHtml || textPart) locationString = `${flagElementHtml}${textPart}`.trim();
+    
+        if (flagElementHtml.trim() || textPart.trim()) locationString = `${flagElementHtml}${textPart}`.trim();
         elements.location.innerHTML = locationString || "N/A";
       }
-
+    
       if (elements.isp) {
-          elements.isp.textContent = sa.scamalytics_isp || dbip?.isp_name || "N/A"; // [cite: 5, 15, 41]
+          elements.isp.textContent = sa.scamalytics_isp || dbip?.isp_name || "N/A"; 
       }
-      
+    
       if (elements.proxy) { 
-        const score = sa.scamalytics_score; // [cite: 10, 23]
-        const risk = sa.scamalytics_risk;   // [cite: 10, 25]
+        const score = sa.scamalytics_score; 
+        const risk = sa.scamalytics_risk;   
         let riskText = "Unknown";
         let badgeClass = "badge-neutral";
-
-        if (risk !== undefined && score !== undefined) {
-            // Use score to make text, use risk string for badge mapping
+    
+        if (risk !== undefined && score !== undefined && risk !== null && score !== null) { // Stricter check
             riskText = `${score} - ${risk.charAt(0).toUpperCase() + risk.slice(1)}`;
-            switch (risk.toLowerCase()) { // [cite: 25, 99]
+            switch (risk.toLowerCase()) { 
                 case "low": badgeClass = "badge-yes"; break;
                 case "medium": badgeClass = "badge-warning"; break;
                 case "high": badgeClass = "badge-no"; break;
-                case "very high": badgeClass = "badge-no"; break; // Or a darker red if defined
-                default: riskText = `Score ${score} - Unknown Risk`; break;
+                case "very high": badgeClass = "badge-no"; break; 
+                default: 
+                    badgeClass = "badge-neutral"; // Fallback for unexpected risk strings
+                    riskText = `Score ${score} - ${risk || 'Status Unknown'}`; // Show score if risk string is weird
+                    break;
             }
-        } else if (score !== undefined) {
-            riskText = `Score ${score} - N/A`; // Has score but no risk string
+        } else if (score !== undefined && score !== null) {
+            riskText = `Score ${score} - N/A`; 
         } else if (risk) {
-            riskText = risk.charAt(0).toUpperCase() + risk.slice(1); // Has risk string but no score
+            riskText = risk.charAt(0).toUpperCase() + risk.slice(1);
              switch (risk.toLowerCase()) {
                 case "low": badgeClass = "badge-yes"; break;
                 case "medium": badgeClass = "badge-warning"; break;
                 case "high": case "very high": badgeClass = "badge-no"; break;
+                default: badgeClass = "badge-neutral"; riskText="Status Unknown"; break;
             }
         }
         elements.proxy.innerHTML = `<span class="badge ${badgeClass}">${riskText}</span>`;
       }
     }
-
+    
+    /**
+     * Updates the display for Proxy Server IP information using data from ip-api.io
+     * @param {object | null} geo - IP data from ip-api.io.
+     * @param {string} prefix - 'proxy'.
+     * @param {string | null} originalHost - The original hostname or IP of the proxy.
+     */
     function updateIpApiIoDisplay(geo, prefix, originalHost) {
-      // ... (This function remains the same as in the previous version for Proxy Server info)
       const hostElement = document.getElementById(`${prefix}-host`);
-      if (hostElement) hostElement.textContent = originalHost || "N/A";
-
+      if (hostElement) {
+        hostElement.textContent = originalHost || "N/A";
+      }
+    
       const ipElement = document.getElementById(`${prefix}-ip`);
       const locationElement = document.getElementById(`${prefix}-location`);
       const ispElement = document.getElementById(`${prefix}-isp`);
-
-      if (!geo) {
+    
+      if (!geo) { 
         if (ipElement) ipElement.textContent = "N/A";
         if (locationElement) locationElement.innerHTML = "N/A";
         if (ispElement) ispElement.textContent = "N/A";
         return;
       }
-
+    
       if (ipElement) ipElement.textContent = geo.ip || "N/A";
-      
+    
       if (locationElement) {
         const city = geo.city || '';
         const countryName = geo.country_name || '';
         const countryCode = geo.country_code ? geo.country_code.toLowerCase() : '';
         let flagElementHtml = '';
-
+    
         if (countryCode) {
             flagElementHtml = `<img src="https://flagcdn.com/w20/${countryCode}.png" srcset="https://flagcdn.com/w40/${countryCode}.png 2x" alt="${geo.country_code || 'flag'}" class="country-flag"> `;
         } else if (geo.country_flag) { 
             flagElementHtml = `${geo.country_flag} `;
         }
-        
+    
         let textPart = '';
         if (city && countryName) textPart = `${city}, ${countryName}`;
         else if (countryName) textPart = countryName;
         else if (city) textPart = city;
-
+    
         let locationText = 'N/A';
         if (flagElementHtml.trim() || textPart.trim()) {
             locationText = `${flagElementHtml}${textPart}`.trim();
@@ -601,9 +609,13 @@
         ispElement.textContent = geo.isp || geo.org || geo.as_name || geo.as || 'N/A';
       }
     }
-
+    
+    /**
+     * Fetches IP information from ip-api.io (for proxy server info)
+     * @param {string} ip - IP address to lookup.
+     * @returns {Promise<object|null>} IP data or null on error.
+     */
     async function fetchIpApiIoInfo(ip) {
-      // ... (This function remains the same for Proxy Server info)
       try {
         const response = await fetch(`https://ip-api.io/json/${ip}`);
         if (!response.ok) {
@@ -616,34 +628,52 @@
         return null;
       }
     }
-
+    
+    /**
+     * Shows error messages in the UI.
+     * @param {string} prefix - 'client' or 'proxy'.
+     * @param {string} message - Error message to log.
+     * @param {string|null} originalHostForProxy - Original host for proxy if applicable.
+     */
     function showError(prefix, message = "Could not load data", originalHostForProxy = null) {
-      // ... (This function remains largely the same, client part targets correct IDs)
       const errorMessage = "N/A";
       if (prefix === 'proxy') {
-        document.getElementById('proxy-host').textContent = originalHostForProxy || errorMessage;
-        document.getElementById('proxy-ip').textContent = errorMessage;
-        document.getElementById('proxy-location').innerHTML = errorMessage;
-        document.getElementById('proxy-isp').textContent = errorMessage;
+        const hostElement = document.getElementById('proxy-host');
+        const ipElement = document.getElementById('proxy-ip');
+        const locationElement = document.getElementById('proxy-location');
+        const ispElement = document.getElementById('proxy-isp');
+        if (hostElement) hostElement.textContent = originalHostForProxy || errorMessage;
+        if (ipElement) ipElement.textContent = errorMessage;
+        if (locationElement) locationElement.innerHTML = errorMessage; // Use innerHTML due to flags
+        if (ispElement) ispElement.textContent = errorMessage;
       } else if (prefix === 'client') {
-        document.getElementById('client-ip').textContent = errorMessage;
-        document.getElementById('client-location').innerHTML = errorMessage;
-        document.getElementById('client-isp').textContent = errorMessage;
-        document.getElementById('client-proxy').innerHTML = `<span class="badge badge-neutral">N/A</span>`; // For Risk Score
+        const ipElement = document.getElementById('client-ip');
+        const locationElement = document.getElementById('client-location');
+        const ispElement = document.getElementById('client-isp');
+        const riskScoreElement = document.getElementById('client-proxy'); // ID for Risk Score
+        if (ipElement) ipElement.textContent = errorMessage;
+        if (locationElement) locationElement.innerHTML = errorMessage; // Use innerHTML due to flags
+        if (ispElement) ispElement.textContent = errorMessage;
+        if (riskScoreElement) riskScoreElement.innerHTML = `<span class="badge badge-neutral">N/A</span>`;
       }
       console.warn(`${prefix} data loading failed: ${message}`);
     }
-
+    
+    /**
+     * Loads all network information.
+     */
     async function loadNetworkInfo() {
       try {
         // --- Load Proxy Server Info (ip-api.io) ---
         const proxyDomainOrIp = document.body.getAttribute('data-proxy-ip');
         let resolvedProxyIp = proxyDomainOrIp; 
-        const proxyHostVal = (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp.toLowerCase() !== "null") ? proxyDomainOrIp : "N/A";
-        
+        const proxyHostVal = (proxyDomainOrIp && proxyDomainOrIp !== "N/A" && proxyDomainOrIp.toLowerCase() !== "null" && proxyDomainOrIp.trim() !== "") 
+                               ? proxyDomainOrIp 
+                               : "N/A";
+    
         const proxyHostEl = document.getElementById('proxy-host');
         if(proxyHostEl) proxyHostEl.textContent = proxyHostVal;
-
+    
         if (proxyHostVal !== "N/A") {
           if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(proxyDomainOrIp)) { 
             try {
@@ -653,9 +683,16 @@
                   if (dnsData.Answer && dnsData.Answer.length > 0) {
                     const ipAnswer = dnsData.Answer.find(a => a.type === 1); 
                     if (ipAnswer) resolvedProxyIp = ipAnswer.data;
-                  }
+                    else console.warn('No A record for proxy domain:', proxyDomainOrIp);
+                  } else console.warn('DNS lookup no answers for proxy domain:', proxyDomainOrIp);
+              } else {
+                console.error(`DNS lookup failed for ${proxyDomainOrIp}: ${dnsRes.status}`);
+                resolvedProxyIp = proxyDomainOrIp; // Keep original domain if DNS fails
               }
-            } catch (e) { console.error('DNS resolution for proxy failed:', e); }
+            } catch (e) { 
+              console.error('DNS resolution for proxy failed:', e); 
+              resolvedProxyIp = proxyDomainOrIp; // Fallback to original domain on error
+            }
           }
           const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp); 
           if (proxyGeoData && (proxyGeoData.ip || proxyGeoData.country_code)) { 
@@ -666,50 +703,52 @@
         } else {
           showError('proxy', 'Proxy Host not available', proxyHostVal);
         }
-
-        // --- Load Client Info (Scamalytics) ---
+    
+        // --- Load Client Info (Scamalytics via Worker) ---
         console.log('Fetching client public IP...');
         const clientIp = await fetchClientPublicIP();
         if (clientIp) {
-          document.getElementById('client-ip').textContent = clientIp; // Show IP as soon as it's fetched
-          console.log('Loading client info from Scamalytics for IP:', clientIp);
-          const scamalyticsData = await fetchScamalyticsClientInfo(clientIp); 
+          // Temporarily display IP, will be overwritten by Scamalytics data or N/A on error
+          const clientIpElement = document.getElementById('client-ip');
+          if(clientIpElement) clientIpElement.textContent = clientIp;
+    
+          console.log('Loading client info from Scamalytics (via Worker) for IP:', clientIp);
+          const scamalyticsData = await fetchScamalyticsClientInfo(clientIp);
+    
           if (scamalyticsData) {
             updateScamalyticsClientDisplay(scamalyticsData); 
           } else {
-            // showError might have been called inside fetchScamalyticsClientInfo or updateScamalyticsClientDisplay
-            // if not, call it here explicitly for the client section.
-            // Ensure client-ip is N/A if scamalyticsData is null but IP was fetched.
-            if(!document.getElementById('client-proxy').textContent.includes("badge")){ // if not already set by more specific error
-                showError('client', 'Failed to get details from Scamalytics.');
-            }
-             // If IP was fetched but Scamalytics failed, IP might still be shown.
-             // Set client-ip to N/A as well if full data retrieval failed.
-            if (!scamalyticsData) document.getElementById('client-ip').textContent = "N/A";
+            // showError would have been called in fetchScamalyticsClientInfo on fetch failure
+            // or if response.ok was false. If it's null due to other reasons, call showError.
+             if (clientIpElement && clientIpElement.textContent === clientIp) { // only if not already N/A'd
+                 showError('client', 'Failed to get full details from Scamalytics. IP may be correct.');
+             } else if (!clientIpElement || clientIpElement.textContent.includes('skeleton')) { // if still skeleton
+                 showError('client', 'Failed to get details from Scamalytics.');
+             }
           }
         } else {
           showError('client', 'Could not determine your IP address.');
         }
-
+    
       } catch (error) {
         console.error('Overall network info loading failed:', error);
         showError('proxy', `Error: ${error.message}`, document.body.getAttribute('data-proxy-ip') || "N/A");
         showError('client', `Error: ${error.message}`);
       }
     }
-
+    
+    // Refresh button functionality
     document.getElementById('refresh-ip-info')?.addEventListener('click', function() {
-      // ... (Refresh button logic remains the same)
       const button = this;
       const icon = button.querySelector('.refresh-icon');
       button.disabled = true;
       if (icon) icon.style.animation = 'spin 1s linear infinite';
-      
+    
       const resetToSkeleton = (prefix) => {
         const elementsToReset = ['ip', 'location', 'isp'];
         if (prefix === 'proxy') elementsToReset.push('host'); 
         if (prefix === 'client') elementsToReset.push('proxy'); // client-proxy is for Risk Score
-
+    
         elementsToReset.forEach(elemKey => {
           const element = document.getElementById(`${prefix}-${elemKey}`);
           if (element) {
@@ -718,22 +757,25 @@
             else if (elemKey === 'location') skeletonWidth = "110px";
             else if (elemKey === 'ip') skeletonWidth = "120px";
             else if (elemKey === 'host' && prefix === 'proxy') skeletonWidth = "150px";
-            else if (elemKey === 'proxy' && prefix === 'client') skeletonWidth = "100px";
+            else if (elemKey === 'proxy' && prefix === 'client') skeletonWidth = "100px"; // For Risk Score
             element.innerHTML = `<span class="skeleton" style="width: ${skeletonWidth};"></span>`;
           }
         });
       };
-
+    
       resetToSkeleton('proxy');
       resetToSkeleton('client');
       loadNetworkInfo().finally(() => setTimeout(() => {
         button.disabled = false; if (icon) icon.style.animation = '';
       }, 1000));
     });
-
+    
+    // Add spin animation style
     const style = document.createElement('style');
     style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
     document.head.appendChild(style);
+    
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Page loaded, initializing network info...');
       loadNetworkInfo();
