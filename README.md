@@ -32,6 +32,99 @@ You can find some "proxyIPs" [^3] from this great repository, and there is even 
 
 ---
 
+
+# zx 
+
+_A modern project powered by **HTML** and **JavaScript**_
+
+![License](https://img.shields.io/github/license/sahar-km/zx)
+![Top Language](https://img.shields.io/github/languages/top/sahar-km/zx)
+![Last Commit](https://img.shields.io/github/last-commit/sahar-km/zx)
+
+---
+
+## ✨ Overview
+
+**zx** is an innovative project utilizing cutting-edge web technologies to deliver awesome functionality with a clean, intuitive interface. Whether you’re a developer looking to contribute or a user wanting to check it out, you’re in the right place!
+
+---
+
+## 📦 Features
+
+- ⚡ **Fast & Lightweight:** Built with efficiency in mind.
+- 🎨 **Modern UI:** Clean, responsive design.
+- 💡 **Easy to Use:** Minimal setup, intuitive experience.
+- 🔧 **Customizable:** Tweak and extend as needed.
+- 🌐 **100% Serverless:** No installs, just open and go!
+
+---
+
+## ⚙️ Getting Started
+
+Clone the repo:
+
+```bash
+git clone https://github.com/sahar-km/zx.git
+cd zx
+```
+
+Open `index.html` in your browser and you’re ready!
+
+---
+
+## 🛠️ Tech Stack
+
+- **HTML** (66.1%)
+- **JavaScript** (33.9%)
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+1. Fork the repository
+2. Create your branch: `git checkout -b feature/awesome-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin feature/awesome-feature`
+5. Open a pull request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.  
+See [`LICENSE`](LICENSE) for details.
+
+---
+
+## 🙌 Acknowledgements
+
+- Thanks to all contributors!
+- Inspired by modern web development best practices.
+
+---
+
+## 📫 Contact
+
+Questions or suggestions?  
+Open an issue or reach out to [sahar-km on GitHub](https://github.com/sahar-km).
+
+---
+
+_Star ⭐ the repo if you like it!_
+
+---
+
+Let me know if you want to add project-specific instructions, screenshots, or badges!
+
+
+
+
+
+
+
+
 ### Credits
 
 Many thanks to our awesome Chinese buddy, **zizifn!** [^4]  
