@@ -16,8 +16,8 @@ const ENCODED = {
 };
 
 // Default user UUID, proxyIP, DNS Resolver, UI panel and websucket states.
-let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30";
-let proxyIP = "turk.radicalization.ir";
+let userCode = "10e894da-61b1-4998-ac2b-e9ccb6af9d30"; // To generate your own UUID: https://www.uuidgenerator.net/
+let proxyIP = "turk.radicalization.ir"; // To find proxyIP: https://github.com/NiREvil/vless/blob/main/sub/ProxyIP.md
 let dnsResolver = "1.1.1.1";
 const HTML_URL = "https://sahar-km.github.io/zx/"; // HTML UI Panel URL CONSTANTS (index.html file, built-in github pages). 
 const WS_READY_STATE_OPEN = 1;
@@ -114,8 +114,6 @@ function stringify(arr, offset = 0) {
   return uuid;
 }
 
-// --- End: Functions and constants  ---
-
 /**
  * Main Worker fetch handler. (Structure, logic adapted)
  * @param {import("@cloudflare/workers-types").Request} request
@@ -157,7 +155,6 @@ export default {
       }
     } catch (err) {
       console.error("Fetch error:", err);
-      // Return error as string for potential client parsing, or a more structured error
       return new Response(err.toString(), { status: 500 });
     }
   },
@@ -191,7 +188,6 @@ async function streamOverWSHandler(request) {
 
   /** @type {{ value: import("@cloudflare/workers-types").Socket | null}}*/
   let remoteSocketWapper = {
-    // Renamed from remoteSocketWrapper for consistency.
     value: null,
   };
   let udpStreamWrite = null;
@@ -448,7 +444,7 @@ function processStreamHeader(chunk, userCode) {
  * @param {number} portRemote
  * @param {Uint8Array} rawClientData
  * @param {import("@cloudflare/workers-types").WebSocket} webSocket
- * @param {Uint8Array} streamResponseHeader VLESS response header (renamed from vlessResponseHeader for clarity)
+ * @param {Uint8Array} streamResponseHeader VLESS response header.
  * @param {function} log
  */
 async function handleTCPOutBound(
@@ -551,7 +547,7 @@ async function remoteSocketToWS(
 /**
  * Handles UDP outbound (DNS only). (modified to use dnsResolver variable)
  * @param {import("@cloudflare/workers-types").WebSocket} webSocket
- * @param {ArrayBuffer} streamResponseHeader (renamed from vlessResponseHeader)
+ * @param {ArrayBuffer} streamResponseHeader
  * @param {(info: string, event?: string) => void} log
  * @returns {Promise<Object>} Write function.
  */
@@ -644,25 +640,25 @@ async function getDianaConfig(currentUuid, hostName) {
 
     // paths /api/v6 and /index?ed=2560)
     const freedomConfig =
-      `${baseUrl}?path=/api/v6&eh=Sec-WebSocket-Protocol` +
+      `${baseUrl}?path=/api/v3&eh=Sec-WebSocket-Protocol` +
       `&ed=2560&${commonParams}&fp=chrome&alpn=h3#${hostName}`;
 
     const dreamConfig =
       `${baseUrl}?path=%2FIndex%3Fed%3D2560&${commonParams}` +
       `&fp=randomized&alpn=h2,http/1.1#${hostName}`;
 
-    // Other URLs
+    // Convertors URLs
     const clashMetaFullUrl = `clash://install-config?url=${encodeURIComponent(
       `https://revil-sub.pages.dev/sub/clash-meta?url=${encodeURIComponent(
         freedomConfig
-      )}&remote_config=&udp=true&ss_uot=false&show_host=false&forced_ws0rtt=false`
+      )}&remote_config=&udp=true&ss_uot=false&show_host=false&forced_ws0rtt=true`
     )}`;
 
     const nekoBoxImportUrl = `https://sahar-km.github.io/arcane/${btoa(
       freedomConfig
     )}`;
 
-    // Fetching HTML from external URL
+    // Fetching HTML from external URL: "https://NiREvil.github.io/zizifn/"
     console.log(`Fetching HTML from external URL: ${HTML_URL}`);
     const response = await fetch(HTML_URL);
 
@@ -676,7 +672,7 @@ async function getDianaConfig(currentUuid, hostName) {
     // Placeholder replacement (Configs generated logics)
     html = html
       .replace(/<body(.*?)>/i, `<body$1 data-proxy-ip="${proxyIP}">`)
-      .replace(/{{PROXY_IP}}/g, proxyIP) // proxyIP is a global variable
+      .replace(/{{PROXY_IP}}/g, proxyIP) 
       .replace(
         /{{LAST_UPDATED}}/g,
         new Date().toLocaleString("en-US", {
