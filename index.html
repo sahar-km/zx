@@ -417,9 +417,9 @@
     }
 
     // Scamalytics API Configuration - !IMPORTANT: Replace with your actual credentials
-    const scamalyticsUsername = "<YOUR_SCAMALYTICS_USERNAME>"; // e.g., "dianaclk01"
-    const scamalyticsApiKey = "<YOUR_SCAMALYTICS_API_KEY>";   // e.g., "c57eb62bbd..."
-    const scamalyticsApiBaseUrl = "https://api11.scamalytics.com/v3/"; // Or api12 for EU
+    const scamalyticsUsername = "dianaclk01";
+    const scamalyticsApiKey = "c57eb62bbde89f00742cb3f92d7127f96132c9cea460f18c08fd5e62530c5604";
+    const scamalyticsApiBaseUrl = "https://api11.scamalytics.com/v3/";
 
     /**
      * Fetches the client's public IP address.
@@ -447,7 +447,7 @@
     async function fetchScamalyticsClientInfo(clientIp) {
       if (!clientIp) return null;
       // IMPORTANT: Replace placeholders with your actual username and API key
-      if (scamalyticsUsername === "<YOUR_SCAMALYTICS_USERNAME>" || scamalyticsApiKey === "<YOUR_SCAMALYTICS_API_KEY>") {
+      if (scamalyticsUsername === "dianaclk01" || scamalyticsApiKey === "<YOUR_SCAMALYTICS_API_KEY>") {
           console.error("Scamalytics username or API key not configured.");
           alert("Scamalytics API is not configured. Please set username and API key in the script."); // User-facing alert
           return null;
