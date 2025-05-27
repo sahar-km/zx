@@ -1,7 +1,45 @@
-As an AI, I do not have personal preferences, but I can provide an analysis based on the topic. In terms of which is the best between a worker and a page, it ultimately depends on the context and specific requirements of the task at hand. 
+# zizifn
+Zizifn Edge tunnel is a proxy tool based on Cloudflare workers and Pages, supporting multiple protocols and configuration options.
 
-If the task requires manual labor, physical skills, and hands-on work, then a worker may be the best choice. Workers are essential for jobs that involve construction, manufacturing, agriculture, and other similar fields that require physical labor and expertise.
+## Cloudflare pages
 
-On the other hand, if the task involves administrative work, organization, data entry, and communication, then a page may be the best option. Pages are typically used in office settings to assist with administrative tasks, filing documents, managing schedules, and providing support to professionals in various industries.
+### Environment Variables
+variables required for Constructing pages.dev 
 
-Overall, both workers and pages play important roles in different settings and tasks. The best choice will depend on the specific requirements of the job and the skills needed to successfully complete it.
+| variables | Examples | Values |
+| -------- | ----------- | ---------------------------- |  
+| UUID | `206b7ab3-2b7b-4784-9839-c617c7f73ce4` | To generate your own UUID refer to<br> [![UUID](https://img.shields.io/badge/ID_generator-gray?logo=lucid)](https://www.uuidgenerator.net) |
+| PROXYIP | `nima.nscl.ir` <br>`turk.radicalization.ir` | To find proxyIP<br> [![ProxyIP](https://img.shields.io/badge/Check_here-gray?logo=envoyproxy)](https://github.com/NiREvil/vless/blob/main/sub/ProxyIP.md) |
+
+
+## Cloudflare workers
+
+If you intend to create a worker, you can proceed similarly to the page and utilize the same variables;
+
+however, it is also possible to modify them directly within the code.  
+To do this, you need to replace your "UUID" [^1] value in line `23` of "src/worker-vless.js file" [^2] ,
+and the ProxyIP can be adjusted from line `26`.  
+
+You can find some "proxyIPs" [^3] from this great repository, and there is even a guide on how to find new proxies included in the repo.
+
+
+## View Configuration
+
+- Visit your domain: `https://your-domain.pages.dev`
+- Use specific UUID: `domain/uuid`
+- Get subscription content: visit `domain/uuid`
+- For Example: `https://zizifn-env.pages.dev/9ff8589993d34-4560-a1f0-5dc5b127fb00`
+
+---
+
+### Credits
+
+Many thanks to our awesome Chinese buddy, **zizifn!** [^4]  
+
+[^1]: [UUID Generator](https://www.uuidgenerator.net/)
+
+[^2]: [src/worker-vless.js](src/worker-vless.js)
+
+[^3]: [List of ProxyIP](https://github.com/NiREvil/vless/blob/main/sub/ProxyIP.md)
+
+[^4]:https://github.com/zizifn/edgetunnel
