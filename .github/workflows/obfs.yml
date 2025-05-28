@@ -32,7 +32,7 @@ jobs:
         run: |
           if [ ! -f index.js ]; then
             echo "index.js not found."
-            if git ls-files --error-unmatch _worker.js > /dev/null 2>&1; then # بررسی اینکه آیا _worker.js یک فایل ردگیری شده است
+            if git ls-files --error-unmatch _worker.js > /dev/null 2>&1; then
               echo "Removing tracked file _worker.js as index.js is not present."
               rm -f _worker.js
             else
