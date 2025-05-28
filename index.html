@@ -6,12 +6,7 @@
   <title>VLESS Proxy Configuration</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
-  <link
-    href="https://p.typekit.net/p.css?s=1&k=tsd8lrs&ht=tk&f=10954.13453.13458.13460.13461.13464.13465.13470.18498.22487.25676.25679&a=691756&app=typekit&e=css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:ital,wght@0,400..700;1,400..700&family=Fira+Code:wght@300..700&family=Inter:opsz,wght@14..32,100..900&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -21,20 +16,20 @@
 
     @font-face {
       font-family: "Aldine 401 BT Web";
-      src:
-        url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2") format("woff2"),
-        url("https://pub-b3ab4c8172fb44e29854df3435aa223d.r2.dev/Aldine401_Mersedeh.ttf") format("truetype");
-      font-weight: 400;
-      font-style: normal;
-      font-display: swap;
+      src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/Aldine401_Mersedeh.woff2") format("woff2");
+      font-weight: 400; font-style: normal; font-display: swap;
     }
 
     @font-face {
       font-family: "Styrene B LC";
       src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Regular.woff2") format("woff2");
-      font-weight: 500; 
-      font-style: normal;
-      font-display: swap;
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+
+    @font-face {
+      font-family: "Styrene B LC";
+      src: url("https://pub-7a3b428c76aa411181a0f4dd7fa9064b.r2.dev/StyreneBLC-Medium.woff2") format("woff2");
+      font-weight: 500; font-style: normal; font-display: swap;
     }
 
     :root {
@@ -64,10 +59,8 @@
       --status-warning: #e0bc44; 
       --status-info: #4f90c4;
 
-      --serif: 'Aldine 401 BT Web', 'Times New Roman', Times, Georgia, ui-serif, serif;
-      --aldine: "Aldine 401 BT Web", serif;
-      --sans-serif: "Styrene B LC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial,
-        "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      --serif: "Aldine 401 BT Web", "Times New Roman", Times, Georgia, ui-serif, serif;
+      --sans-serif: "Styrene B LC", "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "Noto Color Emoji", sans-serif;
       --mono-serif: "Fira Code", "Roboto Mono", Cantarell, Courier Prime, SFMono-Regular, monospace;
     }
 
@@ -93,6 +86,12 @@
         0 6px 15px rgba(0, 0, 0, 0.2),
         0 0 25px 8px var(--shadow-color-accent);
       transition: box-shadow var(--transition-speed-medium) ease;
+    }
+
+    .container:hover {
+      box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.25),
+        0 0 35px 10px var(--shadow-color-accent);
     }
 
     .header {
@@ -122,10 +121,18 @@
       padding: 20px;
       margin-bottom: 24px;
       border: 1px solid var(--border-color);
+      transition:
+        border-color var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    }
+    
+    .config-card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 0 4px 8px var(--shadow-color);
     }
 
     .config-title {
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 22px;
       font-weight: 400;
       color: var(--accent-secondary);
@@ -140,7 +147,7 @@
     .config-title .refresh-btn {
       position: relative;
       overflow: hidden;
-      font-family: var(--aldine);
+      font-family: var(--serif);
       font-size: 12px;
       padding: 6px 12px;
       border-radius: 4px;
@@ -151,7 +158,25 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      transition: all var(--transition-speed) ease;
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    }
+    
+    .config-title .refresh-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform var(--transition-speed-long) ease;
+      z-index: -1;
     }
     
     .config-title .refresh-btn:hover {
@@ -160,6 +185,15 @@
       border-color: var(--border-color-hover);
       transform: translateY(-2px);
       box-shadow: 0 4px 8px var(--shadow-color);
+    }
+    
+    .config-title .refresh-btn:hover::before {
+      transform: translateX(100%);
+    }
+    
+    .config-title .refresh-btn:active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: none;
     }
         
     .refresh-icon {
@@ -196,19 +230,94 @@
       padding: 8px 16px;
       border-radius: var(--border-radius);
       font-size: 13px;
-      font-weight: 600;
+      font-weight: 500;
       cursor: pointer;
       border: 1px solid var(--border-color);
       background-color: var(--background-tertiary);
       color: var(--button-text-secondary);
-      transition: all var(--transition-speed) ease;
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      text-decoration: none;
+      z-index: 1;
+    }
+
+    .button:focus-visible {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    .button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      transition: opacity var(--transition-speed) ease;
+    }
+
+    .button:not(.copy-buttons):not(.client-btn):hover {
+      background-color: #4d453e;
+      border-color: var(--border-color-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .button:not(.copy-buttons):not(.client-btn):active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: none;
     }
 
     .copy-buttons {
       position: absolute;
+      padding: 6px 12px;
       top: 10px;
       right: 10px;
-      font-family: var(--aldine);
+      font-family: var(--serif);
+      font-size: 12px;
+      font-weight: 400;
+      transition:
+        background-color var(--transition-speed) ease,
+        border-color var(--transition-speed) ease,
+        color var(--transition-speed) ease,
+        transform var(--transition-speed) ease,
+        box-shadow var(--transition-speed) ease;
+    }
+    
+    .copy-buttons::before,
+    .client-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform var(--transition-speed-long) ease;
+      z-index: -1;
+    }
+
+    .copy-buttons:hover::before,
+    .client-btn:hover::before {
+      transform: translateX(100%);
+    }
+
+    .copy-buttons:hover {
+      background-color: #4d453e;
+      color: var(--accent-primary);
+      border-color: var(--border-color-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px var(--shadow-color);
+    }
+
+    .copy-buttons:active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: none;
     }
 
     .client-buttons {
@@ -223,18 +332,74 @@
       background-color: var(--accent-primary);
       color: var(--background-tertiary);
       border-color: var(--accent-primary-darker);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     }
+
+    .client-btn::before {
+      left: -100%;
+      transition: transform 0.6s ease;
+      z-index: 1;
+    }
+
+    .client-btn::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent-tertiary), var(--accent-secondary));
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 0;
+    }
+
     .client-btn:hover {
+      transform: translateY(-3px);
       background-color: var(--accent-secondary);
       color: var(--button-text-primary);
       box-shadow: 0 5px 15px rgba(190, 155, 123, 0.5);
       border-color: var(--accent-secondary);
     }
-    .client-icon {
-      width: 18px; height: 18px; border-radius: 6px;
-      background-color: var(--background-secondary);
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+
+    .client-btn:hover::before {
+      transform: translateX(100%);
     }
+
+    .client-btn:hover::after {
+      opacity: 1;
+      bottom: 0;
+    }
+
+    .client-btn:active {
+      transform: translateY(0) scale(0.98);
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+      background-color: var(--accent-primary-darker);
+    }
+
+    .client-btn .client-icon {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.3s ease;
+    }
+
+    .client-btn:hover .client-icon {
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .client-btn .button-text {
+      position: relative;
+      z-index: 2;
+      transition: letter-spacing 0.3s ease;
+    }
+
+    .client-btn:hover .button-text {
+      letter-spacing: 0.5px;
+    }
+    .client-icon { width: 18px; height: 18px; border-radius: 6px; background-color: var(--background-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .client-icon svg { width: 14px; height: 14px; fill: var(--accent-secondary); }
 
     .button.copied { background-color: var(--accent-secondary) !important; color: var(--background-tertiary) !important; }
@@ -242,12 +407,18 @@
 
     .footer { text-align: center; margin-top: 20px; padding-bottom: 40px; color: var(--text-secondary); font-size: 12px; }
     .footer p { margin-bottom: 0px; }
+    
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--background-primary); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; border: 2px solid var(--background-primary); }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-color-hover); }
+    * { scrollbar-width: thin; scrollbar-color: var(--border-color) var(--background-primary); }
 
     .ip-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 24px; }
     .ip-info-section { background-color: var(--background-tertiary); border-radius: var(--border-radius); padding: 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 20px; }
     .ip-info-header { display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
     .ip-info-header svg { width: 20px; height: 20px; stroke: var(--accent-secondary); }
-    .ip-info-header h3 { font-family: var(--aldine); font-size: 18px; color: var(--accent-secondary); margin: 0; }
+    .ip-info-header h3 { font-family: var(--serif); font-size: 18px; font-weight: 400; color: var(--accent-secondary); margin: 0; }
     .ip-info-content { display: flex; flex-direction: column; gap: 10px; }
     .ip-info-item { display: flex; flex-direction: column; gap: 2px; }
     .ip-info-item .label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -263,12 +434,80 @@
     @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     .country-flag { display: inline-block; width: 18px; height: auto; max-height: 14px; margin-right: 6px; vertical-align: middle; border-radius: 2px; }
 
-    /* Responsive styles from previous version - retained for brevity */
-    @media (max-width: 768px) { body { padding: 20px; } .container { padding: 0 14px; } .header h1 { font-size: 24px; } }
-    @media (max-width: 480px) { body { padding: 16px; } .container { padding: 0 12px; } .header h1 { font-size: 20px; } }
-    @media (max-width: 359px) { body { padding: 12px; font-size: 14px; } .container { padding: 8px; } .header h1 { font-size: 16px; } }
-    @media (min-width: 360px) { .container { max-width: 95%; } } @media (min-width: 480px) { .container { max-width: 90%; } } @media (min-width: 640px) { .container { max-width: 600px; } } @media (min-width: 768px) { .container { max-width: 720px; } } @media (min-width: 1024px) { .container { max-width: 800px; } }
+     @media (max-width: 768px) {
+      body { padding: 20px; }
+      .container { padding: 0 14px; width: min(100%, 768px); }
+      .ip-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; }
+      .header h1 { font-size: 1.8rem; }
+      .header p { font-size: 0.7rem }
+      .ip-info-section { padding: 14px; gap: 18px; }
+      .ip-info-header h3 { font-size: 16px; }
+      .ip-info-header { gap: 8px; }
+      .ip-info-content { gap: 8px; }
+      .ip-info-item .label { font-size: 11px; }
+      .ip-info-item .value { font-size: 13px; }
+      .config-card { padding: 16px; }
+      .config-title { font-size: 18px; }
+      .config-title .refresh-btn { font-size: 11px; }
+      .config-content pre { font-size: 12px; padding-right: 47px; }
+      .client-buttons { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+      .button { padding: 6px 10px; font-size: 12px; }
+      .copy-buttons { top: 8px; right: 11px; }
+    }
 
+    @media (max-width: 480px) {
+      body { padding: 16px; }
+      .container { padding: 0 12px; width: min(100%, 390px); }
+      .header h1 { font-size: 20px; }
+      .header p { font-size: 8px; }
+      .ip-info-section { padding: 14px; gap: 16px; }
+      .ip-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+      .ip-info-header h3 { font-size: 14px; }
+      .ip-info-header { gap: 6px; }
+      .ip-info-content { gap: 6px; }
+      .ip-info-header svg { width: 18px; height: 18px; }
+      .ip-info-item .label { font-size: 9px; }
+      .ip-info-item .value { font-size: 11px; }
+      .config-card { padding: 10px; }
+      .config-title { font-size: 16px; }
+      .config-title .refresh-btn { font-size: 10px; }
+      .config-content { padding: 12px; }
+      .config-content pre { font-size: 10px; padding-right: 40px; }
+      .client-buttons { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+      .button { padding: 4px 8px; font-size: 11px; }
+      .copy-buttons { top: 7px; right: 7px; padding: 4px 8px; }
+      .footer { font-size: 10px; }
+    }
+
+    @media (max-width: 359px) {
+      body { padding: 12px; font-size: 14px; }
+      .container { max-width: 100%; padding: 8px; }
+      .header h1 { font-size: 16px; }
+      .header p { font-size: 6px; }
+      .ip-info-section { padding: 12px; gap: 12px; }
+      .ip-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+      .ip-info-header h3 { font-size: 13px; }
+      .ip-info-header { gap: 4px; }
+      .ip-info-content { gap: 4px; }
+      .ip-info-header svg { width: 16px; height: 16px; }
+      .ip-info-item .label { font-size: 8px; }
+      .ip-info-item .value { font-size: 10px; }
+      .config-card { padding: 8px; }
+      .config-title { font-size: 13px; }
+      .config-title .refresh-btn { font-size: 9px; }
+      .config-content { padding: 8px; }
+      .config-content pre { font-size: 8px; padding-right: 35px; }
+      .client-buttons { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .button { padding: 3px 6px; font-size: 10px; }
+      .copy-buttons { top: 6px; right: 6px; padding: 5px 10px; font-size: 8px; }
+      .footer { font-size: 8px; }
+    }
+
+    @media (min-width: 360px) { .container { max-width: 95%; } }
+    @media (min-width: 480px) { .container { max-width: 90%; } }
+    @media (min-width: 640px) { .container { max-width: 600px; } }
+    @media (min-width: 768px) { .container { max-width: 720px; } }
+    @media (min-width: 1024px) { .container { max-width: 800px; } }
   </style>
 </head>
 <body data-proxy-ip="{{PROXY_IP}}">
@@ -395,7 +634,6 @@
   <script>
     function copyToClipboard(button, text) {
       const originalText = button.textContent;
-      // ... (rest of copyToClipboard function remains the same) ...
       navigator.clipboard.writeText(text).then(() => {
         button.textContent = "Copied!";
         button.classList.add("copied");
@@ -452,13 +690,13 @@
              if (errorData && errorData.error) {
                 errorDetail = errorData.error;
                 if(errorData.details) errorDetail += ` Details: ${errorData.details}`;
-            } else if (errorData && errorData.scamalytics && errorData.scamalytics.error) { // Check Scamalytics specific error structure
+            } else if (errorData && errorData.scamalytics && errorData.scamalytics.error) {
                  errorDetail = errorData.scamalytics.error;
             } else if (response.statusText) {
                 errorDetail += ` - ${response.statusText}`;
             }
           } catch (e) { 
-            errorDetail += ` - ${await response.text()}`; // If not JSON, get text
+            errorDetail += ` - ${await response.text()}`;
           }
           throw new Error(errorDetail);
         }
@@ -466,7 +704,7 @@
         if (data.scamalytics && data.scamalytics.status === 'error') {
             throw new Error(data.scamalytics.error || 'Scamalytics API error via Worker');
         }
-        if (data.error && !data.scamalytics) { // General error from worker proxy itself
+        if (data.error && !data.scamalytics) {
             throw new Error(data.error);
         }
         return data;
@@ -489,13 +727,13 @@
       }
     
       const sa = data.scamalytics;
-      const dbip = data.external_datasources?.dbip; // Use optional chaining
+      const dbip = data.external_datasources?.dbip;
     
       const elements = {
         ip: document.getElementById(`${prefix}-ip`),
         location: document.getElementById(`${prefix}-location`),
         isp: document.getElementById(`${prefix}-isp`),
-        proxy: document.getElementById(`${prefix}-proxy`) // For Risk Score
+        proxy: document.getElementById(`${prefix}-proxy`)
       };
     
       if (elements.ip) elements.ip.textContent = sa.ip || "N/A";
@@ -530,7 +768,7 @@
         let riskText = "Unknown";
         let badgeClass = "badge-neutral";
     
-        if (risk !== undefined && score !== undefined && risk !== null && score !== null) { // Stricter check
+        if (risk !== undefined && score !== undefined && risk !== null && score !== null) {
             riskText = `${score} - ${risk.charAt(0).toUpperCase() + risk.slice(1)}`;
             switch (risk.toLowerCase()) { 
                 case "low": badgeClass = "badge-yes"; break;
@@ -538,8 +776,8 @@
                 case "high": badgeClass = "badge-no"; break;
                 case "very high": badgeClass = "badge-no"; break; 
                 default: 
-                    badgeClass = "badge-neutral"; // Fallback for unexpected risk strings
-                    riskText = `Score ${score} - ${risk || 'Status Unknown'}`; // Show score if risk string is weird
+                    badgeClass = "badge-neutral";
+                    riskText = `Score ${score} - ${risk || 'Status Unknown'}`;
                     break;
             }
         } else if (score !== undefined && score !== null) {
@@ -644,15 +882,15 @@
         const ispElement = document.getElementById('proxy-isp');
         if (hostElement) hostElement.textContent = originalHostForProxy || errorMessage;
         if (ipElement) ipElement.textContent = errorMessage;
-        if (locationElement) locationElement.innerHTML = errorMessage; // Use innerHTML due to flags
+        if (locationElement) locationElement.innerHTML = errorMessage;
         if (ispElement) ispElement.textContent = errorMessage;
       } else if (prefix === 'client') {
         const ipElement = document.getElementById('client-ip');
         const locationElement = document.getElementById('client-location');
         const ispElement = document.getElementById('client-isp');
-        const riskScoreElement = document.getElementById('client-proxy'); // ID for Risk Score
+        const riskScoreElement = document.getElementById('client-proxy');
         if (ipElement) ipElement.textContent = errorMessage;
-        if (locationElement) locationElement.innerHTML = errorMessage; // Use innerHTML due to flags
+        if (locationElement) locationElement.innerHTML = errorMessage;
         if (ispElement) ispElement.textContent = errorMessage;
         if (riskScoreElement) riskScoreElement.innerHTML = `<span class="badge badge-neutral">N/A</span>`;
       }
@@ -687,11 +925,11 @@
                   } else console.warn('DNS lookup no answers for proxy domain:', proxyDomainOrIp);
               } else {
                 console.error(`DNS lookup failed for ${proxyDomainOrIp}: ${dnsRes.status}`);
-                resolvedProxyIp = proxyDomainOrIp; // Keep original domain if DNS fails
+                resolvedProxyIp = proxyDomainOrIp;
               }
             } catch (e) { 
               console.error('DNS resolution for proxy failed:', e); 
-              resolvedProxyIp = proxyDomainOrIp; // Fallback to original domain on error
+              resolvedProxyIp = proxyDomainOrIp;
             }
           }
           const proxyGeoData = await fetchIpApiIoInfo(resolvedProxyIp); 
@@ -704,11 +942,10 @@
           showError('proxy', 'Proxy Host not available', proxyHostVal);
         }
     
-        // --- Load Client Info (Scamalytics via Worker) ---
+        // Load Client Info (Scamalytics via Worker)
         console.log('Fetching client public IP...');
         const clientIp = await fetchClientPublicIP();
         if (clientIp) {
-          // Temporarily display IP, will be overwritten by Scamalytics data or N/A on error
           const clientIpElement = document.getElementById('client-ip');
           if(clientIpElement) clientIpElement.textContent = clientIp;
     
@@ -747,7 +984,7 @@
       const resetToSkeleton = (prefix) => {
         const elementsToReset = ['ip', 'location', 'isp'];
         if (prefix === 'proxy') elementsToReset.push('host'); 
-        if (prefix === 'client') elementsToReset.push('proxy'); // client-proxy is for Risk Score
+        if (prefix === 'client') elementsToReset.push('proxy');
     
         elementsToReset.forEach(elemKey => {
           const element = document.getElementById(`${prefix}-${elemKey}`);
@@ -757,7 +994,7 @@
             else if (elemKey === 'location') skeletonWidth = "110px";
             else if (elemKey === 'ip') skeletonWidth = "120px";
             else if (elemKey === 'host' && prefix === 'proxy') skeletonWidth = "150px";
-            else if (elemKey === 'proxy' && prefix === 'client') skeletonWidth = "100px"; // For Risk Score
+            else if (elemKey === 'proxy' && prefix === 'client') skeletonWidth = "100px";
             element.innerHTML = `<span class="skeleton" style="width: ${skeletonWidth};"></span>`;
           }
         });
@@ -770,12 +1007,10 @@
       }, 1000));
     });
     
-    // Add spin animation style
     const style = document.createElement('style');
     style.textContent = `@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`;
     document.head.appendChild(style);
     
-    // Initialize on page load
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Page loaded, initializing network info...');
       loadNetworkInfo();
