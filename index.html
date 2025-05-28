@@ -78,7 +78,7 @@
     }
 
     .container {
-      max-width: 800px;
+      max-width: 768;
       margin: 20px auto;
       padding: 0 12px;
       border-radius: var(--border-radius);
@@ -147,6 +147,9 @@
     .config-title .refresh-btn {
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 4px;
       font-family: var(--serif);
       font-size: 12px;
       padding: 6px 12px;
@@ -155,9 +158,7 @@
       background-color: var(--background-tertiary);
       border: 1px solid var(--border-color);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      
       transition:
         background-color var(--transition-speed) ease,
         border-color var(--transition-speed) ease,
@@ -221,7 +222,6 @@
       margin: 0;
       white-space: pre-wrap;
       word-break: break-all;
-      padding-right: 4em;
     }
 
     .button {
@@ -276,16 +276,17 @@
     }
 
     .copy-buttons {
-      position: absolute;
-      padding: 6px 12px;
-      top: 10px;
-      right: 10px;
+      position: relative;
+      display: flex;
+      gap: 4px;
+      overflow: hidden;
+      align-self: center;
       font-family: var(--serif);
-      color: var(--accent-secondary);
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
       font-size: 12px;
-      font-weight: 400;
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: var(--accent-secondary);
+      border: 1px solid var(--border-color);
       transition:
         background-color var(--transition-speed) ease,
         border-color var(--transition-speed) ease,
@@ -326,7 +327,13 @@
       transform: translateY(0px) scale(0.98);
       box-shadow: none;
     }
-
+    
+    .copy-icon {
+      width: 12px;
+      height: 12px;
+      stroke: currentColor;
+    }
+    
     .client-buttons {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -406,9 +413,7 @@
       transition: letter-spacing 0.3s ease;
     }
 
-    .client-btn:hover .button-text {
-      letter-spacing: 0.5px;
-    }
+    .client-btn:hover .button-text { letter-spacing: 0.5px; }
     .client-icon { width: 18px; height: 18px; border-radius: 6px; background-color: var(--background-secondary); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .client-icon svg { width: 14px; height: 14px; fill: var(--accent-secondary); }
 
@@ -459,10 +464,10 @@
       .config-card { padding: 16px; }
       .config-title { font-size: 18px; }
       .config-title .refresh-btn { font-size: 11px; }
-      .config-content pre { font-size: 12px; padding-right: 47px; }
+      .config-content pre { font-size: 12px; }
       .client-buttons { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-      .button { padding: 6px 10px; font-size: 12px; }
-      .copy-buttons { top: 8px; right: 11px; }
+      .button { font-size: 12px; }
+       .copy-buttons { font-size: 11px; }
     }
 
     @media (max-width: 480px) {
@@ -483,10 +488,10 @@
       .config-title { font-size: 16px; }
       .config-title .refresh-btn { font-size: 10px; }
       .config-content { padding: 12px; }
-      .config-content pre { font-size: 10px; padding-right: 40px; }
+      .config-content pre { font-size: 10px; }
       .client-buttons { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
       .button { padding: 4px 8px; font-size: 11px; }
-      .copy-buttons { top: 7px; right: 7px; padding: 4px 8px; }
+      .copy-buttons { font-size: 10px; }
       .footer { font-size: 10px; }
     }
 
@@ -508,10 +513,10 @@
       .config-title { font-size: 13px; }
       .config-title .refresh-btn { font-size: 9px; }
       .config-content { padding: 8px; }
-      .config-content pre { font-size: 8px; padding-right: 35px; }
+      .config-content pre { font-size: 8px; }
       .client-buttons { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
       .button { padding: 3px 6px; font-size: 10px; }
-      .copy-buttons { top: 6px; right: 6px; padding: 5px 10px; font-size: 8px; }
+      .copy-buttons { font-size: 9px; }
       .footer { font-size: 8px; }
     }
 
@@ -602,10 +607,18 @@
     </div>
 
     <div class="config-card">
-      <div class="config-title">Xray Core Clients</div>
+      <div class="config-title">
+        <span>Xray Core Clients</span>
+        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{DREAM_CONFIG}}')">
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy
+        </button>
+      </div>
       <div class="config-content">
-        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{DREAM_CONFIG}}')">Copy</button>
-        <pre id="xray-config">{{DREAM_CONFIG}}</pre>
+        <pre id="xray-config">vless://52624d58-f628-4bb5-9eca-4bed2d2bf77a@nimii.pages.dev:443?path=%2FIndex%3Fed%3D2560&encryption=none&host=nimii.pages.dev&type=ws&security=tls&sni=nimii.pages.dev&fp=randomized&alpn=h2,http/1.1#nimii.pages.dev</pre>
       </div>
       <div class="client-buttons">
         <a href="hiddify://install-config?url={{FREEDOM_CONFIG_ENCODED}}" class="button client-btn">
@@ -620,9 +633,17 @@
     </div>
 
     <div class="config-card">
-      <div class="config-title">Sing-Box Core Clients</div>
+      <div class="config-title">
+        <span>Sing-Box Core Clients</span>
+        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{FREEDOM_CONFIG}}')">
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copy
+        </button>
+      </div>
       <div class="config-content">
-        <button class="button copy-buttons" onclick="copyToClipboard(this, '{{FREEDOM_CONFIG}}')">Copy</button>
         <pre id="singbox-config">{{FREEDOM_CONFIG}}</pre>
       </div>
       <div class="client-buttons">
@@ -645,21 +666,40 @@
 
   <script>
     function copyToClipboard(button, text) {
-      const originalText = button.textContent;
+      const originalHTML = button.innerHTML;
+
       navigator.clipboard.writeText(text).then(() => {
-        button.textContent = "Copied!";
+        button.innerHTML = `
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copied!
+        `;
         button.classList.add("copied");
+        button.disabled = true;
+
         setTimeout(() => {
-          button.textContent = originalText;
+          button.innerHTML = originalHTML;
           button.classList.remove("copied");
           button.disabled = false;
         }, 1200);
       }).catch(err => {
         console.error("Failed to copy text: ", err);
-        button.textContent = "Error";
+        const originalHTMLError = button.innerHTML;
+
+        button.innerHTML = `
+          <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Error
+        `; 
         button.classList.add("error");
+        button.disabled = true;
+
         setTimeout(() => {
-          button.textContent = originalText;
+          button.innerHTML = originalHTMLError;
           button.classList.remove("error");
           button.disabled = false;
         }, 1500);
