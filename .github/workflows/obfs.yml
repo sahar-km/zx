@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+          check-latest: false
 
       - name: Install dependencies
         run: npm install -g javascript-obfuscator
@@ -31,7 +32,7 @@ jobs:
         run: |
           if [ ! -f index.js ]; then
             echo "index.js not found."
-            if git ls-files --error-unmatch _worker.js > /dev/null 2>&1; then
+            if git ls-files --error-unmatch _worker.js > /dev/null 2>&1; then # بررسی اینکه آیا _worker.js یک فایل ردگیری شده است
               echo "Removing tracked file _worker.js as index.js is not present."
               rm -f _worker.js
             else
@@ -39,7 +40,6 @@ jobs:
             fi
           else
           echo "Obfuscating index.js to _worker.js..."
-          javascript-obfuscator worker code
           javascript-obfuscator index.js --output _worker.js \
           --self-defending false \
           --compact true \
