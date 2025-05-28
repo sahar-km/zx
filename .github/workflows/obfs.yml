@@ -2,7 +2,10 @@ name: Obfs
 
 on:
   push:
-    branches: [test]
+    branches: ['main', 'test']
+    paths:
+      - '**/index.*'
+      - '**/obfs.*'
   workflow_dispatch:
 
 jobs:
@@ -20,13 +23,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
-          check-latest: false
 
       - name: Install dependencies
         run: npm install -g javascript-obfuscator
 
-      - name: Obfuscate worker code
+      - name: Create, update, or delete _worker.js based on index.js
         run: |
+          if [ ! -f index.js ]; then
+            echo "index.js not found."
+            if git ls-files --error-unmatch _worker.js > /dev/null 2>&1; then
+              echo "Removing tracked file _worker.js as index.js is not present."
+              rm -f _worker.js
+            else
+              echo "_worker.js is not tracked or does not exist. Nothing to remove."
+            fi
+          else
+          echo "Obfuscating index.js to _worker.js..."
+          javascript-obfuscator worker code
           javascript-obfuscator index.js --output _worker.js \
           --self-defending false \
           --compact true \
@@ -41,15 +54,19 @@ jobs:
           --string-array-threshold 1 \
           --transform-object-keys true \
           --unicode-escape-sequence true
+            
+            if [ $? -ne 0 ]; then
+              echo "JavaScript obfuscation failed!"
+              exit 1
+            fi
+          fi
 
       - name: Commit and push _worker.js
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add _worker.js
-          git commit -m "Secured and refined _worker.js logic" || echo "No changes to commit"
+          git commit -m "Secured and refined _worker.js logic from commit ${{ github.sha }}" || echo "No changes to commit"
 
       - name: Push changes
         run: |
           git push origin ${{ github.ref }}
-          force: false
