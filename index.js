@@ -117,7 +117,7 @@ async function handleHttpRequest(request, config) {
 	}
 
 	// Fallback to a helpful message if no other route matches
-	const fallbackHtml = `
+	let fallbackHtml = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -327,7 +327,7 @@ function getBeautifulConfig(userID, hostName, proxyIPWithPort) {
 	const subUrlEncoded = encodeURIComponent(subUrl);
 	const clashMetaFullUrl = `clash://install-config?url=https://revil-sub.pages.dev/sub/clash-meta?url=${subUrlEncoded}&remote_config=&udp=false&ss_uot=false&show_host=false&forced_ws0rtt=true`;
 
-	const html = `
+	let html = `
 	<!doctype html>
 	<html lang="en">
 	<head>
