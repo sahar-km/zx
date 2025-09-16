@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#2a2421"/>
+  <text x="16" y="20" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#be9b7b" text-anchor="middle" dominant-baseline="middle" filter="url(#shadow)">RE</text>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.5" result="blur"/>
+      <feOffset in="blur" dx="0.5" dy="0.5" result="offsetBlur"/>
+      <feFlood flood-color="#d4b595" flood-opacity="0.3"/>
+      <feComposite in2="offsetBlur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
